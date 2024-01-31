@@ -7,6 +7,10 @@ use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\ProgramstudiesController;
 use App\Http\Controllers\SchedulesController;
 use App\Http\Controllers\SubjectsController;
+use App\Http\Controllers\UsersController;
+use App\Http\Controllers\ContentsController;
+use App\Http\Controllers\MenusController;
+use App\Http\Controllers\MenurolesController;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -88,6 +92,38 @@ Route::middleware('auth')->group(function () {
       Route::get('/subject-show/{id}', [SubjectsController::class, 'show'])->name('subject.show');
       Route::put('/subject-update/{id}', [SubjectsController::class, 'update'])->name('subject.update');
       Route::delete('/subject-destroy/{id}', [SubjectsController::class, 'destroy'])->name('subject.delete');
+ 
+      // User
+      Route::get('/user-page', [UsersController::class, 'index'])->name('user.index');
+      Route::get('/user-create', [UsersController::class, 'create'])->name('user.create');
+      Route::post('/user-store', [UsersController::class, 'store']);
+      Route::get('/user-show/{id}', [UsersController::class, 'show'])->name('user.show');
+      Route::put('/user-update/{id}', [UsersController::class, 'update'])->name('user.update');
+      Route::delete('/user-destroy/{id}', [UsersController::class, 'destroy'])->name('user.delete');
+ 
+      // Content
+      Route::get('/content-page', [ContentsController::class, 'index'])->name('content.index');
+      Route::get('/content-create', [ContentsController::class, 'create'])->name('content.create');
+      Route::post('/content-store', [ContentsController::class, 'store']);
+      Route::get('/content-show/{id}', [ContentsController::class, 'show'])->name('content.show');
+      Route::put('/content-update/{id}', [ContentsController::class, 'update'])->name('content.update');
+      Route::delete('/content-destroy/{id}', [ContentsController::class, 'destroy'])->name('content.delete');
+      
+      // Content
+      Route::get('/menu-page', [MenusController::class, 'index'])->name('menu.index');
+      Route::get('/menu-create', [MenusController::class, 'create'])->name('menu.create');
+      Route::post('/menu-store', [MenusController::class, 'store']);
+      Route::get('/menu-show/{id}', [MenusController::class, 'show'])->name('menu.show');
+      Route::put('/menu-update/{id}', [MenusController::class, 'update'])->name('menu.update');
+      Route::delete('/menu-destroy/{id}', [MenusController::class, 'destroy'])->name('menu.delete');
+ 
+      // TX Menu Role
+      Route::get('/menurole-page', [MenurolesController::class, 'index'])->name('menurole.index');
+      Route::get('/menurole-create', [MenurolesController::class, 'create'])->name('menurole.create');
+      Route::post('/menurole-store', [MenurolesController::class, 'store']);
+      Route::get('/menurole-show/{id}', [MenurolesController::class, 'show'])->name('menurole.show');
+      Route::put('/menurole-update/{id}', [MenurolesController::class, 'update'])->name('menurole.update');
+      Route::delete('/menurole-destroy/{id}', [MenurolesController::class, 'destroy'])->name('menurole.delete');
  
 
 });
