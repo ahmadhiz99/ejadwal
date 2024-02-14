@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
                     'email' => 'admin@gmail.com',
                     'password' => Hash::make('12345678'),
                     'role_id' => 1,
-                    'nip' => null,
+                    'nis' => null,
                     'status' => null,
                     'program_study_id' => null,
                 ],
@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
                     'email' => 'dosen@gmail.com',
                     'password' => Hash::make('12345678'),
                     'role_id' => 2,
-                    'nip' => '321890',
+                    'nis' => '321890',
                     'status' => 'active',
                     'program_study_id' => 1,
                 ]

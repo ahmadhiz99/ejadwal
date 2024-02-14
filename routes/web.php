@@ -36,9 +36,19 @@ Route::get('/', function () {
     ]);
 });
 
+// !!!! ROUTE FOR INERTIA REACT !!!!
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+// Route::get('/program-study', function () {
+//     return Inertia::render('Prodi/ProgramStudies');
+// })->middleware(['auth', 'verified'])->name('prodi.programstudies');
+
+Route::get('/program-study/add', function () {
+    return Inertia::render('Prodi/FormProgramStudy');
+})->middleware(['auth', 'verified'])->name('prodi.formprogramstudy');
+// !!!! ROUTE FOR INERTIA REACT !!!!
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

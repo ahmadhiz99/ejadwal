@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Programstudies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use App\Helpers\ControllerHelper;
+use App\Models\Role;
 
 
 class ProgramstudiesController extends Controller
@@ -33,7 +35,11 @@ class ProgramstudiesController extends Controller
 
         $config = Self::configController($req);
 
-        return ControllerHelper::ch_datas($config);
+        $data = ControllerHelper::ch_datas($config);
+        // return $data;
+        return Inertia::render('Prodi/ProgramStudies', [
+            'data' => $data
+        ]);
     }
 
     /**
@@ -73,7 +79,8 @@ class ProgramstudiesController extends Controller
             ],400);
         }else{
             $config = Self::configController($req);
-            return ControllerHelper::ch_insert($config);
+            ControllerHelper::ch_insert($config);
+            return to_route('programstudies.index');
         }
       
     }
@@ -89,7 +96,10 @@ class ProgramstudiesController extends Controller
         ];
 
         $config = Self::configController($req);
-        return ControllerHelper::ch_datas($config);
+        $data = ControllerHelper::ch_datas($config);
+        return Inertia::render('Prodi/FormProgramStudy', [
+            'data' => $data
+        ]);
 
     }
 
@@ -148,7 +158,8 @@ class ProgramstudiesController extends Controller
             ],400);
         }else{
             $config = Self::configController($req);
-            return ControllerHelper::ch_insert($config);
+            ControllerHelper::ch_insert($config);
+            return to_route('programstudies.index');
         }
     }
 
@@ -162,6 +173,7 @@ class ProgramstudiesController extends Controller
         ];
 
         $config = Self::configController($req);
-        return ControllerHelper::ch_destroy($config);
+        ControllerHelper::ch_destroy($config);
+        return to_route('programstudies.index');
     }
 }

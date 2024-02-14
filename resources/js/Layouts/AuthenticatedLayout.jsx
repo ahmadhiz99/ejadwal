@@ -4,6 +4,8 @@ import Dropdown from "@/Components/Dropdown";
 import NavLink from "@/Components/NavLink";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { Head, Link } from "@inertiajs/react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
@@ -17,14 +19,6 @@ export default function Authenticated({ user, header, children }) {
                     rel="stylesheet"
                 ></link>
             </Head>
-
-            {/* {header && (
-                <header className="bg-white shadow">
-                    <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {header}
-                    </div>
-                </header>
-            )} */}
             <div className="bg-blue-900 w-80 p-4">
                 <div className="flex flex-row gap-2 mb-5">
                     <img
@@ -33,7 +27,12 @@ export default function Authenticated({ user, header, children }) {
                         alt=""
                     />
                     <div className="flex flex-col text-white">
-                        <h1 className="font-bold text-2xl">E-Jadwal</h1>
+                        <h1
+                            onClick={() => toast.success("halo")}
+                            className="font-bold text-2xl"
+                        >
+                            E-Jadwal
+                        </h1>
                         <p className="text-xs">Fakultas Sains dan Teknologi</p>
                     </div>
                 </div>
@@ -46,10 +45,23 @@ export default function Authenticated({ user, header, children }) {
                         Perkuliahan
                     </NavLink>
                     <NavLink
+                        href={route("programstudies.index")}
+                        active={route().current("programstudies.index")}
+                    >
+                        <i className="bx bx-sm bxs-school mr-2"></i> Program
+                        Studi
+                    </NavLink>
+                    <NavLink
                         href={route("dashboard")}
                         // active={route().current("dashboard")}
                     >
                         <i className="bx bx-sm bx-group mr-2"></i> Dosen
+                    </NavLink>
+                    <NavLink
+                        href={route("dashboard")}
+                        // active={route().current("dashboard")}
+                    >
+                        <i className="bx bx-sm bx-door-open mr-2"></i> Ruangan
                     </NavLink>
                     <NavLink
                         href={route("dashboard")}

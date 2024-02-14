@@ -12,6 +12,7 @@ class Programstudies extends Model
     protected $table = 'program_studies';
 
     protected $fillable = [
-        'prodi_name'
+        'prodi_name',
+        'description'
     ];
 }
