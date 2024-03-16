@@ -13,7 +13,14 @@ class UsersController extends Controller
 {
      function configController($params = null){
         $config = [
-            'model'=>'User'
+            'model'=>'User',
+            'table_master'=>'users',
+            'join'=>[
+                'leftJoin'=>[
+                    'roles'=>['id','role_id','role_name'],
+                    'program_studies'=>['id','program_study_id','prodi_name'],
+                ]
+            ]
         ];
 
         if($params != null){
@@ -44,7 +51,11 @@ class UsersController extends Controller
 
         $config = Self::configController($req);
 
-        return ControllerHelper::ch_datas($config);
+        // return 
+        $data = ControllerHelper::ch_datas($config);
+        // return $data;
+        return redirect('/lecturer')->with("SessTableData", $data);// Variable has to come from here
+
     }
 
     /**
@@ -52,10 +63,23 @@ class UsersController extends Controller
      */
     public function create()
     {
-        return response()->json([
-            'message' => 'true',
-            'data'=> []
-        ],200);
+        $req = [
+            'id'=>null,
+            'model_selection'=>[
+                'Programstudies'=>[
+                    'id','prodi_name','description'
+                ],
+                'Role'=>[
+                    'id','role_name','level'
+                ]
+            ]
+        ];
+
+        $config = Self::configController($req);
+
+        $data_selection = ControllerHelper::ch_datas_selection($config);
+        
+        return to_route('lecturer.formlecturer')->with("SessSelectionData",$data_selection);
     }
 
     /**
@@ -63,10 +87,7 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-       
-        // $data = $request->all();
-        // $role = new Role;
-
+        // Validator
         $validator = Validator::make($request->all(), Self::get_validator());
 
         $req = [
@@ -82,7 +103,8 @@ class UsersController extends Controller
             ],400);
         }else{
             $config = Self::configController($req);
-            return ControllerHelper::ch_insert($config);
+            ControllerHelper::ch_insert($config);
+            return to_route('user.index');
         }
       
     }
@@ -92,14 +114,24 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        //   $role = Role::find($id);
         $req = [
-            'id'=>$id
+            'id'=>$id,
+            'model_selection'=>[
+                'Programstudies'=>[
+                    'id','prodi_name','description'
+                ],
+                'Role'=>[
+                    'id','role_name','level'
+                ]
+            ]
         ];
 
         $config = Self::configController($req);
-        return ControllerHelper::ch_datas($config);
+        $data_selection = ControllerHelper::ch_datas_selection($config);
+        $config = Self::configController($req);        
+        $data = ControllerHelper::ch_datas($config);
 
+        return redirect('/lecturer/show')->with(["SessTableData"=>$data,"SessSelectionData"=>$data_selection]);
     }
 
     /**
@@ -107,11 +139,8 @@ class UsersController extends Controller
      */
     public function edit(Request $request)
     {
-        //
         $role = Role::find($request);
-
         try {
-          
             if(count($role)>0){
                 // return Inertia::render('Profile/Edit');
                 return response()->json([
@@ -155,7 +184,8 @@ class UsersController extends Controller
             ],400);
         }else{
             $config = Self::configController($req);
-            return ControllerHelper::ch_insert($config);
+            ControllerHelper::ch_insert($config);
+            return to_route('user.index');
         }
     }
 
@@ -169,6 +199,7 @@ class UsersController extends Controller
         ];
 
         $config = Self::configController($req);
-        return ControllerHelper::ch_destroy($config);
+        ControllerHelper::ch_destroy($config);
+        return to_route('user.index');
     }
 }

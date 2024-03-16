@@ -33,7 +33,9 @@ class RoomsController extends Controller
 
         $config = Self::configController($req);
 
-        return ControllerHelper::ch_datas($config);
+        $data = ControllerHelper::ch_datas($config);
+        return redirect('/room')->with("SessTableData", $data);// Variable has to come from here
+
     }
 
     /**
@@ -41,10 +43,24 @@ class RoomsController extends Controller
      */
     public function create()
     {
-        return response()->json([
-            'message' => 'true',
-            'data'=> []
-        ],200);
+        $req = [
+            'id'=>null,
+            // 'model_selection'=>[
+            //     'user'=>[
+            //         'id','name','email'
+            //     ],
+            //     'room'=>[
+            //         '*'
+            //     ]
+            // ]
+        ];
+
+        $config = Self::configController($req);
+
+        $data_selection = ControllerHelper::ch_datas_selection($config);
+        
+        return to_route('room.formroom')->with("SessSelectionData",$data_selection);
+
     }
 
     /**
@@ -69,7 +85,8 @@ class RoomsController extends Controller
             ],400);
         }else{
             $config = Self::configController($req);
-            return ControllerHelper::ch_insert($config);
+            ControllerHelper::ch_insert($config);
+            return to_route('rooms.index');
         }
       
     }
@@ -79,13 +96,24 @@ class RoomsController extends Controller
      */
     public function show($id)
     {
-        //   $role = Role::find($id);
         $req = [
-            'id'=>$id
+            'id'=>$id,
+            'model_selection'=>[
+                'Programstudies'=>[
+                    'id','prodi_name','description'
+                ],
+                'Role'=>[
+                    'id','role_name','level'
+                ]
+            ]
         ];
 
         $config = Self::configController($req);
-        return ControllerHelper::ch_datas($config);
+        $data_selection = ControllerHelper::ch_datas_selection($config);
+        $config = Self::configController($req);        
+        $data = ControllerHelper::ch_datas($config);
+
+        return redirect('/room/show')->with(["SessTableData"=>$data,"SessSelectionData"=>$data_selection]);
 
     }
 
@@ -144,7 +172,8 @@ class RoomsController extends Controller
             ],400);
         }else{
             $config = Self::configController($req);
-            return ControllerHelper::ch_insert($config);
+            ControllerHelper::ch_insert($config);
+            return to_route('rooms.index');
         }
     }
 
@@ -158,6 +187,8 @@ class RoomsController extends Controller
         ];
 
         $config = Self::configController($req);
-        return ControllerHelper::ch_destroy($config);
+         ControllerHelper::ch_destroy($config);
+        return to_route('rooms.index');
+
     }
 }

@@ -52,19 +52,19 @@ export default function Authenticated({ user, header, children }) {
                         Studi
                     </NavLink>
                     <NavLink
-                        href={route("dashboard")}
+                        href={route("user.index")}
                         // active={route().current("dashboard")}
                     >
                         <i className="bx bx-sm bx-group mr-2"></i> Dosen
                     </NavLink>
                     <NavLink
-                        href={route("dashboard")}
+                        href={route("rooms.index")}
                         // active={route().current("dashboard")}
                     >
                         <i className="bx bx-sm bx-door-open mr-2"></i> Ruangan
                     </NavLink>
                     <NavLink
-                        href={route("dashboard")}
+                        href={route("subject.index")}
                         // active={route().current("dashboard")}
                     >
                         <i className="bx bx-sm bx-file mr-2"></i> Mata Kuliah

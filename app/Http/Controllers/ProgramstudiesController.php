@@ -36,10 +36,8 @@ class ProgramstudiesController extends Controller
         $config = Self::configController($req);
 
         $data = ControllerHelper::ch_datas($config);
-        // return $data;
-        return Inertia::render('Prodi/ProgramStudies', [
-            'data' => $data
-        ]);
+        return redirect('/program-study')->with("SessTableData", $data);// Variable has to come from here
+
     }
 
     /**
@@ -47,10 +45,23 @@ class ProgramstudiesController extends Controller
      */
     public function create()
     {
-        return response()->json([
-            'message' => 'true',
-            'data'=> []
-        ],200);
+        $req = [
+            'id'=>null,
+            // 'model_selection'=>[
+            //     'user'=>[
+            //         'id','name','email'
+            //     ],
+            //     'room'=>[
+            //         '*'
+            //     ]
+            // ]
+        ];
+
+        $config = Self::configController($req);
+
+        $data_selection = ControllerHelper::ch_datas_selection($config);
+        
+        return to_route('prodi.formprogramstudy')->with("SessSelectionData",$data_selection);
     }
 
     /**
@@ -97,10 +108,7 @@ class ProgramstudiesController extends Controller
 
         $config = Self::configController($req);
         $data = ControllerHelper::ch_datas($config);
-        return Inertia::render('Prodi/FormProgramStudy', [
-            'data' => $data
-        ]);
-
+        return redirect('/program-study/show')->with("SessTableData", $data);
     }
 
     /**

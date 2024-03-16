@@ -41,13 +41,67 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Route::get('/program-study', function () {
-//     return Inertia::render('Prodi/ProgramStudies');
-// })->middleware(['auth', 'verified'])->name('prodi.programstudies');
-
+// Program Study
+Route::get('/program-study', function () {
+    // $data = session()->get('Variable')->getContent();
+    $data = session()->get('SessTableData');
+    return Inertia::render('Prodi/ProgramStudies',['data'=>$data]);
+})->middleware(['auth', 'verified'])->name('prodi.programstudies');
 Route::get('/program-study/add', function () {
-    return Inertia::render('Prodi/FormProgramStudy');
+    $data_selection = session()->get('SessSelectionData');
+    return Inertia::render('Prodi/FormProgramStudy',['data_selection'=>$data_selection]);
 })->middleware(['auth', 'verified'])->name('prodi.formprogramstudy');
+Route::get('/program-study/show', function () {
+    $data = session()->get('SessTableData');
+    return Inertia::render('Prodi/FormProgramStudy',['data'=>$data]);
+})->middleware(['auth', 'verified'])->name('prodi.programstudy-show');
+
+// DOSEN
+Route::get('/lecturer', function () {
+    $data = session()->get('SessTableData');
+    return Inertia::render('Lecturer/Lecturers',['data'=>$data]);
+})->middleware(['auth', 'verified'])->name('lecturer.lecturers');
+Route::get('/lecturer/add', function () {
+    $data = session()->get('SessSelectionData');
+    return Inertia::render('Lecturer/FormLecturer',['data_selection'=>$data_selection]);
+})->middleware(['auth', 'verified'])->name('lecturer.formlecturer');
+Route::get('/lecturer/show', function () {
+    $data = session()->get('SessTableData');
+    $data_selection = session()->get('SessSelectionData');
+    return Inertia::render('Lecturer/FormLecturer',['data'=>$data,'data_selection'=>$data_selection]);
+})->middleware(['auth', 'verified'])->name('lecturer.lecturer-show');
+
+// ROOM
+Route::get('/room', function () {
+    $data = session()->get('SessTableData');
+    return Inertia::render('Room/Rooms',['data'=>$data]);
+})->middleware(['auth', 'verified'])->name('room.rooms');
+Route::get('/room/add', function () {
+    $data = session()->get('SessSelectionData');
+    return Inertia::render('Room/FormRoom');
+})->middleware(['auth', 'verified'])->name('room.formroom');
+Route::get('/room/show', function () {
+    $data = session()->get('SessTableData');
+    $data_selection = session()->get('SessSelectionData');
+    return Inertia::render('Room/FormRoom',['data'=>$data,'data_selection'=>$data_selection]);
+})->middleware(['auth', 'verified']);
+
+// Subject
+Route::get('/subject', function () {
+    $data = session()->get('SessTableData');
+    return Inertia::render('Subject/Subjects',['data'=>$data]);
+})->middleware(['auth', 'verified'])->name('subject.subjects');
+Route::get('/subject/add', function () {
+    $data = session()->get('SessSelectionData');
+    return Inertia::render('Subject/FormSubject');
+})->middleware(['auth', 'verified'])->name('subject.formsubject');
+Route::get('/subject/show', function () {
+    $data = session()->get('SessTableData');
+    $data_selection = session()->get('SessSelectionData');
+    return Inertia::render('Subject/FormSubject',['data'=>$data,'data_selection'=>$data_selection]);
+})->middleware(['auth', 'verified']);
+
+
 // !!!! ROUTE FOR INERTIA REACT !!!!
 
 Route::middleware('auth')->group(function () {

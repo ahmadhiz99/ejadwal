@@ -13,7 +13,13 @@ class SubjectsController extends Controller
 {
      function configController($params = null){
         $config = [
-            'model'=>'Subject'
+            'model'=>'Subject',
+            'table_master'=>'subjects',
+            'join'=>[
+                'leftJoin'=>[
+                    'program_studies'=>['id','program_study_id','prodi_name'],
+                ]
+            ]
         ];
 
         if($params != null){
@@ -22,6 +28,17 @@ class SubjectsController extends Controller
         
         return $config;
     }
+
+    function get_validator(){
+        return [
+            'code' => 'required',
+            'subject_name' => 'required',
+            'sks' => 'required',
+            'semester' => 'required',
+            'program_study_id' => 'required'
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -33,7 +50,11 @@ class SubjectsController extends Controller
 
         $config = Self::configController($req);
 
-        return ControllerHelper::ch_datas($config);
+        // return 
+        $data = ControllerHelper::ch_datas($config);
+        // return $data;
+        return redirect('/subject')->with("SessTableData", $data);// Variable has to come from here
+
     }
 
     /**
@@ -41,10 +62,23 @@ class SubjectsController extends Controller
      */
     public function create()
     {
-        return response()->json([
-            'message' => 'true',
-            'data'=> []
-        ],200);
+        $req = [
+            'id'=>null,
+            'model_selection'=>[
+                'Programstudies'=>[
+                    'id','prodi_name','description'
+                ],
+                'Role'=>[
+                    'id','role_name','level'
+                ]
+            ]
+        ];
+
+        $config = Self::configController($req);
+
+        $data_selection = ControllerHelper::ch_datas_selection($config);
+        
+        return to_route('subject.formsubject')->with("SessSelectionData",$data_selection);
     }
 
     /**
@@ -52,17 +86,8 @@ class SubjectsController extends Controller
      */
     public function store(Request $request)
     {
-       
-        // $data = $request->all();
-        // $role = new Role;
-
-        $validator = Validator::make($request->all(), [
-            'code' => 'required',
-            'subject_name' => 'required',
-            'sks' => 'required',
-            'semester' => 'required',
-            'program_study_id' => 'required'
-        ]);
+        // Validator
+        $validator = Validator::make($request->all(), Self::get_validator());
 
         $req = [
             'id'=>null,
@@ -77,7 +102,8 @@ class SubjectsController extends Controller
             ],400);
         }else{
             $config = Self::configController($req);
-            return ControllerHelper::ch_insert($config);
+            ControllerHelper::ch_insert($config);
+            return to_route('subject.index');
         }
       
     }
@@ -87,14 +113,24 @@ class SubjectsController extends Controller
      */
     public function show($id)
     {
-        //   $role = Role::find($id);
         $req = [
-            'id'=>$id
+            'id'=>$id,
+            'model_selection'=>[
+                'Programstudies'=>[
+                    'id','prodi_name','description'
+                ],
+                'Role'=>[
+                    'id','role_name','level'
+                ]
+            ]
         ];
 
         $config = Self::configController($req);
-        return ControllerHelper::ch_datas($config);
+        $data_selection = ControllerHelper::ch_datas_selection($config);
+        $config = Self::configController($req);        
+        $data = ControllerHelper::ch_datas($config);
 
+        return redirect('/subject/show')->with(["SessTableData"=>$data,"SessSelectionData"=>$data_selection]);
     }
 
     /**
@@ -102,11 +138,8 @@ class SubjectsController extends Controller
      */
     public function edit(Request $request)
     {
-        //
         $role = Role::find($request);
-
         try {
-          
             if(count($role)>0){
                 // return Inertia::render('Profile/Edit');
                 return response()->json([
@@ -135,13 +168,7 @@ class SubjectsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'code' => 'required',
-            'subject_name' => 'required',
-            'sks' => 'required',
-            'semester' => 'required',
-            'program_study_id' => 'required'
-        ]);
+        $validator = Validator::make($request->all(), Self::get_validator());
 
         $req = [
             'id'=>$id,
@@ -156,7 +183,8 @@ class SubjectsController extends Controller
             ],400);
         }else{
             $config = Self::configController($req);
-            return ControllerHelper::ch_insert($config);
+            ControllerHelper::ch_insert($config);
+            return to_route('subject.index');
         }
     }
 
@@ -170,6 +198,7 @@ class SubjectsController extends Controller
         ];
 
         $config = Self::configController($req);
-        return ControllerHelper::ch_destroy($config);
+        ControllerHelper::ch_destroy($config);
+        return to_route('subject.index');
     }
 }

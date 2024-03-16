@@ -2,24 +2,25 @@ import ButtonLink from "@/Components/ButtonLink";
 import PrimaryButton from "@/Components/PrimaryButton";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router, usePage } from "@inertiajs/react";
+import { formToJSON } from "axios";
 import { ToastContainer, toast } from "react-toastify";
 
-export default function ProgramStudies({ auth }) {
+export default function Lecturers({ auth }) {
     const data = usePage().props.data.original.data;
 
     const detail = (e, id) => {
         e.preventDefault();
-        router.visit(`/programstudies-show/${id}`, {
+        router.visit(`/user-show/${id}`, {
             method: "get",
             // data: {
-            //     prodi_name: prodiName,
+            //     user_name: userName,
             //     description: description,
             // },
         });
     };
     const deleteData = (e, id) => {
         e.preventDefault();
-        router.visit(`/programstudies-destroy/${id}`, {
+        router.visit(`/user-destroy/${id}`, {
             method: "delete",
             // onSuccess: () => {
             //     toast.success("Berhasil hapus!");
@@ -31,11 +32,11 @@ export default function ProgramStudies({ auth }) {
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Program Studi
+                    Dosen
                 </h2>
             }
         >
-            <Head title="Program Studi" />
+            <Head title="Lecturer" />
 
             <ToastContainer
                 position="top-right"
@@ -57,10 +58,9 @@ export default function ProgramStudies({ auth }) {
                         <div className="p-6 text-gray-900">
                             <div className="page-head flex flex-row justify-between items-center">
                                 <h1 className="text-xl font-bold">
-                                    Program Studi
+                                    Dosen
                                 </h1>
-                                {/* <ButtonLink href={"prodi.formprogramstudy"}> */}
-                                <ButtonLink href={"programstudies.create"}>
+                                <ButtonLink href={"user.create"}>
                                     Tambah Baru
                                 </ButtonLink>
                             </div>
@@ -75,35 +75,46 @@ export default function ProgramStudies({ auth }) {
                                             <th className="py-3 px-8 w-5 text-center">
                                                 No
                                             </th>
-                                            <th className="w-48 text-center">
-                                                Program Studi
+                                            <th className="w-1/4 text-center">
+                                                Name
                                             </th>
-                                            <th className="w-1/2 text-left">
-                                                Deskripsi
+                                            <th className="w-1/4 text-left">
+                                                Email
+                                            </th>
+                                            <th className="w-1/4 text-left">
+                                                Role
+                                            </th>
+                                            <th className="w-1/4 text-left">
+                                                Program Study
                                             </th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {data.data
-                                            ? data.data.map((prodi, idx) => {
+                                            ? data.data.map((user, idx) => {
                                                   return (
                                                       <tr
-                                                          key={prodi.id}
+                                                          key={user.id}
                                                           className="border text-gray-700"
                                                       >
                                                           <td className="px-8 py-8 text-center">
                                                               {idx + 1}
                                                           </td>
                                                           <td className="text-center">
-                                                              {prodi.prodi_name}
+                                                              {user.name}
+                                                          </td>
+                                                          <td className="text-center">
+                                                              {user.email}
+                                                          </td>
+                                                          <td className="text-center">
+                                                              {user.role_name}
+                                                          </td>
+                                                          <td className="text-center">
+                                                              {user.prodi_name}
                                                           </td>
 
-                                                          <td>
-                                                              {
-                                                                  prodi.description
-                                                              }
-                                                          </td>
+                                                        
                                                           <td>
                                                               <div className="flex flex-row items-center justify-center gap-2">
                                                                   <i
@@ -112,7 +123,7 @@ export default function ProgramStudies({ auth }) {
                                                                       ) =>
                                                                           detail(
                                                                               e,
-                                                                              prodi.id
+                                                                              user.id
                                                                           )
                                                                       }
                                                                       className="bx bx-fw bx-info-circle"
@@ -123,7 +134,7 @@ export default function ProgramStudies({ auth }) {
                                                                       ) =>
                                                                           deleteData(
                                                                               e,
-                                                                              prodi.id
+                                                                              user.id
                                                                           )
                                                                       }
                                                                       className="bx bx-fw bx-trash text-rose-500"
