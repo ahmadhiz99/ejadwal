@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Menu;
+use App\Models\SysMenu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use App\Helpers\ControllerHelper;
 
 
-class MenusController extends Controller
+class SysMenuController extends Controller
 {
      function configController($params = null){
         $config = [
-            'model'=>'Menu'
+            'model'=>'Sysmenu'
         ];
 
         if($params != null){
@@ -123,44 +123,6 @@ class MenusController extends Controller
         // return redirect('/menu-page')->with("SessTableData", $dataEncode);// Variable has to come from here
 
         return $dataEncode;
-    }
-
-    public function table(){
-        $req = [
-            'id'=>null
-        ];
-
-        $config = Self::configController($req);
-
-        // return 
-        $data = ControllerHelper::ch_datas($config);
-        $dataTable = [
-                        'tableConfig' => [
-                            'idType'=>['alias'=>'No','type'=>'number'],/* number/alphabet */
-                            'columnMode'=>'manual',/* manual/auto */
-                            'columnCase'=>'camel',/* upper/lowercase/camel/pascal */
-                            'orderColumn' =>'id,asc', /* name column then asc or desc */
-                            'action' => [ 
-                                'alias' => 'Aksi',
-                                'feature' => [ /*feature = add,edit,delete */
-                                    ['feature'=>'add', 'alias'=> 'Tambah', 'icon'=>'','disabled'=>'false','hide'=>'false'], 
-                                    ['feature'=>'edit', 'alias'=> 'Edit', 'icon'=>'','disabled'=>'false','hide'=>'false'], 
-                                    ['feature'=>'delete', 'alias'=> 'Hapus', 'icon'=>'','disabled'=>'false','hide'=>'false'], 
-                                ]
-                            ]
-                        ],
-                        'data'=>[
-                            ['column' => 'name', 'alias' => 'Nama Menu', 'data' => '', 'className'=>''],
-                            ['column' => 'code', 'alias' => 'Kode', 'data' => '', 'className'=>''],
-                            ['column' => 'route', 'alias' => 'BackendRoute', 'data' => '', 'className'=>''],
-                            ['column' => 'activeRoute', 'alias' => 'FrontendRoute', 'data' => '', 'className'=>''],
-                        ]
-                    ];
-
-        $data = ['data'=>$data,'dataTable'=>$dataTable];
-        // return $data[1];
-        return redirect('/menu')->with("SessTableData", $data);// Variable has to come from here
- 
     }
 
     /**

@@ -1,15 +1,49 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import Dropdown from "@/Components/Dropdown";
 import NavLink from "@/Components/NavLink";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link,usePage } from "@inertiajs/react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+// import {useParams} from 'react-router-dom';
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
+
+    // const {menuId} = useParams();
+    // const data = usePage().props.data;
+    const [menuData,setMenuData] = useState([]);
+    const [showSubMenu, setShowSubMenu] = useState(false);
+
+    // Toggle submenu
+    // const toggleSubMenu = (index) =>{
+    //     setMenuData(prevMenuData => {
+    //         const updatedMenuData = [ ...prevMenuData];
+    //         updatedMenuData[index].showSubMenu = !updatedMenuData[index].showSubMenu;
+    //         return updatedMenuData;
+    //     });
+    // }
+    const toggleSubMenu = (menuId) => {
+        setShowSubMenu(prevShowSubMenu =>(prevShowSubMenu === menuId ? null : menuId));
+    };
+
+    useEffect(()=>{
+        const fetchData = async () =>{
+            try{
+                const response = await fetch('/menu-page');
+                const data = await response.json();
+                const menuDataWithSubMenu = data.data.data.map(item => ({...item,showSubMenu:false}));
+                setMenuData(menuDataWithSubMenu);
+                // setMenuData(data.data.data);
+            }catch(error){
+                console.error('Error Fetching menu data:',error);
+            }
+        }
+
+        fetchData();
+    },[])
 
     return (
         <div className="flex flex-row min-h-screen bg-gray-100">
@@ -37,45 +71,54 @@ export default function Authenticated({ user, header, children }) {
                     </div>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <NavLink
-                        href={route("dashboard")}
-                        active={route().current("dashboard")}
-                    >
-                        <i className="bx bx-sm bx-calendar mr-2"></i> Jadwal
-                        Perkuliahan
-                    </NavLink>
-                    <NavLink
-                        href={route("programstudies.index")}
-                        active={route().current("programstudies.index")}
-                    >
-                        <i className="bx bx-sm bxs-school mr-2"></i> Program
-                        Studi
-                    </NavLink>
-                    <NavLink
-                        href={route("user.index")}
-                        // active={route().current("dashboard")}
-                    >
-                        <i className="bx bx-sm bx-group mr-2"></i> Dosen
-                    </NavLink>
-                    <NavLink
-                        href={route("rooms.index")}
-                        // active={route().current("dashboard")}
-                    >
-                        <i className="bx bx-sm bx-door-open mr-2"></i> Ruangan
-                    </NavLink>
-                    <NavLink
-                        href={route("subject.index")}
-                        // active={route().current("dashboard")}
-                    >
-                        <i className="bx bx-sm bx-file mr-2"></i> Mata Kuliah
-                    </NavLink>
-                    <NavLink
-                        href={route("dashboard")}
-                        // active={route().current("dashboard")}
-                    >
-                        <i className="bx bx-sm bx-info-square mr-2"></i> Info
-                        Permintaan
-                    </NavLink>
+                    {menuData?.map(menuData =>(
+                    // console.log((menuData.subMenus).length),
+                    (menuData.subMenus).length == 0 ? 
+                        <div key={menuData.id}>
+                            <NavLink
+                                href={route(`${menuData.route}`)}
+                                active={route().current(`${menuData.activeRoute}`)}
+                                className="nav-link"
+                            >
+                                 <i className={`nav-link bx bx-sm ${menuData.icon} mr-2`}></i>{menuData.name}
+                            </NavLink>
+                        </div>
+                :
+                    <div key={menuData.id}>
+                            <div
+                                className="w-full p-3 inline-flex items-center border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none border-transparent text-white hover:bg-blue-950 "
+                                onClick={()=>toggleSubMenu(menuData.id)}
+                                
+                                style={{cursor:'pointer'}}
+                            >
+                                <i className={`nav-link bx bx-sm ${menuData.icon} mr-2`}></i>{menuData.name}
+                            </div>
+                            
+                            {showSubMenu === menuData.id && menuData.subMenus && (
+                                <ul style={{
+                                    overflow: 'hidden',
+                                    transition: 'max-height 0.5s ease-out'
+                                }}>
+                                    {menuData.subMenus.map(subMenu => (
+                                        
+                                        <li >
+                                            <NavLink
+                                                href={route(`${subMenu.route}`)}
+                                                active={route().current(`${subMenu.activeRoute}`)}
+                                                className="nav-link"
+                                            >
+                                                <i className="bx bx-sm bx-bowling-ball mr-2 pl-6"></i>{subMenu.name}
+                                            </NavLink>
+                                        
+                                        </li>
+                                    ))}
+                                 </ul>
+                            )}
+                          
+                         
+                     </div>
+                    ))}
+                    
                 </div>
             </div>
             <main className="w-full">

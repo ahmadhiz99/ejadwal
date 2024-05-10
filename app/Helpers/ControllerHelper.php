@@ -11,38 +11,29 @@ class ControllerHelper{
      */
     public static function ch_datas($config){
         try {
+            $db;
             $model_name = '\\App\\Models\\'.$config['model'];
             $model = new $model_name;
-            if(isset($config['join']) && (!isset($config['id']) || $config['id']==null || $config['id']=='' )){
 
+            if(isset($config['join']) && (!isset($config['id']) || $config['id']==null || $config['id']=='' )){
                 $join = $config['join'];
                 $table_master = $config['table_master'];
-                $select_master =     $table_master.".*";
-                $select_joins = '';
 
-                foreach($join as $join_type => $data){
-                    $tables = $config['join'][$join_type];
-                    $db =  DB::table($table_master);
-                        $num_alias = 0;
-                        $db->select($select_master);
+                $db =  DB::table($table_master['table_name'].' as '.$table_master['alias']);
+                $db->select($table_master['select']);
 
-                        foreach($tables as $table => $columns){
-                            $num_alias++;
-                            $column_join = $columns[0];
-                            $column_master = $columns[1];
-                            $column_join_select = $columns[2];
-                            $table_join = $table.' as a'.$num_alias;
-                            $column_relation_1 = 'a'.$num_alias.'.'.$column_join;
-                            $column_relation_2 = $table_master.'.'.$column_master;
-                            $select_join = 'a'.$num_alias.'.'.$column_join_select;
-                            
-                            $db->$join_type($table_join,$column_relation_1,'=',$column_relation_2 );
-                            $select_joins .= ", '".$select_join."'";
+                foreach($join as $table => $tableConfig){
+                        $table_join = $table;
+                        $join_type = $tableConfig['join_type'];
+                        $alias = $table.' as '.$tableConfig['alias'];
 
-                            $db->addselect($select_join);
-                        }
-                        $result = $db->paginate(5);
-                    }
+                        $on = explode(" ",$tableConfig['on']);
+                        $db->$join_type($alias,$on[0],$on[1],$on[2]);
+
+                        $db->addselect($tableConfig['select']);
+                        $result = $db->get();
+                }
+                
                 $data = $result;
                 $status = true;
                 $message = count($result).' Datas Found!';
@@ -62,6 +53,46 @@ class ControllerHelper{
                 $message = 'Data Not Found!';
                 $data = null;
                 $statusCode = 404;
+            }
+
+            if(isset($config['where_condition'])){
+                if(!isset($config['join'])){
+                    $db = $model;
+                }
+                $condition = $config['where_condition'];
+                foreach($condition as $key => $conds){
+                     // Equals Condition
+                    if($key == 'equals'){
+                        $model = $db->where($conds);
+                    }
+                    // Where In Condition
+                    if($key == 'in'){
+                        $model = $db->wherein($conds['column'],$conds['value']);
+                    }
+                    // Where Not In Condition
+                    if($key == 'not_in'){
+                        $model = $db->whereNotIn($conds['column'],$conds['value']);
+                    }
+                    // Group By Condition
+                    if($key == 'group_by'){
+                        $model = $db->groupBy($conds['column']);
+                    }
+                    // Order By Condition
+                    if($key == 'order_by'){
+                        $model = $db->orderBy($conds['column'],$conds['value']);
+                    }
+                    // Paginate Condition
+                    if($key == 'paginate'){
+                        $model = $db->paginate($conds['value']);
+                    }
+                    // $data = $model->orderBy('name','ASC')->paginate(5);
+                    $data = $model;
+                }
+                
+               
+                $status = true;
+                $message = count($data).' Datas Found!';
+                $statusCode = 200;
             }
         } catch (\Throwable $th) {
             $status = false;
