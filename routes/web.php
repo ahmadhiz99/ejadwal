@@ -109,8 +109,12 @@ Route::get('/menu', function () {
     return Inertia::render('Builder/TableBuilder',['data'=>$data]);
 })->middleware(['auth', 'verified'])->name('menu.menus');
 Route::get('/menu/add', function () {
-    $data = session()->get('SessSelectionData');
-    return Inertia::render('SysMenu/FormMenu');
+    $data = session()->get('SessTableData');
+    return Inertia::render('Builder/FormBuilder',['data'=>$data]);
+})->middleware(['auth', 'verified'])->name('menu.formmenu');
+Route::get('/menu/edit', function () {
+    $data = session()->get('SessTableData');
+    return Inertia::render('Builder/FormBuilder',['data'=>$data]);
 })->middleware(['auth', 'verified'])->name('menu.formmenu');
 Route::get('/menu/show', function () {
     $data = session()->get('SessTableData');
@@ -284,6 +288,7 @@ Route::group(['middleware' => 'checkRole:super,admin,client'], function() {
       Route::get('/menu-create', [MenusController::class, 'create'])->name('menu.create');
       Route::post('/menu-store', [MenusController::class, 'store']);
       Route::get('/menu-show/{id}', [MenusController::class, 'show'])->name('menu.show');
+      Route::get('/menu-edit/{id}', [MenusController::class, 'edit'])->name('menu.edit');
       Route::put('/menu-update/{id}', [MenusController::class, 'update'])->name('menu.update');
       Route::delete('/menu-destroy/{id}', [MenusController::class, 'destroy'])->name('menu.delete');
  

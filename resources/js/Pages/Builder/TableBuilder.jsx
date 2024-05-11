@@ -8,25 +8,25 @@ export default function TableBuilder({ auth }) {
     const data = usePage().props.data.data.original.data;
     const dataTable = usePage().props.data.dataTable;
 
-
-    console.log(dataTable);
-    const detail = (e, id) => {
+    const detail = (e, route, id) => {
         e.preventDefault();
-        router.visit(`/menu-show/${id}`, {
+        router.visit(`/${route}/${id}`, {
             method: "get",
-            // data: {
-            //     prodi_name: prodiName,
-            //     description: description,
-            // },
         });
     };
-    const deleteData = (e, id) => {
+    const edit = (e, route, id) => {
         e.preventDefault();
-        router.visit(`/menu-destroy/${id}`, {
+        router.visit(`/${route}/${id}`, {
+            method: "get",
+        });
+    };
+    const deleteData = (e, route ,id) => {
+        e.preventDefault();
+        router.visit(`/${route}/${id}`, {
             method: "delete",
-            // onSuccess: () => {
-            //     toast.success("Berhasil hapus!");
-            // },
+            onSuccess: () => {
+                toast.success("Berhasil hapus!");
+            },
         });
     };
     return (
@@ -60,11 +60,21 @@ export default function TableBuilder({ auth }) {
                         <div className="p-6 text-gray-900">
                             <div className="page-head flex flex-row justify-between items-center">
                                 <h1 className="text-xl font-bold">
-                                    Menu
+                                    {dataTable.tableConfig.title? dataTable.tableConfig.title : null}
                                 </h1>
-                                <ButtonLink href={"menu.create"}>
-                                    Tambah Baru
-                                </ButtonLink>
+                                {dataTable.tableConfig.action.feature  ? dataTable.tableConfig.action.feature.map((data_feature,idx)=>{
+                                    if (data_feature.feature == 'add'){
+                                        return(
+                                            <ButtonLink href={data_feature.route}>
+                                                {data_feature.alias}
+                                            </ButtonLink>
+                                        )
+                                    }
+                                })
+                                :
+                                null
+                                }
+
                             </div>
                         </div>
                     </div>
@@ -91,7 +101,7 @@ export default function TableBuilder({ auth }) {
                                                     )
                                                 })
                                                 :
-                                                console.log(dataTable)
+                                                null
                                             }
                                             {dataTable.tableConfig.action?
                                                 (
@@ -139,12 +149,13 @@ export default function TableBuilder({ auth }) {
                                                                                     onClick={(
                                                                                         e
                                                                                     ) =>
-                                                                                        events(
+                                                                                        detail(
                                                                                             e,
+                                                                                            data_feature.route,
                                                                                             data_table.id,
                                                                                         )
                                                                                     }
-                                                                                    className="bx bx-fw bx-info-circle"
+                                                                                    className={`bx bx-fw ${data_feature.icon} `}
                                                                                 ></i>
                                                                         )
                                                                             
@@ -154,12 +165,13 @@ export default function TableBuilder({ auth }) {
                                                                                 onClick={(
                                                                                     e
                                                                                 ) =>
-                                                                                    deleteData(
+                                                                                    edit(
                                                                                         e,
+                                                                                        data_feature.route,
                                                                                         data_table.id
                                                                                     )
                                                                                 }
-                                                                                className="bx bx-fw bx-home text-rose-500"
+                                                                                className={`bx bx-fw ${data_feature.icon} text-rose-500`}
                                                                             ></i>
                                                                             )
                                                                     }else if( data_feature.feature == 'delete' ){
@@ -170,10 +182,11 @@ export default function TableBuilder({ auth }) {
                                                                             ) =>
                                                                                 deleteData(
                                                                                     e,
+                                                                                    data_feature.route,
                                                                                     data_table.id
                                                                                 )
                                                                             }
-                                                                            className="bx bx-fw bx-trash text-rose-500"
+                                                                            className={`bx bx-fw ${data_feature.icon} text-rose-500`}
                                                                         ></i>
                                                                         )
                                                                 }else{

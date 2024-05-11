@@ -140,12 +140,14 @@ class MenusController extends Controller
                             'columnMode'=>'manual',/* manual/auto */
                             'columnCase'=>'camel',/* upper/lowercase/camel/pascal */
                             'orderColumn' =>'id,asc', /* name column then asc or desc */
+                            'title' => 'Menus',
                             'action' => [ 
                                 'alias' => 'Aksi',
                                 'feature' => [ /*feature = add,edit,delete */
-                                    ['feature'=>'add', 'alias'=> 'Tambah', 'icon'=>'','disabled'=>'false','hide'=>'false'], 
-                                    ['feature'=>'edit', 'alias'=> 'Edit', 'icon'=>'','disabled'=>'false','hide'=>'false'], 
-                                    ['feature'=>'delete', 'alias'=> 'Hapus', 'icon'=>'','disabled'=>'false','hide'=>'false'], 
+                                    // ['feature'=>'detail', 'alias'=> 'Detail', 'route'=>'menu-show', 'icon'=>'bx-info-circle','disabled'=>'false','hide'=>'false'], 
+                                    ['feature'=>'edit', 'alias'=> 'Edit', 'route'=>'menu-edit', 'icon'=>'bx-pencil','disabled'=>'false','hide'=>'false'], 
+                                    ['feature'=>'delete', 'alias'=> 'Hapus', 'route'=>'menu-destroy', 'icon'=>'bx-trash','disabled'=>'false','hide'=>'false'], 
+                                    ['feature'=>'add', 'alias'=> 'Tambah', 'route'=>'menu.create', 'icon'=>'','disabled'=>'false','hide'=>'false'], 
                                 ]
                             ]
                         ],
@@ -168,10 +170,32 @@ class MenusController extends Controller
      */
     public function create()
     {
-        return response()->json([
-            'message' => 'true',
-            'data'=> []
-        ],200);
+        $req = [
+            'id'=>null
+        ];
+        $config = Self::configController($req);
+        $data = ControllerHelper::ch_datas($config);
+        $dataMenu = $data->original['data'];
+
+        $dataForm = [
+            'formConfig' => [
+                'title' => 'Tambah Menu Baru', /*title page*/
+                'route'=> '/menu-store', /*route backend*/
+                'formInput' => [
+                    ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Nama Menu','state'=>'name','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>''],
+                    ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Nama Kode','state'=>'code','required'=>'true','note'=>'','data'=>''],
+                    ['inputType'=>'dropdown','dataType'=>'text','alias'=>'Parent','state'=>'parent','required'=>'true','note'=>'','data'=>$dataMenu],
+                    // ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Parent','state'=>'parent','required'=>'true','note'=>'','data'=>''],
+                    ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Route','state'=>'route','required'=>'true','note'=>'','data'=>''],
+                    ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Active','state'=>'is_active','required'=>'true','note'=>'','data'=>''],
+                    ['inputType'=>'textarea','dataType'=>'text','alias'=>'Deskripsi','state'=>'description','required'=>'false','note'=>'','data'=>''],
+                ],
+            ],
+        ];
+
+        $data = ['dataForm'=>$dataForm];
+        return redirect('/menu/add')->with("SessTableData", $data);// Variable has to come from here
+ 
     }
 
     /**
@@ -221,34 +245,34 @@ class MenusController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request)
+    public function edit(Request $request,$id)
     {
         //
-        $role = Role::find($request);
+        $req = [
+            'id'=>$id
+        ];
 
-        try {
-          
-            if(count($role)>0){
-                // return Inertia::render('Profile/Edit');
-                return response()->json([
-                    'message' => 'Data Exist!',
-                    'status' => 'true',
-                    'data'=> [$role]
-                ],200);
-            }else{
-                return response()->json([
-                    'message' => 'Data Empty!',
-                    'status' => 'true',
-                    'data'=> [$role]
-                ],200);
-            }
-        } catch (\Throwable $th) {
-            return response()->json([
-                'message' => 'Failed',
-                'status' => 'false',
-                'data'=> $th->getMessage()
-            ],500);
-        }
+        $config = Self::configController($req);
+        $data = ControllerHelper::ch_datas($config);
+        // $data = Menu::find($id);
+        $dataForm = [
+            'formConfig' => [
+                'title' => 'Edit Data Menu', /*title page*/
+                'route'=> '/menu-update', /*route backend*/
+                'method'=> 'post', /* post for create, put/patch for update */
+                'formInput' => [
+                    ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Nama Menu','state'=>'name','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>''],
+                    ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Nama Kode','state'=>'code','required'=>'true','note'=>'','data'=>''],
+                    ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Parent','state'=>'parent','required'=>'true','note'=>'','data'=>''],
+                    ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Route','state'=>'route','required'=>'true','note'=>'','data'=>''],
+                    ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Active','state'=>'is_active','required'=>'true','note'=>'','data'=>''],
+                    ['inputType'=>'textarea','dataType'=>'text','alias'=>'Deskripsi','state'=>'description','required'=>'false','note'=>'','data'=>''],
+                ],
+            ],
+        ];
+        $data = ['data'=>$data, 'dataForm'=>$dataForm];
+        return redirect('/menu/edit')->with("SessTableData", $data);// Variable has to come from here
+        
     }
 
     /**

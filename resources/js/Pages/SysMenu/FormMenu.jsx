@@ -8,7 +8,11 @@ import { Head, router, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 export default function FormMenu({ auth }) {
-    const data = usePage().props.data?.original.data;
+    // const data = usePage().props.data?.original.data;
+    const dataForm = usePage().props.data.dataForm;
+
+    console.log(dataForm);
+
     const [menuName, setMenuName] = useState(data ? data.menu_name : "");
     const [description, setDescription] = useState(
         data ? data.description : ""
