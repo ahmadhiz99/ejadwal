@@ -9,8 +9,7 @@ import { Head, router, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 export default function FormBuilder({ auth }) {
-    // const data = usePage().props.data.original?.data;
-    const data = usePage().props.data.data?.original.data;
+    const data = usePage().props.data.data;
     const dataForm = usePage().props.data?.dataForm;
     const [formData, setFormData] = useState(data ? data : "");
 
@@ -44,9 +43,7 @@ export default function FormBuilder({ auth }) {
                         <div className="p-6 text-gray-900">
                             <div className="page-head flex flex-row items-center">
                                 <h1 className="text-xl font-bold">
-                                    {data
-                                        ? `Detail ${data.menu_name}`
-                                        : 
+                                    {
                                         dataForm.formConfig?.title
                                     }
                                 </h1>
@@ -77,6 +74,8 @@ export default function FormBuilder({ auth }) {
                                                             }
                                                         />
                                                         <TextInput
+                                                            className="required"
+                                                            type={form_data.dataType}
                                                             value={formData[form_data.state]}
                                                             onChange={(e)=>handleChange(e,form_data.state)}
                                                         />
@@ -141,9 +140,11 @@ export default function FormBuilder({ auth }) {
                                                             value={formData[form_data.state]}
                                                             onChange={(e)=>handleChange(e,form_data.state)}
                                                             >
-                                                            {form_data.data.data ? form_data.data.data.map((item, idx)=>{
+                                                                <option className="rounded-md" value={form_data.data.default}>--Choose--</option>
+                                                            {
+                                                            form_data.data ? form_data.data.data.map((item, idx)=>{
                                                                 return (
-                                                                    <option className="rounded-md" value={item.id}>{item.name}</option>
+                                                                    <option className="rounded-md" value={item[form_data.data.id]}>{item[form_data.data.name]}</option>
                                                                 )
                                                             })
                                                             :
@@ -171,7 +172,7 @@ export default function FormBuilder({ auth }) {
                                     
                                     <div className="flex flex-row gap-2">
                                         <SecondaryButtonLink
-                                            href="programstudies.index"
+                                            href="builder.table-builder"
                                             className="flex flex-row items-center"
                                         >
                                             <p className="text-xs">Batal</p>

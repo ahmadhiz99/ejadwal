@@ -1,22 +1,22 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\Role;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\helpers\ControllerHelper;
+use App\Models\Menu;
+use App\Models\Sys_Content;
 use Inertia\Inertia;
-use App\Helpers\ControllerHelper;
+use Illuminate\Support\Facades\Validator;
 
-
-class RolesController extends Controller
+class Sys_ContentController extends Controller
 {
-    public static $title = 'Role';
-    public static $mainRoute = 'role';
+    public static $title = 'Konten';
+    public static $mainRoute = 'content';
     public static $mainBuilder = 'builder';
     public static $subRoute = [];
-    public static $model = 'Role';
-    
+    public static $model = 'Sys_Content';
+    public static $master_table = 'sys_content';
+
     public  function __construct() {
         // routingan backend
         self::$subRoute = [
@@ -31,113 +31,56 @@ class RolesController extends Controller
         ];
     }
 
-    function table_view(){
-        
+    function get_validator(){
+        return [
+            'name' => 'required',
+            'value' => 'required',
+        ];
+    }
+
+    function table_view($params = null){
         Self::purgeConfig();
+
+        $req = [
+            'id'=>null,
+        ];
+
+        if($params == 'get_req'){
+            return $req;
+        }
+
         $tableReq = [
             'type' => 'generate', /* generate/manual */
             'column_show' => '',
             'column_block' => [
-                'created_at','updated_at'
+                'created_at','updated_at','program_study_id','role_id','menu_id','id'
             ],
         ];
 
-        $req = [
-            'id'=>null,
-            // 'table_master' => [
-            //     'table_name' => 'subjects',
-            //     'alias' => 'a',
-            //     'select'=>'a.*',
-            // ],
-            // 'join' => [
-            //     'program_studies'=>[
-            //         'join_type'=>'leftJoin',
-            //         'alias'=> 'b',
-            //         'on'=>'a.program_study_id = b.id',
-            //         'select'=> [['b.prodi_name'],['b.description'],['b.created_at as created_at_prodi']
-            //     ],
-            // ],
-        // ],
-            // 'where_condition' => [
-            //     'equals' => [
-            //         ['parent','=','0']
-            //     ]
-            // ]
-        ];
-        
         $config = Self::configController($req);
         $dataTable = (ControllerHelper::ch_datas($config));
-        
-        if($tableReq['type'] == 'generate'){
-            $data=[];
-            $dataColumn=[];
-            $dataForm = $dataTable[0];
-            foreach($dataForm as $key1 => $data1){
-                foreach($tableReq['column_block'] as $key2 => $data2){
-                    if($key1 == $data2){
-                        unset($dataForm->$key1);
-                    }
-                }
-            }
 
-            foreach($dataForm as $key => $val){
-                $dataColumn['column'] = $key;
-                if(str_contains($key,'_')){
-                    $generate_column = str_replace('_', ' ', ucwords($key, '_'));
-                    $dataColumn['alias'] = $generate_column;
-                }else{
-                    $generate_column = ucwords($key);
-                    $dataColumn['alias'] = $generate_column;
-                }
-                array_push($data,$dataColumn);
-            }
-            return $data;
-            
-        }else{
-            $data = [
-                    ['column' => 'subject_name', 'alias' => 'Nama Mata Kuliah', 'data' => '', 'className'=>''],
-                    ['column' => 'code', 'alias' => 'Kode', 'data' => '', 'className'=>''],
-                    ['column' => 'sks', 'alias' => 'Sks', 'data' => '', 'className'=>''],
-                    ['column' => 'semester', 'alias' => 'Semester', 'data' => '', 'className'=>''],
-                    ['column' => 'prodi_name', 'alias' => 'Progam Studi', 'data' => '', 'className'=>''],
-                ];
-            return $data;
-        }
+        return self::generate_table_view($tableReq, $dataTable);
     }
 
-    function form_view() {
+    function form_view($params = null) {
         Self::purgeConfig();
-        $req = [
-            'id'=>null,
-            // 'table_master' => [
-            //     'table_name' => 'program_studies',
-            //     'alias' => 'a',
-            //     'select'=>'a.*',
-            // ],
+       
+        $dataDropdown =[
+            ['id'=>'1','name'=>'active'],
+            ['id'=>'0','name'=>'no active'],
         ];
-        $config = Self::configController($req);
-        $dataDropdown = ControllerHelper::ch_datas($config);
-        // $dataDropdown =[
-        //     ['id'=>'1','name'=>'active'],
-        //     ['id'=>'0','name'=>'no active'],
-        // ];
-        $dataProgramStudy = ['default'=>'0','id'=>'id','name'=>'prodi_name','data'=>$dataDropdown];
+        $data_active = ['default'=>'0','id'=>'id','name'=>'name','data'=>$dataDropdown];
     
         $data = [
-            ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Nama Role','state'=>'role_name','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>''],
-            ['inputType'=>'TextInput','dataType'=>'number','alias'=>'Level','state'=>'level','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>''],
-            ['inputType'=>'textarea','dataType'=>'number','alias'=>'Deskripsi','state'=>'description','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>''],
-            // ['inputType'=>'dropdown','dataType'=>'text','alias'=>'Program Studi Id','state'=>'name','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>$dataProgramStudy],
+            ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Nama Konten','state'=>'name','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>''],
+            ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Isi Konten','state'=>'value','required'=>'true','note'=>'','data'=>''],
+            ['inputType'=>'dropdown','dataType'=>'text','alias'=>'Active','state'=>'is_active','required'=>'true','note'=>'','data'=>$data_active],
+            ['inputType'=>'textarea','dataType'=>'text','alias'=>'Deskripsi','state'=>'description','required'=>'false','note'=>'','data'=>''],        
         ];
         return $data;
     }
 
-    function get_validator(){
-        return [
-            'role_name' => 'required',
-            'level' => 'required',
-        ];
-    }
 
      function configController($params = null){
         $config = [
@@ -164,53 +107,20 @@ class RolesController extends Controller
     {
         $req = [
             'id'=>null,
-            'where_condition' => [
-                "equals" => [
-                    // ['a.parent','=','0'],
-                //     // ['b.role_id','=',auth()->user()->role_id],
-                    ['a.is_active','=','1'],
-                ],
-            ]
         ];
 
         $config = Self::configController($req);
         $data = ControllerHelper::ch_datas($config);
         
-        Self::purgeConfig();
-      
-
-        $config = Self::configController($req);
-        $subData = ControllerHelper::ch_datas($config);
-        $dataFromJson = $data;
-        $dataSubFromJson = $subData;
-
-
-        $dataEncode = json_encode($dataFromJson);
-        // return redirect('/menu-page')->with("SessTableData", $dataEncode);// Variable has to come from here
-        return $dataEncode;
+        return $data;
     }
 
     public function table(){
-        $req = [
-            'id'=>null,
-            // 'table_master' => [
-            //     'table_name'=>'subjects',
-            //     'alias'=>'a',
-            //     'select'=> 'a.*',
-            // ],
-            // 'join'=>[
-            //     'program_studies'=>[
-            //         'join_type' => 'leftJoin',
-            //         'alias'=>'b',
-            //         'on'=>'a.program_study_id = b.id',
-            //         'select' => [['b.prodi_name'],['b.description'],['b.id as id_prodi'],['b.created_at as created_at_prodi']]
-            //     ]
-            // ]
-        ];
+
+       $req = self::table_view('get_req');
 
         $config = Self::configController($req);
         $data = ControllerHelper::ch_datas($config);
-        // dd($data);
         $dataTable = [
                         'tableConfig' => [
                             'idType'=>['alias'=>'No','type'=>'number'],/* number/alphabet */
@@ -367,5 +277,42 @@ class RolesController extends Controller
         $config = Self::configController($req);
         return ControllerHelper::ch_destroy($config);
         
+    }
+
+    function generate_table_view($tableReq, $dataTable){
+        if($tableReq['type'] == 'generate'){
+            $data=[];
+            $dataColumn=[];
+            $dataForm = $dataTable[0];
+            foreach($dataForm as $key1 => $data1){
+                foreach($tableReq['column_block'] as $key2 => $data2){
+                    if($key1 == $data2){
+                        unset($dataForm->$key1);
+                    }
+                }
+            }
+
+            foreach($dataForm as $key => $val){
+                $dataColumn['column'] = $key;
+                if(str_contains($key,'_')){
+                    $generate_column = str_replace('_', ' ', ucwords($key, '_'));
+                    $dataColumn['alias'] = $generate_column;
+                }else{
+                    $generate_column = ucwords($key);
+                    $dataColumn['alias'] = $generate_column;
+                }
+                array_push($data,$dataColumn);
+            }
+            return $data;
+            
+        }else{
+            $data = [
+                        ['column' => 'name', 'alias' => 'Nama', 'data' => '', 'className'=>''],
+                        ['column' => 'value', 'alias' => 'Isi Konten', 'data' => '', 'className'=>''],
+                        ['column' => 'description', 'alias' => 'Deskripsi', 'data' => '', 'className'=>''],
+                        ['column' => 'is_active', 'alias' => 'Active', 'data' => '', 'className'=>''],
+                    ];
+            return $data;
+        }
     }
 }

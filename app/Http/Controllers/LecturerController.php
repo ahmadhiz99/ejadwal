@@ -2,25 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use App\Helpers\ControllerHelper;
 
 
-class RolesController extends Controller
+class LecturerController extends Controller
 {
-    public static $title = 'Role';
-    public static $mainRoute = 'role';
+    // new
+    public static $title = 'Dosen';
+    public static $mainRoute = 'lecturer';
     public static $mainBuilder = 'builder';
     public static $subRoute = [];
-    public static $model = 'Role';
+    public static $model = 'User';
+    public static $master_table = 'users';
     
     public  function __construct() {
         // routingan backend
         self::$subRoute = [
-            'index' => self::$mainBuilder . '.index',
+            'index' => self::$mainRoute . '.index',
             'table' => self::$mainRoute . '.table',
             'show' => self::$mainRoute . '.show',
             'create' => self::$mainRoute . '.create',
@@ -31,111 +34,47 @@ class RolesController extends Controller
         ];
     }
 
-    function table_view(){
-        
-        Self::purgeConfig();
-        $tableReq = [
-            'type' => 'generate', /* generate/manual */
-            'column_show' => '',
-            'column_block' => [
-                'created_at','updated_at'
-            ],
+    function table_view() {
+        $data = [
+            ['column' => 'name', 'alias' => 'Nama', 'data' => '', 'className'=>''],
+            ['column' => 'email', 'alias' => 'Email', 'data' => '', 'className'=>''],
+            ['column' => 'role_id', 'alias' => 'Role', 'data' => '', 'className'=>''],
         ];
-
-        $req = [
-            'id'=>null,
-            // 'table_master' => [
-            //     'table_name' => 'subjects',
-            //     'alias' => 'a',
-            //     'select'=>'a.*',
-            // ],
-            // 'join' => [
-            //     'program_studies'=>[
-            //         'join_type'=>'leftJoin',
-            //         'alias'=> 'b',
-            //         'on'=>'a.program_study_id = b.id',
-            //         'select'=> [['b.prodi_name'],['b.description'],['b.created_at as created_at_prodi']
-            //     ],
-            // ],
-        // ],
-            // 'where_condition' => [
-            //     'equals' => [
-            //         ['parent','=','0']
-            //     ]
-            // ]
-        ];
-        
-        $config = Self::configController($req);
-        $dataTable = (ControllerHelper::ch_datas($config));
-        
-        if($tableReq['type'] == 'generate'){
-            $data=[];
-            $dataColumn=[];
-            $dataForm = $dataTable[0];
-            foreach($dataForm as $key1 => $data1){
-                foreach($tableReq['column_block'] as $key2 => $data2){
-                    if($key1 == $data2){
-                        unset($dataForm->$key1);
-                    }
-                }
-            }
-
-            foreach($dataForm as $key => $val){
-                $dataColumn['column'] = $key;
-                if(str_contains($key,'_')){
-                    $generate_column = str_replace('_', ' ', ucwords($key, '_'));
-                    $dataColumn['alias'] = $generate_column;
-                }else{
-                    $generate_column = ucwords($key);
-                    $dataColumn['alias'] = $generate_column;
-                }
-                array_push($data,$dataColumn);
-            }
-            return $data;
-            
-        }else{
-            $data = [
-                    ['column' => 'subject_name', 'alias' => 'Nama Mata Kuliah', 'data' => '', 'className'=>''],
-                    ['column' => 'code', 'alias' => 'Kode', 'data' => '', 'className'=>''],
-                    ['column' => 'sks', 'alias' => 'Sks', 'data' => '', 'className'=>''],
-                    ['column' => 'semester', 'alias' => 'Semester', 'data' => '', 'className'=>''],
-                    ['column' => 'prodi_name', 'alias' => 'Progam Studi', 'data' => '', 'className'=>''],
-                ];
-            return $data;
-        }
+        return $data;
     }
 
     function form_view() {
         Self::purgeConfig();
         $req = [
             'id'=>null,
-            // 'table_master' => [
-            //     'table_name' => 'program_studies',
-            //     'alias' => 'a',
-            //     'select'=>'a.*',
-            // ],
+            'where_condition' => [
+                'equals' => [
+                    ['parent','=','0']
+                ]
+            ]
         ];
         $config = Self::configController($req);
-        $dataDropdown = ControllerHelper::ch_datas($config);
-        // $dataDropdown =[
-        //     ['id'=>'1','name'=>'active'],
-        //     ['id'=>'0','name'=>'no active'],
-        // ];
-        $dataProgramStudy = ['default'=>'0','id'=>'id','name'=>'prodi_name','data'=>$dataDropdown];
-    
+        $dataParent = ControllerHelper::ch_datas($config);
+
         $data = [
-            ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Nama Role','state'=>'role_name','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>''],
-            ['inputType'=>'TextInput','dataType'=>'number','alias'=>'Level','state'=>'level','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>''],
-            ['inputType'=>'textarea','dataType'=>'number','alias'=>'Deskripsi','state'=>'description','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>''],
-            // ['inputType'=>'dropdown','dataType'=>'text','alias'=>'Program Studi Id','state'=>'name','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>$dataProgramStudy],
+            ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Nama User','state'=>'name','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>''],
+                    ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Email','state'=>'email','required'=>'true','note'=>'','data'=>''],
+                    ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Password','state'=>'password','required'=>'true','note'=>'','data'=>''],
+                    ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Status','state'=>'status','required'=>'true','note'=>'','data'=>''],
+                    ['inputType'=>'TextInput','dataType'=>'text','alias'=>'NIS','state'=>'nis','required'=>'true','note'=>'','data'=>''],
+                    ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Role Id','state'=>'role_id','required'=>'true','note'=>'','data'=>''],
+                    ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Program Studi Id','state'=>'program_study_id','required'=>'true','note'=>'','data'=>''],
         ];
         return $data;
     }
 
     function get_validator(){
         return [
-            'role_name' => 'required',
-            'level' => 'required',
+            'name' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+            'nis' => 'required',
+            'program_study_id' => 'required'
         ];
     }
 
@@ -157,60 +96,20 @@ class RolesController extends Controller
         $config = $configTemp;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
+    public function table(){
         $req = [
             'id'=>null,
-            'where_condition' => [
-                "equals" => [
-                    // ['a.parent','=','0'],
-                //     // ['b.role_id','=',auth()->user()->role_id],
-                    ['a.is_active','=','1'],
-                ],
+            'where_condition'=>[
+                'equals' => [
+                    ['role_id','=','3'],
+                    ['status','=','1'],
+                ]
             ]
         ];
 
         $config = Self::configController($req);
+
         $data = ControllerHelper::ch_datas($config);
-        
-        Self::purgeConfig();
-      
-
-        $config = Self::configController($req);
-        $subData = ControllerHelper::ch_datas($config);
-        $dataFromJson = $data;
-        $dataSubFromJson = $subData;
-
-
-        $dataEncode = json_encode($dataFromJson);
-        // return redirect('/menu-page')->with("SessTableData", $dataEncode);// Variable has to come from here
-        return $dataEncode;
-    }
-
-    public function table(){
-        $req = [
-            'id'=>null,
-            // 'table_master' => [
-            //     'table_name'=>'subjects',
-            //     'alias'=>'a',
-            //     'select'=> 'a.*',
-            // ],
-            // 'join'=>[
-            //     'program_studies'=>[
-            //         'join_type' => 'leftJoin',
-            //         'alias'=>'b',
-            //         'on'=>'a.program_study_id = b.id',
-            //         'select' => [['b.prodi_name'],['b.description'],['b.id as id_prodi'],['b.created_at as created_at_prodi']]
-            //     ]
-            // ]
-        ];
-
-        $config = Self::configController($req);
-        $data = ControllerHelper::ch_datas($config);
-        // dd($data);
         $dataTable = [
                         'tableConfig' => [
                             'idType'=>['alias'=>'No','type'=>'number'],/* number/alphabet */
@@ -230,7 +129,6 @@ class RolesController extends Controller
                         ],
                         'data'=> self::table_view()
                     ];
-
 
         $data = ['data'=>$data,'dataTable'=>$dataTable];
         session()->put("SessTableData", $data);
@@ -308,7 +206,6 @@ class RolesController extends Controller
 
         $config = Self::configController($req);
         $data = ControllerHelper::ch_datas($config);
-        // dd($data);
         
         $dataForm = [
             'formConfig' => [

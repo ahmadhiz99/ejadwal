@@ -16,6 +16,7 @@ export default function Authenticated({ user, header, children }) {
     // const data = usePage().props.data;
     const [menuData,setMenuData] = useState([]);
     const [showSubMenu, setShowSubMenu] = useState(false);
+    const [content, setContent] = useState();
 
     // Toggle submenu
     // const toggleSubMenu = (index) =>{
@@ -25,6 +26,7 @@ export default function Authenticated({ user, header, children }) {
     //         return updatedMenuData;
     //     });
     // }
+
     const toggleSubMenu = (menuId) => {
         setShowSubMenu(prevShowSubMenu =>(prevShowSubMenu === menuId ? null : menuId));
     };
@@ -34,9 +36,21 @@ export default function Authenticated({ user, header, children }) {
             try{
                 const response = await fetch('/menu-page');
                 const data = await response.json();
-                const menuDataWithSubMenu = data.data.data.map(item => ({...item,showSubMenu:false}));
+                const menuDataWithSubMenu = data.map(item => ({...item,showSubMenu:false}));
                 setMenuData(menuDataWithSubMenu);
-                // setMenuData(data.data.data);
+
+                const responseContent = await fetch('/content-page');
+                const dataContent = await responseContent.json();
+                // const contents = dataContent.map(item => ({[item.name]:item.value}));
+                
+                const contents = dataContent.reduce((acc, item) => {
+                    acc[item.name] = item.value;
+                    return acc;
+                  }, {});
+
+                setContent(contents);
+
+
             }catch(error){
                 console.error('Error Fetching menu data:',error);
             }
@@ -56,7 +70,7 @@ export default function Authenticated({ user, header, children }) {
             <div className="bg-blue-900 w-80 p-4">
                 <div className="flex flex-row gap-2 mb-5">
                     <img
-                        src="/assets/images/upy.png"
+                        src={content?.logo}
                         className="w-14 h-14"
                         alt=""
                     />
@@ -65,15 +79,14 @@ export default function Authenticated({ user, header, children }) {
                             onClick={() => toast.success("halo")}
                             className="font-bold text-2xl"
                         >
-                            E-Jadwal
+                            {content?.title_2}
                         </h1>
-                        <p className="text-xs">Fakultas Sains dan Teknologi</p>
+                        <p className="text-xs">{content?.title_3}</p>
                     </div>
                 </div>
                 <div className="flex flex-col gap-2">
                     {menuData?.map(menuData =>(
-                    // console.log((menuData.subMenus).length),
-                    (menuData.subMenus).length == 0 ? 
+                    (menuData.subMenus).length == 0  ? 
                         <div key={menuData.id}>
                             <NavLink
                                 href={route(`${menuData.route}`)}

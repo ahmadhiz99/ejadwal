@@ -11,59 +11,91 @@ class ControllerHelper{
      */
     public static function ch_datas($config){
         try {
+            DB::enableQueryLog();
             $db;
             $model_name = '\\App\\Models\\'.$config['model'];
             $model = new $model_name;
 
-            if(isset($config['join']) && (!isset($config['id']) || $config['id']==null || $config['id']=='' )){
-                $join = $config['join'];
+            if(isset($config['table_master'])){
                 $table_master = $config['table_master'];
-
                 $db =  DB::table($table_master['table_name'].' as '.$table_master['alias']);
-                $db->select($table_master['select']);
+                if(is_array($table_master['select'])){
+                    foreach($table_master['select'] as $val){
+                        $db->addselect($val);
+                    }
+                }else{
+                    $db->select($table_master['select']);
+                }
+                $model = $db;
+            }
 
-                foreach($join as $table => $tableConfig){
-                        $table_join = $table;
-                        $join_type = $tableConfig['join_type'];
-                        $alias = $table.' as '.$tableConfig['alias'];
+            if(isset($config['join']) ){
+                $join = $config['join'];
+                if(isset($join)){
+                    $table_master = $config['table_master'];
+                    $db =  DB::table($table_master['table_name'].' as '.$table_master['alias']);
+                    $db->select($table_master['select']);
+                }
+                // else{
+                        // $model = $model->leftJoin('program_studies','program_study_id','=','program_studies.id')->select('*');
+                        // $db = $model;
+                // }
+                       
+                    foreach($join as $table => $tableConfig){
+                            $table_join = $table;
+                            $join_type = $tableConfig['join_type'];
+                            $alias = $table.' as '.$tableConfig['alias'];
 
-                        $on = explode(" ",$tableConfig['on']);
-                        $db->$join_type($alias,$on[0],$on[1],$on[2]);
+                            $on = explode(" ",$tableConfig['on']);
+                            $db->$join_type($alias,$on[0],$on[1],$on[2]);
 
-                        $db->addselect($tableConfig['select']);
-                        $result = $db->get();
+                            if(is_array($tableConfig['select'])){
+                                foreach($tableConfig['select'] as $val){
+                                    $db->addselect($val);
+                                }
+                            }else{
+                                $db->addselect($val);
+                            }
+                            $model = $db;
+                    }
                 }
                 
-                $data = $result;
-                $status = true;
-                $message = count($result).' Datas Found!';
-                $statusCode = 200;
-            }else if(!isset($config['id']) || $config['id']==null || $config['id']==''){
-                $data = $model->paginate(5);
-                $status = true;
-                $message = count($data).' Datas Found!';
-                $statusCode = 200;
-            }else if(isset($config['id']) && $config['id'] != null && $config['id'] != ''){
-                $status = true;
-                $data = $model->find($config['id']);
-                $message = '1 Data Found!';
-                $statusCode = 200;
-            }else{
-                $status = false;
-                $message = 'Data Not Found!';
-                $data = null;
-                $statusCode = 404;
-            }
+
+
+            // if(!isset($config['id']) || $config['id']==null || $config['id']==''){
+            //     // $data = $model->paginate(5);
+            //     $data = $model->get();
+            //     $status = true;
+            //     $message = count($data).' Datas Found!';
+            //     $statusCode = 200;
+            // }
+
+            //  if(isset($config['id']) && $config['id'] != null && $config['id'] != ''){
+            //     $status = true;
+            //     $data = $model->find($config['id']);
+            //     $message = '1 Data Found!';
+            //     $statusCode = 200;
+            // }else{
+            //     $status = false;
+            //     $message = 'Data Not Found!';
+            //     $data = null;
+            //     $statusCode = 404;
+            // }
 
             if(isset($config['where_condition'])){
                 if(!isset($config['join'])){
                     $db = $model;
                 }
+
+
                 $condition = $config['where_condition'];
+                // dd($condition);
                 foreach($condition as $key => $conds){
-                     // Equals Condition
+                    // Equals Condition
                     if($key == 'equals'){
-                        $model = $db->where($conds);
+                        foreach($conds as $item){
+                            $model = $db->where($item[0],$item[1],$item[2]);
+                        }
                     }
                     // Where In Condition
                     if($key == 'in'){
@@ -82,30 +114,40 @@ class ControllerHelper{
                         $model = $db->orderBy($conds['column'],$conds['value']);
                     }
                     // Paginate Condition
-                    if($key == 'paginate'){
-                        $model = $db->paginate($conds['value']);
-                    }
-                    // $data = $model->orderBy('name','ASC')->paginate(5);
-                    $data = $model;
+                }
+            }
+
+           
+            if(isset($config['paginate'])){
+                $model = $model->paginate($config['paginate']);
+            }else{
+                if(isset($config['id']) && $config['id'] != null && $config['id'] != ''){
+                    $model = $model->find($config['id']);
+                }else{
+                    $model = json_decode($model->get());
                 }
                 
-               
-                $status = true;
-                $message = count($data).' Datas Found!';
-                $statusCode = 200;
             }
+            
+            
+            
+            $data = $model;
+            // dd(DB::getQueryLog());
+
         } catch (\Throwable $th) {
-            $status = false;
-            $message = 'Failed!';
-            $statusCode = 500;
+            // $status = false;
+            // $message = 'Failed!';
+            // $statusCode = 500;
             $data = $th->getMessage();
         }
 
-            return response()->json([
-                'message' => $message,
-                'status' => $status,
-                'data'=> $data
-            ],$statusCode);    
+        return $data;
+        
+            // return response()->json([
+            //     'message' => $message,
+            //     'status' => $status,
+            //     'data'=> $data
+            // ],$statusCode);    
     }
      /**
      * Function to get all data and spesific data.
@@ -140,6 +182,7 @@ class ControllerHelper{
             $data = $th->getMessage();
         }
 
+        return $data;
             return response()->json([
                 'message' => $message,
                 'status' => $status,
@@ -158,20 +201,66 @@ class ControllerHelper{
             $model_name = '\\App\\Models\\'.$config['model'];
             $model = new $model_name;
             
-            if(!isset($config['id']) || $config['id']==null || $config['id']==''){
-                $data = $model::create($config['request']);
-                $message = 'Success Insert Data!';
-            }else if(isset($config['id']) && $config['id'] != null && $config['id'] != ''){
-                $find = $model->find($config['id']);
-                $data = $find->update($config['request']);
-                $message = 'Success Update Data!';
+            
+            if(isset($config['reference_table']) && $config['reference_table']!=null && $config['reference_table']!=''){
+                $tables = $config['reference_table'];
+                $data_reference;
+                $idx= 0;
+                foreach($tables as $key => $value){
+                    $model = DB::table($key);
+
+                    if(!isset($config['id']) || $config['id']==null || $config['id']==''){
+                        if($idx == 0){
+                            $idx = $model->insertGetId($value[1]);
+                        }else{
+                            $data_merge = array_merge($value[1],[ $value[0] =>$idx]);
+                            // dd($data_merge);
+                            $data = $model->insert($data_merge);
+                        }
+                        $message = 'Success Insert Data!';
+                    }else if(isset($config['id']) && $config['id'] != null && $config['id'] != ''){
+                        $find = $model->where('id',$config['id']);
+                        $data = $find->update($value[1]);
+                        // $idx = $data[$value[0]];
+                        $message = 'Success Update Data!';
+                    }else{
+                        $data = false;
+                    }
+                }
+            }else if(isset($config['multiple_table']) && $config['multiple_table']!=null && $config['multiple_table']!=''){
+                $tables = $config['multiple_table'];
+                $data_reference;
+                $idx= 0;
+                foreach($tables as $key => $value){
+                    $model = DB::table($key);
+                    if(!isset($config['id']) || $config['id']==null || $config['id']==''){
+                        $idx = $model->insert($value);
+                        $data = $idx;
+                        $message = 'Success Insert Data!';
+                    }else if(isset($config['id']) && $config['id'] != null && $config['id'] != ''){
+                        $find = $model->find($config['id']);
+                        $data = $find->update($value);
+                        $message = 'Success Update Data!';
+                    }else{
+                        $data = false;
+                    }
+                }
             }else{
-                $data = false;
+                if(!isset($config['id']) || $config['id']==null || $config['id']==''){
+                    $data = $model::create($config['request']);
+                    $message = 'Success Insert Data!';
+                }else if(isset($config['id']) && $config['id'] != null && $config['id'] != ''){
+                    $find = $model->find($config['id']);
+                    $data = $find->update($config['request']);
+                    $message = 'Success Update Data!';
+                }else{
+                    $data = false;
+                }
             }
 
             if($data){
                 $status = true;
-                $data = $config['request'];
+                $data = 'Successfully';
                 $statusCode = 200;
             }else{
                 $status = false;

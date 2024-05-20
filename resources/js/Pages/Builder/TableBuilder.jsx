@@ -5,7 +5,7 @@ import { Head, router, usePage } from "@inertiajs/react";
 import { ToastContainer, toast } from "react-toastify";
 
 export default function TableBuilder({ auth }) {
-    const data = usePage().props.data.data.original.data;
+    const data = usePage().props.data;
     const dataTable = usePage().props.data.dataTable;
 
     const detail = (e, route, id) => {
@@ -24,6 +24,7 @@ export default function TableBuilder({ auth }) {
         e.preventDefault();
         router.visit(`/${route}/${id}`, {
             method: "delete",
+            preserveState: true,
             onSuccess: () => {
                 toast.success("Berhasil hapus!");
             },
@@ -43,15 +44,15 @@ export default function TableBuilder({ auth }) {
             <ToastContainer
                 position="top-right"
                 autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
+                hideProgressBar={'false'}
+                newestOnTop={'false'}
                 closeOnClick
-                rtl={false}
+                rtl={'false'}
                 pauseOnFocusLoss
                 draggable
                 pauseOnHover
                 theme="light"
-                transition={true}
+                transition={'true'}
             />
 
             <div className="py-8">
