@@ -165,6 +165,51 @@ export default function FormBuilder({ auth }) {
 
                                                 )
                                             }
+                                            // END DROPDOWN
+
+                                            // DROPDOWN RELATION
+                                            if(form_data.inputType == 'checkbox_relation'){
+                                                return (
+                                                    <div className="flex flex-col gap-2">
+                                                        <InputLabel
+                                                            className="text-sm"
+                                                            htmlFor="description"
+                                                            value={form_data.alias}
+                                                        />
+
+                                                            {form_data.data ? form_data.data.data.filter(items=>items.parent == formData[form_data.state_relation] ).map((item, idx)=>{
+                                                                return (
+                                                                    <span>
+                                                                    <input
+                                                                        name={item[form_data.data.id]}
+                                                                        type="checkbox"
+                                                                        className="mx-2 border-gray-300 focus:border-sky-500 focus:ring-sky-500 rounded-md shadow-sm"
+                                                                        value={item[form_data.data.id]}
+                                                                        onChange={(e)=>handleChange(e,form_data.state+'_'+item[form_data.data.id])}
+                                                                        />
+                                                                    <label htmlFor={item[form_data.data.id]}>{item[form_data.data.name]}</label>
+                                                                    </span>
+                                                                )
+                                                            })
+                                                            :
+                                                            null
+                                                            }
+
+                                                        {form_data.note || form_data.note != '' ? 
+                                                            (
+                                                                <p className="text-xs text-gray-400">
+                                                                   {form_data.note}
+                                                                </p>
+                                                            )
+                                                            :
+                                                            null
+                                                         }
+                                                    </div>
+
+                                                )
+                                            }
+                                            // END DROPDOWN RELATION
+                                            
 
                                         })
                                         :null

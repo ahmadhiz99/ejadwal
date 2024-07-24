@@ -7,10 +7,21 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use App\Helpers\ControllerHelper;
-
+use App\Helpers\MapperHelper;
+use App\Helpers\TableHelper;
 
 class SchedulesController extends Controller
 {
+    function __construct(){
+        $main_config = MapperHelper::get('SchedulesController');
+    }
+    
+    function purgeConfig(){
+        $configTemp = Self::configController();
+        $config = [];
+        $config = $configTemp;
+    }
+
      function configController($params = null){
         $config = [
             'model'=>'Schedule'
@@ -36,15 +47,40 @@ class SchedulesController extends Controller
         return ControllerHelper::ch_datas($config);
     }
 
+    public function table(){
+        // Get Mapping Tablw
+        $req = MapperHelper::schedules('table_req_query');
+        $req = MapperHelper::schedules('table_req_query');
+        $config = Self::configController($req);
+        $dataResult = ControllerHelper::ch_datas($config);
+
+        $dataTable = MapperHelper::schedules('dataTable');
+        $data = ['data'=>$dataResult,'dataTable'=>$dataTable];
+        session()->put("SessTableData", $data);
+        return redirect('/builder/table');
+
+        /**
+         * 
+         */
+        $req = MapperHelper::schedules();
+        $data = GeneratePages::_initial($MAIN_PAGE)
+                ->table(manual,$TABLE_CONFIG);
+
+        session()->put("SessTableData", $data);
+        return redirect('/builder/table');
+        
+     }
+
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return response()->json([
-            'message' => 'true',
-            'data'=> []
-        ],200);
+        $dataForm = MapperHelper::schedules('dataForm');
+
+        $data = ['dataForm'=>$dataForm];
+        session()->put("SessFormData", $data);
+        return redirect('/builder/table/add');
     }
 
     /**
@@ -53,9 +89,6 @@ class SchedulesController extends Controller
     public function store(Request $request)
     {
        
-        // $data = $request->all();
-        // $role = new Role;
-
         $validator = Validator::make($request->all(), [
             'start_date' => 'required',
             'end_date' => 'required',

@@ -33,7 +33,7 @@ class TxMenuController extends Controller
 
     function get_validator(){
         return [
-            'menu_id' => 'required',
+            // 'menu_id' => 'required',
             'role_id' => 'required',
             'is_active' => 'required'
         ];
@@ -47,7 +47,11 @@ class TxMenuController extends Controller
             'table_master' => [
                 'table_name' => 'tx_menu_roles',
                 'alias' => 'a',
-                'select'=>'a.*',
+                // 'select'=>"a.*",
+                'select'=>[
+                    'a.*',
+                    ['IF(a.is_active = 0,"Non Active","Active") as is_active','raw()']
+                ]
             ],
             'join' => [
                 'sys_menu'=>[
@@ -77,7 +81,7 @@ class TxMenuController extends Controller
             'type' => 'generate', /* generate/manual */
             'column_show' => '',
             'column_block' => [
-                'created_at','updated_at','program_study_id','role_id','menu_id','id'
+                'description','created_at','updated_at','program_study_id','role_id','menu_id','id'
             ],
         ];
 
@@ -97,10 +101,34 @@ class TxMenuController extends Controller
                 'alias' => 'a',
                 'select'=>'a.*',
             ],
+            'where_condition' => [
+                "equals" => [
+                    ['a.parent','=','0'],
+                ],
+            ],
         ];
         $config = Self::configController($req);
         $dataDropdown = ControllerHelper::ch_datas($config);
         $data_menu = ['default'=>'0','id'=>'id','name'=>'name','data'=>$dataDropdown];
+
+       
+        Self::purgeConfig();
+        $req = [
+            'id'=>null,
+            'table_master' => [
+                'table_name' => 'sys_menu',
+                'alias' => 'a',
+                'select'=>'a.*',
+            ],
+            'where_condition' => [
+                "equals" => [
+                    ['a.parent','<>','0'],
+                ],
+            ],
+        ];
+        $config = Self::configController($req);
+        $dataDropdownSub = ControllerHelper::ch_datas($config);
+        $data_menu_sub = ['default'=>'0','id'=>'id','name'=>'name','data'=>$dataDropdownSub];
 
         Self::purgeConfig();
         $req = [
@@ -128,10 +156,52 @@ class TxMenuController extends Controller
         $data_active = ['default'=>'0','id'=>'id','name'=>'name','data'=>$dataDropdown];
     
         $data = [
-            ['inputType'=>'dropdown','dataType'=>'text','alias'=>'Menu Name','state'=>'menu_id','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>$data_menu],
-            ['inputType'=>'dropdown','dataType'=>'number','alias'=>'Role Name','state'=>'role_id','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>$data_role],
-            ['inputType'=>'textarea','dataType'=>'number','alias'=>'Deskripsi','state'=>'description','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>''],
-            ['inputType'=>'dropdown','dataType'=>'text','alias'=>'Aktif','state'=>'is_active','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>$data_active],
+            [
+                'inputType'=>'dropdown',
+                'dataType'=>'text',
+                'alias'=>'Menu Name',
+                'state'=>'menu_id',
+                'required'=>'true',
+                'note'=>'Gunakan nama yang singkat namun informatif',
+                'data'=>$data_menu
+            ],
+            [
+                'inputType'=>'checkbox_relation',
+                'dataType'=>'text',
+                'alias'=>'Sub Menu',
+                'required'=>'true',
+                'note'=>'Gunakan nama yang singkat namun informatif',
+                'state'=>'menu_id',
+                'state_relation'=>'menu_id',
+                'data'=>$data_menu_sub
+            ],
+            [
+                'inputType'=>'dropdown',
+                'dataType'=>'number',
+                'alias'=>'Role Name',
+                'state'=>'role_id',
+                'required'=>'true',
+                'note'=>'Gunakan nama yang singkat namun informatif',
+                'data'=>$data_role
+            ],
+            [
+                'inputType'=>'textarea',
+                'dataType'=>'number',
+                'alias'=>'Deskripsi',
+                'state'=>'description',
+                'required'=>'true',
+                'note'=>'Gunakan nama yang singkat namun informatif',
+                'data'=>''
+            ],
+            [
+                'inputType'=>'dropdown',
+                'dataType'=>'text',
+                'alias'=>'Aktif',
+                'state'=>'is_active',
+                'required'=>'true',
+                'note'=>'Gunakan nama yang singkat namun informatif',
+                'data'=>$data_active
+            ],
         ];
         return $data;
     }
@@ -208,7 +278,7 @@ class TxMenuController extends Controller
                             'columnMode'=>'manual',/* manual/auto */
                             'columnCase'=>'camel',/* upper/lowercase/camel/pascal */
                             'orderColumn' =>'id,asc', /* name column then asc or desc */
-                            'title' => self::$title,
+                            'title' => self::$title, 
                             'action' => [ 
                                 'alias' => 'Aksi',
                                 'feature' => [ /*feature = add,edit,delete */
@@ -253,25 +323,48 @@ class TxMenuController extends Controller
      */
     public function store(Request $request)
     {
-        // $data = $request->all();
+
         $validator = Validator::make($request->all(), Self::get_validator());
 
-        $req = [
-            'id'=>null,
-            'request'=> $request->all(),
-        ];
+        $data = $request->all();
+        $dataArr = [];
 
-        if($validator->fails()){
-            return response()->json([
-                'message' => 'Store Role Failed!',
-                'status' => 'false',
-                'data'=> [$validator->messages()]
-            ],400);
-        }else{
-            $config = Self::configController($req);
-            ControllerHelper::ch_insert($config);
-            return to_route(self::$subRoute['table']);
+        $menuSubKeys = [];
+        $otherKeys = [];
+        
+        // Iterate through the array
+        foreach ($data as $key => $value) {
+            if (strpos($key, "menu_id") === 0) {
+                $menuSubKeys[$key] = $value;
+            } else {
+                $otherKeys[$key] = $value;
+            }
         }
+
+        foreach($menuSubKeys as $key => $val ){
+
+            $otherKeys["menu_id"] = $val;
+
+            $req = [
+                'id'=>null,
+                'request'=> $otherKeys,
+            ];
+
+            if($validator->fails()){
+                return response()->json([
+                    'message' => 'Store Role Failed!',
+                    'status' => 'false',
+                    'data'=> [$validator->messages()]
+                ],400);
+            }else{
+                $config = Self::configController($req);
+                ControllerHelper::ch_insert($config);
+            }
+        }
+
+        return to_route(self::$subRoute['table']);
+
+
     }
 
     /**

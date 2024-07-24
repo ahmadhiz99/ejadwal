@@ -16,10 +16,10 @@ class ControllerHelper{
             $model_name = '\\App\\Models\\'.$config['model'];
             $model = new $model_name;
 
-            if(isset($config['table_master'])){
+            if(isset($config['table_master'])){ // USING TABLE MASTER
                 $table_master = $config['table_master'];
                 $db =  DB::table($table_master['table_name'].' as '.$table_master['alias']);
-                if(is_array($table_master['select'])){
+                if(is_array($table_master['select'])){     // USING SELECT
                     foreach($table_master['select'] as $val){
                         $db->addselect($val);
                     }
@@ -29,17 +29,32 @@ class ControllerHelper{
                 $model = $db;
             }
 
-            if(isset($config['join']) ){
+            if(isset($config['join']) ){ // USING JOIN
                 $join = $config['join'];
+                
                 if(isset($join)){
                     $table_master = $config['table_master'];
                     $db =  DB::table($table_master['table_name'].' as '.$table_master['alias']);
-                    $db->select($table_master['select']);
+                    // $db->select($table_master['select']);
+                    if(is_array($table_master['select'])){     // USING SELECT
+                        foreach($table_master['select'] as $val){
+                            if($val[1] == 'raw()'){
+                                $db->addSelect(DB::raw($val[0]));
+                            }else{
+                                $db->addselect($val);
+                            }
+                        }
+                    }else{
+                        $db->select($table_master['select']);
+                    }
                 }
+                // dd($db);
+
                 // else{
                         // $model = $model->leftJoin('program_studies','program_study_id','=','program_studies.id')->select('*');
                         // $db = $model;
                 // }
+                
                        
                     foreach($join as $table => $tableConfig){
                             $table_join = $table;
@@ -59,8 +74,6 @@ class ControllerHelper{
                             $model = $db;
                     }
                 }
-                
-
 
             // if(!isset($config['id']) || $config['id']==null || $config['id']==''){
             //     // $data = $model->paginate(5);
@@ -128,8 +141,6 @@ class ControllerHelper{
                 }
                 
             }
-            
-            
             
             $data = $model;
             // dd(DB::getQueryLog());

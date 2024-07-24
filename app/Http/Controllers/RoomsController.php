@@ -36,8 +36,7 @@ class RoomsController extends Controller
         $data = [
                     ['column' => 'room_name', 'alias' => 'Nama Ruangan', 'data' => '', 'className'=>''],
                     ['column' => 'description', 'alias' => 'Deskripsi', 'data' => '', 'className'=>''],
-                    ['column' => 'created_at', 'alias' => 'Created At', 'data' => '', 'className'=>''],
-                    ['column' => 'is_active', 'alias' => 'Aktive', 'data' => '', 'className'=>''],
+                    ['column' => 'is_active', 'alias' => 'Aktif', 'data' => '', 'className'=>''],
                 ];
         return $data;
     }
