@@ -28,7 +28,12 @@ CREATE TABLE IF NOT EXISTS `classes` (
   CONSTRAINT `classes_program_study_id_foreign` FOREIGN KEY (`program_study_id`) REFERENCES `program_studies` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table jadwal.classes: ~3 rows (approximately)
+INSERT INTO `classes` (`id`, `class_name`, `code`, `description`, `program_study_id`, `created_at`, `updated_at`) VALUES
+	(1, 'Kelas A', 'A1', 'Class A number 1', 1, '2024-01-30 08:34:24', '2024-01-30 08:34:24'),
+	(2, 'Kelas B', 'B1', 'Class B number 1', 1, '2024-01-30 08:35:17', '2024-01-30 08:35:17'),
+	(4, 'test clas', '1', 'asdasd', 1, '2024-05-19 03:59:34', '2024-05-19 03:59:34'),
+	(5, 'CLASS D', '12', 'aaaa', 2, '2024-07-24 16:14:40', '2024-07-24 16:14:40');
 
 -- Dumping structure for table jadwal.contents
 CREATE TABLE IF NOT EXISTS `contents` (
@@ -43,7 +48,9 @@ CREATE TABLE IF NOT EXISTS `contents` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table jadwal.contents: ~0 rows (approximately)
+INSERT INTO `contents` (`id`, `name`, `code`, `description`, `url`, `other`, `created_at`, `updated_at`) VALUES
+	(1, 'title', 'item1', 'UPN Veteran', NULL, NULL, '2024-01-31 06:05:19', '2024-01-31 06:05:19');
 
 -- Dumping structure for table jadwal.failed_jobs
 CREATE TABLE IF NOT EXISTS `failed_jobs` (
@@ -58,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `failed_jobs` (
   UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table jadwal.failed_jobs: ~0 rows (approximately)
 
 -- Dumping structure for table jadwal.migrations
 CREATE TABLE IF NOT EXISTS `migrations` (
@@ -68,7 +75,34 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table jadwal.migrations: ~24 rows (approximately)
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
+	(1, '2014_10_12_100000_create_password_reset_tokens_table', 1),
+	(2, '2019_08_19_000000_create_failed_jobs_table', 1),
+	(3, '2019_12_14_000001_create_personal_access_tokens_table', 1),
+	(4, '2024_01_21_102827_create_roles_table', 1),
+	(5, '2024_01_21_103000_create_program_studies_table', 1),
+	(6, '2024_01_21_103238_create_classes_table', 1),
+	(7, '2024_01_21_103835_create_users_table', 1),
+	(8, '2024_01_21_104119_create_subjects_table', 1),
+	(9, '2024_01_21_104321_create_rooms_table', 1),
+	(10, '2024_01_21_104423_create_schedules_table', 1),
+	(11, '2024_01_21_104423_create_contents_table', 2),
+	(12, '2024_01_21_104423_create_contents_table copy', 3),
+	(13, '2024_01_31_104423_create_contents_table', 4),
+	(14, '2024_01_31_104424_create_contents_table', 5),
+	(15, '2024_01_21_104423_create_menus_table', 6),
+	(16, '2024_01_31_104423_create_menus_table', 7),
+	(17, '2024_01_31_104423_create_menuroles_table', 8),
+	(18, '2024_01_31_104424_create_menuroles_table', 9),
+	(19, '2024_01_31_104425_create_menuroles_table', 10),
+	(20, '2024_01_31_104426_create_menuroles_table', 11),
+	(21, '2024_02_03_212900_create_systables_table', 12),
+	(22, '2024_02_03_212901_create_systables_table', 13),
+	(23, '2024_02_03_213359_create_sys_columns_table', 13),
+	(24, '2024_02_03_214127_create_sys_action_table', 13),
+	(25, '2024_02_03_215811_create_sys_loguser_table', 13),
+	(26, '2024_05_11_192004_create_sys_content_table', 14);
 
 -- Dumping structure for table jadwal.password_reset_tokens
 CREATE TABLE IF NOT EXISTS `password_reset_tokens` (
@@ -78,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `password_reset_tokens` (
   PRIMARY KEY (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table jadwal.password_reset_tokens: ~0 rows (approximately)
 
 -- Dumping structure for table jadwal.personal_access_tokens
 CREATE TABLE IF NOT EXISTS `personal_access_tokens` (
@@ -97,7 +131,7 @@ CREATE TABLE IF NOT EXISTS `personal_access_tokens` (
   KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table jadwal.personal_access_tokens: ~0 rows (approximately)
 
 -- Dumping structure for table jadwal.program_studies
 CREATE TABLE IF NOT EXISTS `program_studies` (
@@ -109,7 +143,11 @@ CREATE TABLE IF NOT EXISTS `program_studies` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table jadwal.program_studies: ~3 rows (approximately)
+INSERT INTO `program_studies` (`id`, `prodi_name`, `description`, `created_at`, `updated_at`) VALUES
+	(1, 'Informatikasss', 'Lorem ipsum dolor sit amet', '2024-05-18 10:56:55', '2024-05-14 12:03:09'),
+	(2, 'Sistem Informasi', 'Lorem ipsum dolor sit amet', NULL, NULL),
+	(10, 'Ilmu Komputers', 'Pendidikan Ilmu Komputer', '2024-02-15 09:14:06', '2024-03-16 02:52:24');
 
 -- Dumping structure for table jadwal.roles
 CREATE TABLE IF NOT EXISTS `roles` (
@@ -122,7 +160,12 @@ CREATE TABLE IF NOT EXISTS `roles` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table jadwal.roles: ~4 rows (approximately)
+INSERT INTO `roles` (`id`, `role_name`, `level`, `description`, `created_at`, `updated_at`) VALUES
+	(1, 'super', 1, NULL, NULL, NULL),
+	(2, 'admin', 2, NULL, NULL, NULL),
+	(3, 'dosen', 2, NULL, NULL, NULL),
+	(4, 'client', 3, NULL, NULL, NULL);
 
 -- Dumping structure for table jadwal.rooms
 CREATE TABLE IF NOT EXISTS `rooms` (
@@ -135,7 +178,10 @@ CREATE TABLE IF NOT EXISTS `rooms` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table jadwal.rooms: ~2 rows (approximately)
+INSERT INTO `rooms` (`id`, `room_name`, `description`, `created_at`, `updated_at`, `is_active`) VALUES
+	(10, 'tess', 'r', '2024-05-18 02:12:06', '2024-05-18 02:12:06', 1),
+	(11, 'tessaaa', 'r', '2024-05-18 02:12:06', '2024-05-18 02:12:06', 0);
 
 -- Dumping structure for table jadwal.schedules
 CREATE TABLE IF NOT EXISTS `schedules` (
@@ -160,7 +206,10 @@ CREATE TABLE IF NOT EXISTS `schedules` (
   CONSTRAINT `schedules_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `program_studies` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table jadwal.schedules: ~2 rows (approximately)
+INSERT INTO `schedules` (`id`, `start_date`, `end_date`, `status`, `class_id`, `room_id`, `subject_id`, `user_id`, `created_at`, `updated_at`) VALUES
+	(2, '2024-07-24', '2024-07-24', '5', 4, 10, 1, 10, '2024-07-24 01:47:43', '2024-07-24 18:23:45'),
+	(3, '2024-07-24', '2024-07-24', '1', 2, 10, 1, 1, '2024-07-24 01:47:43', '2024-07-24 01:47:44');
 
 -- Dumping structure for table jadwal.subjects
 CREATE TABLE IF NOT EXISTS `subjects` (
@@ -177,7 +226,9 @@ CREATE TABLE IF NOT EXISTS `subjects` (
   CONSTRAINT `subjects_program_study_id_foreign` FOREIGN KEY (`program_study_id`) REFERENCES `program_studies` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table jadwal.subjects: ~1 rows (approximately)
+INSERT INTO `subjects` (`id`, `code`, `subject_name`, `sks`, `semester`, `program_study_id`, `created_at`, `updated_at`) VALUES
+	(1, 'S1', 'Pengenalan Informatika', 2, 1, 1, '2024-01-30 09:09:03', '2024-01-30 09:09:03');
 
 -- Dumping structure for table jadwal.sys_action
 CREATE TABLE IF NOT EXISTS `sys_action` (
@@ -193,7 +244,7 @@ CREATE TABLE IF NOT EXISTS `sys_action` (
   CONSTRAINT `sys_action_table_id_foreign` FOREIGN KEY (`table_id`) REFERENCES `sys_table` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table jadwal.sys_action: ~0 rows (approximately)
 
 -- Dumping structure for table jadwal.sys_column
 CREATE TABLE IF NOT EXISTS `sys_column` (
@@ -210,7 +261,7 @@ CREATE TABLE IF NOT EXISTS `sys_column` (
   CONSTRAINT `sys_column_table_id_foreign` FOREIGN KEY (`table_id`) REFERENCES `sys_table` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table jadwal.sys_column: ~0 rows (approximately)
 
 -- Dumping structure for table jadwal.sys_content
 CREATE TABLE IF NOT EXISTS `sys_content` (
@@ -225,7 +276,12 @@ CREATE TABLE IF NOT EXISTS `sys_content` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table jadwal.sys_content: ~4 rows (approximately)
+INSERT INTO `sys_content` (`id`, `name`, `value`, `description`, `url`, `is_active`, `created_at`, `updated_at`) VALUES
+	(1, 'title', 'APLIKASI E-JADWAL FAKULTAS SAINS & TEKNOLOGI', 'aaaa', 0, 1, NULL, '2024-05-17 18:13:44'),
+	(2, 'title_2', ' E-Jadwal', '', 0, 0, NULL, NULL),
+	(3, 'title_3', 'Fakultas Sains dan Teknologi', 'dasd', 0, 1, '2024-05-17 18:15:21', '2024-05-17 18:15:21'),
+	(4, 'logo', '/assets/images/upy.png', 'dasd', 0, 1, '2024-05-17 18:15:21', '2024-05-17 18:15:21');
 
 -- Dumping structure for table jadwal.sys_loguser
 CREATE TABLE IF NOT EXISTS `sys_loguser` (
@@ -242,7 +298,7 @@ CREATE TABLE IF NOT EXISTS `sys_loguser` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table jadwal.sys_loguser: ~0 rows (approximately)
 
 -- Dumping structure for table jadwal.sys_menu
 CREATE TABLE IF NOT EXISTS `sys_menu` (
@@ -259,7 +315,25 @@ CREATE TABLE IF NOT EXISTS `sys_menu` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=108 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table jadwal.sys_menu: ~18 rows (approximately)
+INSERT INTO `sys_menu` (`id`, `name`, `code`, `parent`, `icon`, `route`, `activeRoute`, `is_active`, `created_at`, `updated_at`) VALUES
+	(1, 'Dashboard', 'D1', '0', 'bx-home', 'dashboard', NULL, 1, '2024-05-15 04:19:01', '2024-05-15 04:19:01'),
+	(2, 'Prodi', 'A1', '0', 'bx-buildings', '', '', 1, '2024-01-31 06:13:00', '2024-01-31 06:13:00'),
+	(3, 'Sys Menu', 'A1', '0', 'bx-grid', 'menu.table', 'menu.menus', 1, '2024-01-31 06:13:00', '2024-01-31 06:13:00'),
+	(4, 'Program Studi', 'A1', '2', NULL, 'programstudies.table', '', 1, '2024-01-31 06:13:00', '2024-01-31 06:13:00'),
+	(5, 'Akademik', 'A1', '0', 'bx-calendar', '', '', 1, '2024-01-31 06:13:00', '2024-01-31 06:13:00'),
+	(6, 'Dosen', 'A1', '2', NULL, 'lecturer.table', 'lecturer.lecturers', 1, '2024-01-31 06:13:00', '2024-05-15 07:52:59'),
+	(7, 'Mata Kuliah', 'A1', '5', NULL, 'subject.table', '', 1, '2024-01-31 06:13:00', '2024-01-31 06:13:00'),
+	(8, 'Ruangan', 'A1', '5', NULL, 'room.table', 'room.rooms', 1, '2024-01-31 06:13:00', '2024-01-31 06:13:00'),
+	(9, 'Jadwal', 'A1', '5', NULL, 'schedule.table', 'room.rooms', 1, '2024-01-31 06:13:00', '2024-07-23 16:46:23'),
+	(95, 'Sys User', 'U', '0', 'bx-user', 'user.index', NULL, 1, '2024-05-15 08:23:41', '2024-05-17 13:26:04'),
+	(96, 'List Menu', 'M1', '3', NULL, 'menu.table', 'menu.menus', 1, '2024-05-17 13:19:12', '2024-05-17 13:19:12'),
+	(97, 'Transaction Menu', 'M2', '3', NULL, 'txmenu.table', 'menu.menus', 1, '2024-05-17 13:20:34', '2024-05-17 13:20:34'),
+	(98, 'List Role', 'U1', '95', NULL, 'role.table', NULL, 1, '2024-05-17 13:49:16', '2024-05-17 14:18:05'),
+	(99, 'List User', 'U2', '95', NULL, 'user.table', NULL, 1, '2024-05-17 13:50:09', '2024-05-17 13:50:09'),
+	(105, 'Sys Content', 'SC', '0', 'bx-food-menu', '', '', 1, '2024-05-17 16:41:27', '2024-05-17 16:41:27'),
+	(106, 'List Contents', 'SC1', '105', NULL, 'content.table', NULL, 1, '2024-05-17 16:42:14', '2024-05-17 17:51:07'),
+	(107, 'Class', 'M3', '2', NULL, 'class.table', NULL, 1, '2024-05-19 03:11:09', '2024-05-19 03:11:09');
 
 -- Dumping structure for table jadwal.sys_table
 CREATE TABLE IF NOT EXISTS `sys_table` (
@@ -271,7 +345,7 @@ CREATE TABLE IF NOT EXISTS `sys_table` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table jadwal.sys_table: ~0 rows (approximately)
 
 -- Dumping structure for table jadwal.tx_menu_roles
 CREATE TABLE IF NOT EXISTS `tx_menu_roles` (
@@ -289,7 +363,32 @@ CREATE TABLE IF NOT EXISTS `tx_menu_roles` (
   CONSTRAINT `tx_menu_roles_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table jadwal.tx_menu_roles: ~24 rows (approximately)
+INSERT INTO `tx_menu_roles` (`id`, `menu_id`, `role_id`, `description`, `is_active`, `created_at`, `updated_at`) VALUES
+	(1, 1, 1, NULL, '1', NULL, NULL),
+	(2, 95, 1, NULL, '1', NULL, NULL),
+	(3, 2, 1, NULL, '1', '2024-05-19 10:23:18', '2024-05-19 10:23:18'),
+	(4, 96, 1, NULL, '1', NULL, NULL),
+	(5, 97, 1, NULL, '1', NULL, NULL),
+	(6, 3, 1, NULL, '1', NULL, NULL),
+	(7, 1, 2, 'tes', '1', '2024-07-23 09:04:16', '2024-07-23 09:04:16'),
+	(30, 2, 2, NULL, '1', '2024-07-23 09:06:46', '2024-07-23 09:06:46'),
+	(31, 6, 2, NULL, '1', '2024-07-23 09:07:01', '2024-07-23 09:07:01'),
+	(32, 4, 2, NULL, '1', '2024-07-23 09:08:23', '2024-07-23 09:08:23'),
+	(33, 107, 2, NULL, '1', '2024-07-23 09:08:53', '2024-07-23 09:08:53'),
+	(34, 95, 2, NULL, '1', '2024-07-23 09:09:43', '2024-07-23 09:09:43'),
+	(35, 98, 2, NULL, '1', '2024-07-23 09:09:57', '2024-07-23 09:09:57'),
+	(36, 99, 2, NULL, '1', '2024-07-23 09:10:19', '2024-07-23 09:10:19'),
+	(38, 2, 3, 'tess dosen', '1', '2024-07-23 13:06:56', '2024-07-23 13:06:56'),
+	(39, 4, 3, 'tess dosen', '1', '2024-07-23 13:06:56', '2024-07-23 13:06:56'),
+	(40, 6, 3, 'tess dosen', '1', '2024-07-23 13:06:56', '2024-07-23 13:06:56'),
+	(41, 107, 3, 'tess dosen', '1', '2024-07-23 13:06:56', '2024-07-23 13:06:56'),
+	(42, 5, 1, 'super', '1', '2024-07-23 14:34:01', '2024-07-23 14:34:01'),
+	(43, 7, 1, 'super', '1', '2024-07-23 14:34:01', '2024-07-23 14:34:01'),
+	(44, 8, 1, 'super', '1', '2024-07-23 14:34:01', '2024-07-23 14:34:01'),
+	(45, 9, 1, 'super', '1', '2024-07-23 14:34:01', '2024-07-23 14:34:01'),
+	(46, 105, 1, 'superr', '1', '2024-07-23 14:35:04', '2024-07-23 14:35:04'),
+	(47, 106, 1, 'superr', '1', '2024-07-23 14:35:04', '2024-07-23 14:35:04');
 
 -- Dumping structure for table jadwal.users
 CREATE TABLE IF NOT EXISTS `users` (
@@ -313,7 +412,12 @@ CREATE TABLE IF NOT EXISTS `users` (
   CONSTRAINT `users_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table jadwal.users: ~4 rows (approximately)
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `nis`, `status`, `role_id`, `program_study_id`, `remember_token`, `created_at`, `updated_at`) VALUES
+	(1, 'Super Admin', 'super@gmail.com', NULL, '$2y$12$evFqLSYJNmbhqLJVkkgZUuXoUfrcI6nVruoJxeFhwfg55gPs/3b.u', NULL, NULL, 1, NULL, NULL, NULL, NULL),
+	(2, 'Mas Admin2', 'admin@gmail.com', NULL, '$2y$12$evFqLSYJNmbhqLJVkkgZUuXoUfrcI6nVruoJxeFhwfg55gPs/3b.u', NULL, NULL, 2, NULL, NULL, NULL, NULL),
+	(3, 'Puji Astuti, S.Kom., M.Koms', 'dosen@gmail.com', NULL, '$2y$12$NF14q/g37KZoTMVssfk20Ow6xaaZ1vkb/HHTK/pdrpWVJUn9s7aGC', '321890', '1', 3, 1, NULL, NULL, '2024-05-17 19:36:06'),
+	(15, 'test4', 'test4@gmail.com', NULL, '$2y$12$HOmpqMGtWGW19WNaZfTbL.La5vXOeFf471PrCy/nDrUA/526dLLa.', '123', '1', 1, 1, NULL, '2024-05-17 12:50:24', '2024-05-17 12:50:24');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
