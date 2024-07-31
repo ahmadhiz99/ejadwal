@@ -9,9 +9,9 @@ class FormHelper {
         $config = $configTemp;
     }
 
-     public static function configController($params = null){
+     public static function configController($params = null, $model = nulll){
         $config = [
-            'model'=>'Schedule'
+            'model'=> $model
         ];
 
         if($params != null){
@@ -24,12 +24,62 @@ class FormHelper {
     /**
      * Validator
      */
-    function get_validator(){
-        return [
-            // 'menu_id' => 'required',
-            'role_id' => 'required',
-            'is_active' => 'required'
+    public static function get_validator($params){
+        $arr = [];
+
+        $param = [
+            'required' => [
+                'aasd','asdasd','asdasd'
+            ]
         ];
+
+        foreach($params as $atrribute => $columns){
+            if($atrribute == 'required'){
+                foreach($columns as $value){
+                   $arr[$value] = $arr[$atrribute];
+                }
+            }
+        }
+        return $arr;
+    }
+
+    /**
+     * DROPDOWN INSTANT
+     */
+    public static function dropdownInstant($column=null, $table=null , $active=null){
+        $req = [
+            'table_master' => [
+                'table_name' => $table,
+                'alias' => 'a',
+                'select'=>'a.*',
+            ],
+        ];
+
+        if($active != null){
+            $req['where_condition'] = 
+            [ 
+                "equals" => [
+                    ['a.'.$active[0],'=',$active[1]],
+                ],
+            ];
+        }
+
+        $dataArr = ControllerHelper::ch_datas($req);
+        $dropdown_result = ['default'=>'0','id'=>'id','name'=>$column,'data'=>$dataArr];
+
+        return $dropdown_result;
+    }
+    
+    /**
+     * DROPDOWN INSTANT Bool
+     */
+    public static function dropdownInstantBool($column=null, $table=null , $active=null){
+        $dataArr =[
+            ['id'=>'1','name'=>'Active'],
+            ['id'=>'0','name'=>'Inctive'],
+        ];
+        $dropdown_result = ['default'=>'0','id'=>'id','name'=>$column,'data'=>$dataArr];
+        return $dropdown_result;
     }
 
     /**

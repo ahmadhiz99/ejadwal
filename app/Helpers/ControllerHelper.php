@@ -11,14 +11,27 @@ class ControllerHelper{
      */
     public static function ch_datas($config){
         try {
+
+            
             DB::enableQueryLog();
             $db;
-            $model_name = '\\App\\Models\\'.$config['model'];
-            $model = new $model_name;
+            $model_name;
+            $Model;
 
+            // JIKA MENGGUNAKAN MODEL MAKA AKAN MENGGUNAKAN FUNGSI ORM MODEL
+            if(isset($config['model'])){
+                $model_name = '\\App\\Models\\'.$config['model'];
+                $model = new $model_name;
+            }
+
+            // JIKA MENGGUNAKAN TABLE MAKA AKAN NATIVE DARI TABLE
             if(isset($config['table_master'])){ // USING TABLE MASTER
                 $table_master = $config['table_master'];
-                $db =  DB::table($table_master['table_name'].' as '.$table_master['alias']);
+                if(isset($table_master['table_name']) && isset($table_master['alias'])){
+                    $db =  DB::table($table_master['table_name'].' as '.$table_master['alias']);
+                }else{
+                    $db =  DB::table($table_master);
+                }
                 if(is_array($table_master['select'])){     // USING SELECT
                     foreach($table_master['select'] as $val){
                         $db->addselect($val);
@@ -48,13 +61,6 @@ class ControllerHelper{
                         $db->select($table_master['select']);
                     }
                 }
-                // dd($db);
-
-                // else{
-                        // $model = $model->leftJoin('program_studies','program_study_id','=','program_studies.id')->select('*');
-                        // $db = $model;
-                // }
-                
                        
                     foreach($join as $table => $tableConfig){
                             $table_join = $table;
@@ -75,26 +81,7 @@ class ControllerHelper{
                     }
                 }
 
-            // if(!isset($config['id']) || $config['id']==null || $config['id']==''){
-            //     // $data = $model->paginate(5);
-            //     $data = $model->get();
-            //     $status = true;
-            //     $message = count($data).' Datas Found!';
-            //     $statusCode = 200;
-            // }
-
-            //  if(isset($config['id']) && $config['id'] != null && $config['id'] != ''){
-            //     $status = true;
-            //     $data = $model->find($config['id']);
-            //     $message = '1 Data Found!';
-            //     $statusCode = 200;
-            // }else{
-            //     $status = false;
-            //     $message = 'Data Not Found!';
-            //     $data = null;
-            //     $statusCode = 404;
-            // }
-
+         
             if(isset($config['where_condition'])){
                 if(!isset($config['join'])){
                     $db = $model;
@@ -134,11 +121,29 @@ class ControllerHelper{
             if(isset($config['paginate'])){
                 $model = $model->paginate($config['paginate']);
             }else{
+            
+               if(isset($config['table_single'])){
+                $db  =  DB::table($config['table_single']);
+                if(isset($config['id'])){
+                     $model = $db->find($config['id']);
+                }else{
+                    $model = json_decode($db->get());
+                }
+               }else{
+                
                 if(isset($config['id']) && $config['id'] != null && $config['id'] != ''){
-                    $model = $model->find($config['id']);
+                    if(isset($config['table_master'])){
+                        $model = $db->where($config['id']);
+                    }else if(isset($config['model'])){
+                        $model = $model->find($config['id']);
+                    }else{
+                        $model = $model->find($config['id']);
+                    }
+
                 }else{
                     $model = json_decode($model->get());
                 }
+              }
                 
             }
             
@@ -257,6 +262,7 @@ class ControllerHelper{
                     }
                 }
             }else{
+                
                 if(!isset($config['id']) || $config['id']==null || $config['id']==''){
                     $data = $model::create($config['request']);
                     $message = 'Success Insert Data!';

@@ -225,8 +225,8 @@ class TxMenuController extends Controller
         $config = $configTemp;
     }
 
-    /**
-     * Display a listing of the resource.
+/**
+         * Display a listing of the resource.
      */
     public function index()
     {
@@ -253,7 +253,6 @@ class TxMenuController extends Controller
         $data = ControllerHelper::ch_datas($config);
         
         Self::purgeConfig();
-      
 
         $config = Self::configController($req);
         $subData = ControllerHelper::ch_datas($config);

@@ -12,9 +12,9 @@ use App\Helpers\TableHelper;
 
 class SchedulesController extends Controller
 {
-    function __construct(){
-        $main_config = MapperHelper::get('SchedulesController');
-    }
+    // function __construct(){
+    //     $main_config = MapperHelper::get('SchedulesController');
+    // }
     
     function purgeConfig(){
         $configTemp = Self::configController();
@@ -76,7 +76,8 @@ class SchedulesController extends Controller
      */
     public function create()
     {
-        $dataForm = MapperHelper::schedules('dataForm');
+        // CALL FORM
+        $dataForm = MapperHelper::schedules('dataFormAdd');
 
         $data = ['dataForm'=>$dataForm];
         session()->put("SessFormData", $data);
@@ -88,15 +89,15 @@ class SchedulesController extends Controller
      */
     public function store(Request $request)
     {
-       
+    //    GET VALIDATOR FROM FORM HELPER
         $validator = Validator::make($request->all(), [
-            'start_date' => 'required',
-            'end_date' => 'required',
-            'status' => 'required',
-            'class_id' => 'required',
+            // 'start_date' => 'required',
+            // 'end_date' => 'required',
+            // 'status' => 'required',
+            // 'class_id' => 'required',
             'room_id' => 'required',
             'subject_id' => 'required',
-            'user_id' => 'required'
+            // 'user_id' => 'required'
         ]);
 
         $req = [
@@ -135,34 +136,12 @@ class SchedulesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request)
+    public function edit(Request $request, $id)
     {
-        //
-        $role = Role::find($request);
+        $dataForm = MapperHelper::schedules('dataFormEdit',$id);
 
-        try {
-          
-            if(count($role)>0){
-                // return Inertia::render('Profile/Edit');
-                return response()->json([
-                    'message' => 'Data Exist!',
-                    'status' => 'true',
-                    'data'=> [$role]
-                ],200);
-            }else{
-                return response()->json([
-                    'message' => 'Data Empty!',
-                    'status' => 'true',
-                    'data'=> [$role]
-                ],200);
-            }
-        } catch (\Throwable $th) {
-            return response()->json([
-                'message' => 'Failed',
-                'status' => 'false',
-                'data'=> $th->getMessage()
-            ],500);
-        }
+        session()->put("SessFormData", $dataForm);
+        return redirect('/builder/table/edit');// Variable has to come from here
     }
 
     /**
@@ -179,11 +158,13 @@ class SchedulesController extends Controller
             'subject_id' => 'required',
             'user_id' => 'required'
         ]);
+        Self::purgeConfig();
 
         $req = [
             'id'=>$id,
             'request'=> $request->all()
         ];
+        
 
         if($validator->fails()){
             return response()->json([

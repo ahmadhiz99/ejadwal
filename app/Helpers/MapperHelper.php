@@ -33,7 +33,7 @@ class MapperHelper {
         $config = $configTemp;
     }
 
-    public static function schedules($params = null){
+    public static function schedules($params = nul, $id_data = null){
         /**
          * DATAS CONFIG START
          */
@@ -62,8 +62,9 @@ class MapperHelper {
         /**
          * TABLE CONFIG START
          */
+        
+        //  Query ke database
         $table_req_query = [
-            'id'=>null,
             'table_master' => [
                 'table_name' => $table_name,
                 'alias' => 'a',
@@ -99,7 +100,9 @@ class MapperHelper {
                 ],
             ],
         ];
-      
+
+        
+        // Table header
         $tableReq = [
             'type' => 'generate', /* generate/manual */
             'column_show' => '',
@@ -108,6 +111,7 @@ class MapperHelper {
             ],
         ];
 
+        // Table value
         $dataTable = [
             'tableConfig' => [
                 'idType'=>['alias'=>'No','type'=>'number'],/* number/alphabet */
@@ -138,172 +142,129 @@ class MapperHelper {
          * DATA FORM START
         */
 
-        $MAIN_PAGE = [
-            // ROUTES
-            ['ROUTES'] = $mainRoute,
-            ['SUB_ROUTES'] = $subRoute,
-            ['MODEL'] = $model,
-            ['FORM'] => [
-                'GENERATE'  => ['auto',null], 
-                'DROPDOWN'  => ['auto',null],
-                'CHECKBOX'  => ['auto',null],
-            ],
-            ['TABLE'] => [
-                'GENERATE'  => ['auto',null],
-                'HEADER'    => ['auto',null], /* auto || hybrid || manual */
-                'VALUE'     => ['auto',null],
-            ],
-            ['FEATURE'] => [
-                'ADD' => ['auto',null],
-                'EDIT' => ['auto',null],
-                'DETAIL' => ['auto',null],
-                'DELETE' => ['auto',null],
-            ]
-        ];
+        // $MAIN_PAGE = [
+        //     // ROUTES
+        //     ['ROUTES']       => $mainRoute,
+        //     ['SUB_ROUTES']   => $subRoute,
+        //     ['MODEL']        => $model,
+        //     ['FORM']         => [
+        //                             'GENERATE'  => ['auto',null], 
+        //                             'DROPDOWN'  => ['auto',null],
+        //                             'CHECKBOX'  => ['auto',null],
+        //                         ],
+        //     ['TABLE'] => [
+        //         'GENERATE'  => ['auto',null],
+        //         'HEADER'    => ['auto',null], /* auto || hybrid || manual */
+        //         'VALUE'     => ['auto',null],
+        //     ],
+        //     ['FEATURE'] => [
+        //         'ADD' => ['auto',null],
+        //         'EDIT' => ['auto',null],
+        //         'DETAIL' => ['auto',null],
+        //         'DELETE' => ['auto',null],
+        //     ]
+        // ];
 
-        $TABLE_CONFIG = [
-            'GENERATE_DROPDOWN' => [
+        // $TABLE_CONFIG = [
+        //     'GENERATE_DROPDOWN' => [
                 
-            ],
-            'GENERATE_',
+        //     ],
+        //     'GENERATE_',
 
-        ];
+        // ];
 
-        $FORM_CONFIG = [
+        // $FORM_CONFIG = [
 
-        ];
+        // ];
 
-        GeneratePages::_initial($MAIN_PAGE)
-                ->table(manual,$TABLE_CONFIG)
+        // GeneratePages::_initial($MAIN_PAGE)
+        //         ->table(manual,$TABLE_CONFIG)
                 
-        GeneratePages::_initial($MAIN_PAGE)
-                ->form(manual,$FORM_CONFIG)
+        // GeneratePages::_initial($MAIN_PAGE)
+        //         ->form(manual,$FORM_CONFIG)
 
-        DBHelper::get_generate('schedules')
+        // DBHelper::get_generate('schedules')
         
-        DBHelper::getDropdown('schedules')
-            ->key('id')
-            ->select(['id','name'])
-            ->where()
-            ->get();
+        // DBHelper::getDropdown('schedules')
+        //     ->key('id')
+        //     ->select(['id','name'])
+        //     ->where()
+        //     ->get();
 
-        DBHelper::get_table('schedules')
-            ->key('id')
-            ->select(['id','name'])
-            ->where()
-            ->get();
+        // DBHelper::get_table('schedules')
+        //     ->key('id')
+        //     ->select(['id','name'])
+        //     ->where()
+        //     ->get();
 
-
-
-        $req = [
-            'id'=>null,
-            'table_master' => [
-                'table_name' => 'schedules',
-                'alias' => 'a',
-                'select'=>'a.*',
-            ],
-            'where_condition' => [
-                "equals" => [
-                    ['a.parent','=','0'],
-                ],
-            ],
-        ];
-
-        $dataDropdown = ControllerHelper::ch_datas(Self::configController($req, $model));
-        $data_menu = ['default'=>'0','id'=>'id','name'=>'name','data'=>$dataDropdown];
-
-        // Self::purgeConfig();
-        $req = [
-            'id'=>null,
-            'table_master' => [
-                'table_name' => 'sys_menu',
-                'alias' => 'a',
-                'select'=>'a.*',
-            ],
-            'where_condition' => [
-                "equals" => [
-                    ['a.parent','<>','0'],
-                ],
-            ],
-        ];
-        $config = Self::configController($req, $model);
-        $dataDropdownSub = ControllerHelper::ch_datas($config);
-        $data_menu_sub = ['default'=>'0','id'=>'id','name'=>'name','data'=>$dataDropdownSub];
-
-        $req = [
-            'id'=>null,
-            'table_master' => [
-                'table_name' => 'roles',
-                'alias' => 'a',
-                'select'=>'a.*',
-            ],
-        ];
-        $config = Self::configController($req, $model);
-        $dataDropdown = ControllerHelper::ch_datas($config);
-        $data_role = ['default'=>'0','id'=>'id','name'=>'role_name','data'=>$dataDropdown];
-
-        $dataDropdown =[
-            ['id'=>'1','name'=>'active'],
-            ['id'=>'0','name'=>'no active'],
-        ];
-        $data_active = ['default'=>'0','id'=>'id','name'=>'name','data'=>$dataDropdown];
-    
-        $form_config_data = [
+        $formConfig = [
             [
-                'inputType'=>'dropdown',
-                'dataType'=>'text',
-                'alias'=>'Menu Name',
-                'state'=>'menu_id',
+                'inputType'=>'date',
+                'dataType'=>'date',
+                'alias'=>'Start Date',
+                'state'=>'start_date',
                 'required'=>'true',
                 'note'=>'Gunakan nama yang singkat namun informatif',
-                'data'=>$data_menu
             ],
             [
-                'inputType'=>'checkbox_relation',
-                'dataType'=>'text',
-                'alias'=>'Sub Menu',
+                'inputType'=>'date',
+                'dataType'=>'date',
+                'alias'=>'End Date',
+                'state'=>'end_date',
                 'required'=>'true',
                 'note'=>'Gunakan nama yang singkat namun informatif',
-                'state'=>'menu_id',
-                'state_relation'=>'menu_id',
-                'data'=>$data_menu_sub
             ],
             [
                 'inputType'=>'dropdown',
                 'dataType'=>'number',
-                'alias'=>'Role Name',
-                'state'=>'role_id',
+                'alias'=>'subject Name',
+                'state'=>'subject_id',
                 'required'=>'true',
                 'note'=>'Gunakan nama yang singkat namun informatif',
-                'data'=>$data_role
-            ],
-            [
-                'inputType'=>'textarea',
-                'dataType'=>'number',
-                'alias'=>'Deskripsi',
-                'state'=>'description',
-                'required'=>'true',
-                'note'=>'Gunakan nama yang singkat namun informatif',
-                'data'=>''
+                // 'data'=>$data_subject
+                'data'=> FormHelper::dropdownInstant('subject_name','subjects')
             ],
             [
                 'inputType'=>'dropdown',
                 'dataType'=>'text',
-                'alias'=>'Aktif',
-                'state'=>'is_active',
+                'alias'=>'Room',
+                'state'=>'room_id',
                 'required'=>'true',
                 'note'=>'Gunakan nama yang singkat namun informatif',
-                'data'=>$data_active
+                'data'=> FormHelper::dropdownInstant('room_name','rooms',['is_active',1])
+            ],
+            [
+                'inputType'=>'dropdown',
+                'dataType'=>'text',
+                'alias'=>'Nama Kelas',
+                'required'=>'true',
+                'note'=>'Gunakan nama yang singkat namun informatif',
+                'state'=>'class_id',
+                'data'=>FormHelper::dropdownInstant('class_name','classes')
             ],
         ];
 
-
-        $dataForm = [
+        // FORM ADD
+        $dataFormAdd = [
             'formConfig' => [
                 'title' => 'Tambah '.$title.' Baru', /*title page*/
                 'route'=> $subRoute['store'], /*route backend*/
-                'formInput' => FormHelper::form_view(),
+                'formInput' => $formConfig
             ],
+        ];
+
+        // FORM EDIT
+        $dataFormEdit = [
+            'data' => (ControllerHelper::ch_datas(['id'=>$id_data, 'table_single'=>'schedules'])),
+            
+            'dataForm'=>[
+                'formConfig' => [
+                'title' => 'Edit Data '.$title, /*title page*/
+                'route'=> $subRoute['update'], /*route backend*/
+                'method'=> 'post', /* post for create, put/patch for update */
+                'formInput' => $formConfig,
+               ],
+            ]
         ];
 
         /**
@@ -332,17 +293,17 @@ class MapperHelper {
             case 'dataTable':
                 return $dataTable;
                 break;
-            case 'dataForm':
-                return $dataForm;
-                break;
             case 'dataTable':
                 return $dataTable;
                 break;
             case 'form_req_query':
                 return $form_req_query;
                 break;
-            case 'form_config_data':
-                return $form_config_data;
+            case 'dataFormAdd':
+                return $dataFormAdd;
+                break;
+            case 'dataFormEdit':
+                return $dataFormEdit;
                 break;
             
             default:
