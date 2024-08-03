@@ -2,7 +2,7 @@
 -- Host:                         127.0.0.1
 -- Server version:               10.4.32-MariaDB - mariadb.org binary distribution
 -- Server OS:                    Win64
--- HeidiSQL Version:             12.6.0.6765
+-- HeidiSQL Version:             12.8.0.6908
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `classes` (
   CONSTRAINT `classes_program_study_id_foreign` FOREIGN KEY (`program_study_id`) REFERENCES `program_studies` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table jadwal.classes: ~3 rows (approximately)
+-- Dumping data for table jadwal.classes: ~4 rows (approximately)
 INSERT INTO `classes` (`id`, `class_name`, `code`, `description`, `program_study_id`, `created_at`, `updated_at`) VALUES
 	(1, 'Kelas A', 'A1', 'Class A number 1', 1, '2024-01-30 08:34:24', '2024-01-30 08:34:24'),
 	(2, 'Kelas B', 'B1', 'Class B number 1', 1, '2024-01-30 08:35:17', '2024-01-30 08:35:17'),
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table jadwal.migrations: ~24 rows (approximately)
+-- Dumping data for table jadwal.migrations: ~26 rows (approximately)
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 	(1, '2014_10_12_100000_create_password_reset_tokens_table', 1),
 	(2, '2019_08_19_000000_create_failed_jobs_table', 1),
@@ -141,13 +141,14 @@ CREATE TABLE IF NOT EXISTS `program_studies` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table jadwal.program_studies: ~3 rows (approximately)
 INSERT INTO `program_studies` (`id`, `prodi_name`, `description`, `created_at`, `updated_at`) VALUES
 	(1, 'Informatikasss', 'Lorem ipsum dolor sit amet', '2024-05-18 10:56:55', '2024-05-14 12:03:09'),
 	(2, 'Sistem Informasi', 'Lorem ipsum dolor sit amet', NULL, NULL),
-	(10, 'Ilmu Komputers', 'Pendidikan Ilmu Komputer', '2024-02-15 09:14:06', '2024-03-16 02:52:24');
+	(10, 'Ilmu Komputers', 'Pendidikan Ilmu Komputer', '2024-02-15 09:14:06', '2024-03-16 02:52:24'),
+	(15, 'Test', 'AAABB', '2024-08-02 04:11:19', '2024-08-02 04:12:26');
 
 -- Dumping structure for table jadwal.roles
 CREATE TABLE IF NOT EXISTS `roles` (
@@ -176,12 +177,25 @@ CREATE TABLE IF NOT EXISTS `rooms` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `is_active` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table jadwal.rooms: ~2 rows (approximately)
+-- Dumping data for table jadwal.rooms: ~15 rows (approximately)
 INSERT INTO `rooms` (`id`, `room_name`, `description`, `created_at`, `updated_at`, `is_active`) VALUES
-	(10, 'tess', 'r', '2024-05-18 02:12:06', '2024-05-18 02:12:06', 1),
-	(11, 'tessaaa', 'r', '2024-05-18 02:12:06', '2024-05-18 02:12:06', 0);
+	(1, 'ROOM 1', 'RUANGAN LT 111', '2024-08-01 00:57:24', '2024-08-02 02:54:35', 0),
+	(2, 'ROOM 2', 'RUANGAN LT 2', '2024-08-01 00:57:24', '2024-08-01 00:57:25', 1),
+	(3, 'ROOM 3', 'RUANGAN LT 3', '2024-08-01 00:58:02', '2024-08-01 00:58:03', 1),
+	(10, 'LAB', 'LABORAT', '2024-05-18 02:12:06', '2024-05-18 02:12:06', 1),
+	(11, 'AULA', 'AULA UTAMA', '2024-05-18 02:12:06', '2024-05-18 02:12:06', 0),
+	(13, 'RUANGAN BASEMENT', 'Ruangan Tambahan', '2024-08-01 15:44:22', '2024-08-01 15:44:22', 0),
+	(14, 'tes', 'tes', '2024-08-02 02:25:44', '2024-08-02 02:25:44', 0),
+	(15, 'aa', 'aa', '2024-08-02 02:27:47', '2024-08-02 02:27:47', 1),
+	(16, 'aa', 'aa', '2024-08-02 02:28:13', '2024-08-02 02:28:13', 1),
+	(17, 'bb', 'aa', '2024-08-02 02:31:11', '2024-08-02 02:31:11', 1),
+	(18, 'tes', 'tes', '2024-08-02 02:31:42', '2024-08-02 02:31:42', 0),
+	(19, 'bb', 'aa', '2024-08-02 02:38:44', '2024-08-02 02:38:44', 0),
+	(20, 'bb', 'aa', '2024-08-02 02:39:03', '2024-08-02 02:39:03', 0),
+	(21, 'bb', 'aa', '2024-08-02 02:39:16', '2024-08-02 02:39:16', 0),
+	(22, 'bb', 'aa', '2024-08-02 02:42:42', '2024-08-02 02:42:42', 1);
 
 -- Dumping structure for table jadwal.schedules
 CREATE TABLE IF NOT EXISTS `schedules` (
@@ -200,16 +214,17 @@ CREATE TABLE IF NOT EXISTS `schedules` (
   KEY `schedules_room_id_foreign` (`room_id`),
   KEY `schedules_subject_id_foreign` (`subject_id`),
   KEY `schedules_user_id_foreign` (`user_id`),
+  CONSTRAINT `FK_schedules_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `schedules_class_id_foreign` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`) ON DELETE CASCADE,
   CONSTRAINT `schedules_room_id_foreign` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `schedules_subject_id_foreign` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `schedules_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `program_studies` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  CONSTRAINT `schedules_subject_id_foreign` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table jadwal.schedules: ~2 rows (approximately)
 INSERT INTO `schedules` (`id`, `start_date`, `end_date`, `status`, `class_id`, `room_id`, `subject_id`, `user_id`, `created_at`, `updated_at`) VALUES
-	(2, '2024-07-24', '2024-07-24', '5', 4, 10, 1, 10, '2024-07-24 01:47:43', '2024-07-24 18:23:45'),
-	(3, '2024-07-24', '2024-07-24', '1', 2, 10, 1, 1, '2024-07-24 01:47:43', '2024-07-24 01:47:44');
+	(2, '2024-07-24', '2024-07-24', '5', 4, 1, 2, 15, '2024-07-24 01:47:43', '2024-07-31 18:05:29'),
+	(3, '2024-07-24', '2024-07-24', '1', 2, 10, 1, 3, '2024-07-24 01:47:43', '2024-07-24 01:47:44'),
+	(6, '2024-08-01', '2024-08-03', '', 2, 2, 4, 3, '2024-07-31 18:34:35', '2024-07-31 18:34:35');
 
 -- Dumping structure for table jadwal.subjects
 CREATE TABLE IF NOT EXISTS `subjects` (
@@ -224,11 +239,14 @@ CREATE TABLE IF NOT EXISTS `subjects` (
   PRIMARY KEY (`id`),
   KEY `subjects_program_study_id_foreign` (`program_study_id`),
   CONSTRAINT `subjects_program_study_id_foreign` FOREIGN KEY (`program_study_id`) REFERENCES `program_studies` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table jadwal.subjects: ~1 rows (approximately)
+-- Dumping data for table jadwal.subjects: ~4 rows (approximately)
 INSERT INTO `subjects` (`id`, `code`, `subject_name`, `sks`, `semester`, `program_study_id`, `created_at`, `updated_at`) VALUES
-	(1, 'S1', 'Pengenalan Informatika', 2, 1, 1, '2024-01-30 09:09:03', '2024-01-30 09:09:03');
+	(1, 'S1', 'Pengenalan Informatika', 2, 1, 1, '2024-01-30 09:09:03', '2024-01-30 09:09:03'),
+	(2, 'S1', 'Algoritma Pemrograman', 2, 1, 1, '2024-01-30 09:09:03', '2024-01-30 09:09:03'),
+	(3, 'S1', 'Pemrograman Dasar', 3, 1, 1, '2024-01-30 09:09:03', '2024-01-30 09:09:03'),
+	(4, 'S1', 'Pemrograman Web', 2, 2, 1, '2024-01-30 09:09:03', '2024-01-30 09:09:03');
 
 -- Dumping structure for table jadwal.sys_action
 CREATE TABLE IF NOT EXISTS `sys_action` (
@@ -315,7 +333,7 @@ CREATE TABLE IF NOT EXISTS `sys_menu` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=108 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table jadwal.sys_menu: ~18 rows (approximately)
+-- Dumping data for table jadwal.sys_menu: ~17 rows (approximately)
 INSERT INTO `sys_menu` (`id`, `name`, `code`, `parent`, `icon`, `route`, `activeRoute`, `is_active`, `created_at`, `updated_at`) VALUES
 	(1, 'Dashboard', 'D1', '0', 'bx-home', 'dashboard', NULL, 1, '2024-05-15 04:19:01', '2024-05-15 04:19:01'),
 	(2, 'Prodi', 'A1', '0', 'bx-buildings', '', '', 1, '2024-01-31 06:13:00', '2024-01-31 06:13:00'),
@@ -323,8 +341,8 @@ INSERT INTO `sys_menu` (`id`, `name`, `code`, `parent`, `icon`, `route`, `active
 	(4, 'Program Studi', 'A1', '2', NULL, 'programstudies.table', '', 1, '2024-01-31 06:13:00', '2024-01-31 06:13:00'),
 	(5, 'Akademik', 'A1', '0', 'bx-calendar', '', '', 1, '2024-01-31 06:13:00', '2024-01-31 06:13:00'),
 	(6, 'Dosen', 'A1', '2', NULL, 'lecturer.table', 'lecturer.lecturers', 1, '2024-01-31 06:13:00', '2024-05-15 07:52:59'),
-	(7, 'Mata Kuliah', 'A1', '5', NULL, 'subject.table', '', 1, '2024-01-31 06:13:00', '2024-01-31 06:13:00'),
-	(8, 'Ruangan', 'A1', '5', NULL, 'room.table', 'room.rooms', 1, '2024-01-31 06:13:00', '2024-01-31 06:13:00'),
+	(7, 'Mata Kuliah', 'A1', '2', NULL, 'subject.table', '', 1, '2024-01-31 06:13:00', '2024-08-02 02:59:36'),
+	(8, 'Ruangan', 'A1', '2', NULL, 'room.table', 'room.rooms', 1, '2024-01-31 06:13:00', '2024-08-01 16:08:48'),
 	(9, 'Jadwal', 'A1', '5', NULL, 'schedule.table', 'room.rooms', 1, '2024-01-31 06:13:00', '2024-07-23 16:46:23'),
 	(95, 'Sys User', 'U', '0', 'bx-user', 'user.index', NULL, 1, '2024-05-15 08:23:41', '2024-05-17 13:26:04'),
 	(96, 'List Menu', 'M1', '3', NULL, 'menu.table', 'menu.menus', 1, '2024-05-17 13:19:12', '2024-05-17 13:19:12'),

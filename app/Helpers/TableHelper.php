@@ -10,7 +10,7 @@ class TableHelper {
 
      public static function configController($params = null){
         $config = [
-            'model'=>'Schedule'
+            'model'=>'Room'
         ];
 
         if($params != null){
@@ -26,8 +26,8 @@ class TableHelper {
     public static function table_view($req = null, $tableReq = null){
         Self::purgeConfig();
 
-        $config = Self::configController($req);
-        $dataTable = (ControllerHelper::ch_datas($config));
+        // $config = Self::configController($req);
+        $dataTable = (ControllerHelper::ch_datas($req));
 
         return self::generate_table_view($tableReq, $dataTable);
        
@@ -54,6 +54,7 @@ class TableHelper {
             $data=[];
             $dataColumn=[];
             $dataForm = $dataTable[0];
+            // dd($dataForm);
             foreach($dataForm as $key1 => $data1){
                 foreach($tableReq['column_block'] as $key2 => $data2){
                     if($key1 == $data2){

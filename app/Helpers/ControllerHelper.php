@@ -12,7 +12,6 @@ class ControllerHelper{
     public static function ch_datas($config){
         try {
 
-            
             DB::enableQueryLog();
             $db;
             $model_name;
@@ -34,7 +33,11 @@ class ControllerHelper{
                 }
                 if(is_array($table_master['select'])){     // USING SELECT
                     foreach($table_master['select'] as $val){
-                        $db->addselect($val);
+                        if($val[1] == 'raw()'){
+                            $db->addSelect(DB::raw($val[0]));
+                        }else{
+                            $db->addselect($val);
+                        }
                     }
                 }else{
                     $db->select($table_master['select']);

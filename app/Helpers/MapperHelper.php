@@ -98,6 +98,14 @@ class MapperHelper {
                         ['d.subject_name']
                     ],
                 ],
+                'users'=>[
+                    'join_type'=>'leftJoin',
+                    'alias'=> 'e',
+                    'on'=>'a.user_id = e.id',
+                    'select'=> [
+                        ['e.name as user_name']
+                    ],
+                ],
             ],
         ];
 
@@ -107,7 +115,7 @@ class MapperHelper {
             'type' => 'generate', /* generate/manual */
             'column_show' => '',
             'column_block' => [
-                'created_at','updated_at','class_id','room_id','subject_id','id'
+                'created_at','updated_at','class_id','room_id','subject_id','id','user_id'
             ],
         ];
 
@@ -241,6 +249,15 @@ class MapperHelper {
                 'note'=>'Gunakan nama yang singkat namun informatif',
                 'state'=>'class_id',
                 'data'=>FormHelper::dropdownInstant('class_name','classes')
+            ],
+            [
+                'inputType'=>'dropdown',
+                'dataType'=>'text',
+                'alias'=>'Nama User',
+                'required'=>'true',
+                'note'=>'Gunakan nama yang singkat namun informatif',
+                'state'=>'user_id',
+                'data'=>FormHelper::dropdownInstant('name','users')
             ],
         ];
 
@@ -550,6 +567,372 @@ class MapperHelper {
         
     }
 
+
+    public static function rooms($params = nul, $id_data = null){
+        /**
+         * DATAS CONFIG START
+         */
+        $title = 'Ruangan';
+        $mainRoute = 'room';
+        $mainBuilder = 'builder';
+        $subRoute = [];
+        $model = 'Room';
+        $master_table = 'rooms';
+
+        $subRoute = [
+           'index' => $mainBuilder . '.index',
+            'table' => $mainRoute . '.table',
+            'show' => $mainRoute . '.show',
+            'create' => $mainRoute . '.create',
+            'store' => '/' . $mainRoute . '-store', /* /route-store  */
+            'edit' => $mainRoute . '-edit',
+            'update' => '/'.$mainRoute . '-update',
+            'destroy' => $mainRoute . '-destroy'
+        ];
+        /**
+         * DATAS CONFIG END
+         */
+
+
+        /**
+         * TABLE CONFIG START
+         */
+        
+        //  Query ke database
+        $table_req_query = [
+            'table_master' => [
+                'table_name' => $master_table,
+                'alias' => 'a',
+                'select'=>[
+                    'a.*',
+                    ['IF(a.is_active = 0,"Non Active","Active") as is_active','raw()']
+                ]
+            ],
+        ];
+
+        
+        // Table header
+        $tableReq = [
+            'type' => 'generate', /* generate/manual */
+            'column_show' => '',
+            'column_block' => [
+                'created_at','updated_at','id',
+            ],
+        ];
+
+        // Table value
+        $dataTable = [
+            'tableConfig' => [
+                'idType'=>['alias'=>'No','type'=>'number'],/* number/alphabet */
+                'columnMode'=>'manual',/* manual/auto */
+                'columnCase'=>'camel',/* upper/lowercase/camel/pascal */
+                'orderColumn' =>'id,asc', /* name column then asc or desc */
+                'title' => $title, 
+                'action' => [ 
+                    'alias' => 'Aksi',
+                    'feature' => [ /*feature = add,edit,delete */
+                        // ['feature'=>'detail', 'alias'=> 'Detail', 'route'=>self::$subRoute['show'], 'icon'=>'bx-info-circle','disabled'=>'false','hide'=>'false'], 
+                        ['feature'=>'edit', 'alias'=> 'Edit', 'route'=>$subRoute['edit'], 'icon'=>'bx-pencil','disabled'=>'false','hide'=>'false'], 
+                        ['feature'=>'delete', 'alias'=> 'Hapus', 'route'=>$subRoute['destroy'], 'icon'=>'bx-trash','disabled'=>'false','hide'=>'false'], 
+                        ['feature'=>'add', 'alias'=> 'Tambah', 'route'=>$subRoute['create'], 'icon'=>'','disabled'=>'false','hide'=>'false'], 
+                    ]
+                ]
+            ],
+            // 'data'=> self::table_view()
+            'data'=> TableHelper::table_view($table_req_query, $tableReq)
+        ];
+
+        /**
+         * TABLE CONFIG END
+         */
+
+
+        /**
+         * DATA FORM START
+        */
+        $formConfig = [
+            [
+                'inputType'=>'TextInput',
+                'dataType'=>'text',
+                'alias'=>'Room Name',
+                'state'=>'room_name',
+                'required'=>'true',
+                'note'=>'Gunakan nama yang singkat namun informatif',
+            ],
+            [
+                'inputType'=>'TextInput',
+                'dataType'=>'text',
+                'alias'=>'Description',
+                'state'=>'description',
+                'required'=>'true',
+                'note'=>'Gunakan nama yang singkat namun informatif',
+            ],
+            [
+                'inputType'=>'dropdown',
+                'dataType'=>'text',
+                'alias'=>'Aktif',
+                'state'=>'is_active',
+                'required'=>'true',
+                'note'=>'Gunakan nama yang singkat namun informatif',
+                'data'=>FormHelper::dropdownInstantBool('is_active')
+            ],
+        ];
+
+        // FORM ADD
+        $dataFormAdd = [
+            'formConfig' => [
+                'title' => 'Tambah '.$title.' Baru', /*title page*/
+                'route'=> $subRoute['store'], /*route backend*/
+                'formInput' => $formConfig
+            ],
+        ];
+
+        // FORM EDIT
+        $dataFormEdit = [
+            'data' => (ControllerHelper::ch_datas(['id'=>$id_data, 'table_single'=> $master_table])),
+            
+            'dataForm'=>[
+                'formConfig' => [
+                'title' => 'Edit Data '.$title, /*title page*/
+                'route'=> $subRoute['update'], /*route backend*/
+                'method'=> 'post', /* post for create, put/patch for update */
+                'formInput' => $formConfig,
+               ],
+            ]
+        ];
+
+        /**
+         * DATA FORM END
+         */
+
+        switch ($params) {
+            case 'title':
+                return $title;
+                break;
+            case 'mainRoute':
+                return $mainRoute;
+                break;
+            case 'mainBuilder':
+                return $mainBuilder;
+                break;
+            case 'subRoute':
+                return $subRoute;
+                break;
+            case 'model':
+                return $model;
+                break;
+            case 'table_req_query':
+                return $table_req_query;
+                break;
+            case 'dataTable':
+                return $dataTable;
+                break;
+            case 'dataTable':
+                return $dataTable;
+                break;
+            case 'form_req_query':
+                return $form_req_query;
+                break;
+            case 'dataFormAdd':
+                return $dataFormAdd;
+                break;
+            case 'dataFormEdit':
+                return $dataFormEdit;
+                break;
+            
+            default:
+                return 'no action found';
+                break;
+        }
+        
+        return($req);
+        
+    }
+
+    public static function mapperProgramstudiesController($params = nul, $id_data = null){
+        /**
+         * DATAS CONFIG START
+         */
+        $title = 'Programstudies';
+        $mainRoute = 'programstudies';
+        $mainBuilder = 'builder';
+        $subRoute = [];
+        $model = 'Programstudies';
+        $master_table = 'program_studies';
+        
+
+        $subRoute = [
+           'index' => $mainBuilder . '.index',
+            'table' => $mainRoute . '.table',
+            'show' => $mainRoute . '.show',
+            'create' => $mainRoute . '.create',
+            'store' => '/' . $mainRoute . '-store', /* /route-store  */
+            'edit' => $mainRoute . '-edit',
+            'update' => '/'.$mainRoute . '-update',
+            'destroy' => $mainRoute . '-destroy'
+        ];
+        /**
+         * DATAS CONFIG END
+         */
+
+
+        /**
+         * TABLE CONFIG START
+         */
+        
+        //  Query ke database
+        $table_req_query = [
+            'table_master' => [
+                'table_name' => $master_table,
+                'alias' => 'a',
+                'select'=>[
+                    'a.*',
+                ]
+            ],
+        ];
+
+        
+        // Table header
+        $tableReq = [
+            'type' => 'generate', /* generate/manual */
+            'column_show' => '',
+            'column_block' => [
+                'created_at','updated_at','id',
+            ],
+        ];
+
+        // Table value
+        $dataTable = [
+            'tableConfig' => [
+                'idType'=>['alias'=>'No','type'=>'number'],/* number/alphabet */
+                'columnMode'=>'manual',/* manual/auto */
+                'columnCase'=>'camel',/* upper/lowercase/camel/pascal */
+                'orderColumn' =>'id,asc', /* name column then asc or desc */
+                'title' => $title, 
+                'action' => [ 
+                    'alias' => 'Aksi',
+                    'feature' => [ /*feature = add,edit,delete */
+                        // ['feature'=>'detail', 'alias'=> 'Detail', 'route'=>self::$subRoute['show'], 'icon'=>'bx-info-circle','disabled'=>'false','hide'=>'false'], 
+                        ['feature'=>'edit', 'alias'=> 'Edit', 'route'=>$subRoute['edit'], 'icon'=>'bx-pencil','disabled'=>'false','hide'=>'false'], 
+                        ['feature'=>'delete', 'alias'=> 'Hapus', 'route'=>$subRoute['destroy'], 'icon'=>'bx-trash','disabled'=>'false','hide'=>'false'], 
+                        ['feature'=>'add', 'alias'=> 'Tambah', 'route'=>$subRoute['create'], 'icon'=>'','disabled'=>'false','hide'=>'false'], 
+                    ]
+                ]
+            ],
+            // 'data'=> self::table_view()
+            'data'=> TableHelper::table_view($table_req_query, $tableReq)
+        ];
+
+        /**
+         * TABLE CONFIG END
+         */
+
+
+        /**
+         * DATA FORM START
+        */
+        $formConfig = [
+            [
+                'inputType'=>'TextInput',
+                'dataType'=>'text',
+                'alias'=>'Prodi Name',
+                'state'=>'prodi_name',
+                'required'=>'true',
+                'note'=>'Gunakan nama yang singkat namun informatif',
+            ],
+            [
+                'inputType'=>'textarea',
+                'dataType'=>'text',
+                'alias'=>'Description',
+                'state'=>'description',
+                'required'=>'true',
+                'note'=>'Gunakan nama yang singkat namun informatif',
+            ],
+            // [
+            //     'inputType'=>'dropdown',
+            //     'dataType'=>'text',
+            //     'alias'=>'Aktif',
+            //     'state'=>'is_active',
+            //     'required'=>'true',
+            //     'note'=>'Gunakan nama yang singkat namun informatif',
+            //     'data'=>FormHelper::dropdownInstantBool('is_active')
+            // ],
+            // ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Nama Program Studi','state'=>'prodi_name','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>''],
+            // ['inputType'=>'textarea','dataType'=>'text','alias'=>'Deskripsi','state'=>'description','required'=>'false','note'=>'','data'=>''],
+        ];
+
+        // FORM ADD
+        $dataFormAdd = [
+            'formConfig' => [
+                'title' => 'Tambah '.$title.' Baru', /*title page*/
+                'route'=> $subRoute['store'], /*route backend*/
+                'formInput' => $formConfig
+            ],
+        ];
+
+        // FORM EDIT
+        $dataFormEdit = [
+            'data' => (ControllerHelper::ch_datas(['id'=>$id_data, 'table_single'=> $master_table])),
+            
+            'dataForm'=>[
+                'formConfig' => [
+                'title' => 'Edit Data '.$title, /*title page*/
+                'route'=> $subRoute['update'], /*route backend*/
+                'method'=> 'post', /* post for create, put/patch for update */
+                'formInput' => $formConfig,
+               ],
+            ]
+        ];
+
+        /**
+         * DATA FORM END
+         */
+
+        switch ($params) {
+            case 'title':
+                return $title;
+                break;
+            case 'mainRoute':
+                return $mainRoute;
+                break;
+            case 'mainBuilder':
+                return $mainBuilder;
+                break;
+            case 'subRoute':
+                return $subRoute;
+                break;
+            case 'model':
+                return $model;
+                break;
+            case 'table_req_query':
+                return $table_req_query;
+                break;
+            case 'dataTable':
+                return $dataTable;
+                break;
+            case 'dataTable':
+                return $dataTable;
+                break;
+            case 'form_req_query':
+                return $form_req_query;
+                break;
+            case 'dataFormAdd':
+                return $dataFormAdd;
+                break;
+            case 'dataFormEdit':
+                return $dataFormEdit;
+                break;
+            
+            default:
+                return 'no action found';
+                break;
+        }
+        
+        return($req);
+        
+    }
+
+    
 }
 
 ?>

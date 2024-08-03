@@ -75,10 +75,10 @@ class FormHelper {
      */
     public static function dropdownInstantBool($column=null, $table=null , $active=null){
         $dataArr =[
-            ['id'=>'1','name'=>'Active'],
-            ['id'=>'0','name'=>'Inctive'],
+            ['id'=>1,'name'=>'Active'],
+            ['id'=>0,'name'=>'Inactive'],
         ];
-        $dropdown_result = ['default'=>'0','id'=>'id','name'=>$column,'data'=>$dataArr];
+        $dropdown_result = ['default'=>'','id'=>'id','name'=>'name','data'=>$dataArr];
         return $dropdown_result;
     }
 
