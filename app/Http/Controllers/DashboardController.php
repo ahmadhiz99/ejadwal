@@ -9,7 +9,7 @@ use App\Helpers\ControllerHelper;
 use App\Helpers\MapperHelper;
 use App\Helpers\TableHelper;
 
-class SubjectsController extends Controller
+class DashboardController extends Controller
 {
     function purgeConfig(){
         $configTemp = Self::configController();
@@ -19,7 +19,7 @@ class SubjectsController extends Controller
 
      function configController($params = null){
         $config = [
-            'model'=> MapperHelper::mapperSubjectsController('model')
+            'model'=> MapperHelper::mapperDashboardController('model')
         ];
 
         if($params != null){
@@ -33,6 +33,7 @@ class SubjectsController extends Controller
      */
     public function index()
     {
+        return Inertia::render('Dashboard');
         $req = [
             'id'=>null
         ];
@@ -43,12 +44,15 @@ class SubjectsController extends Controller
     }
 
     public function table(){
+
+        // dd($dayName);
+
         // Get Mapping Tabl
-        $req = MapperHelper::mapperSubjectsController('table_req_query');
+        $req = MapperHelper::mapperDashboardController('table_req_query');
         $config = Self::configController($req);
         $dataResult = ControllerHelper::ch_datas($config);
 
-        $dataTable = MapperHelper::mapperSubjectsController('dataTable');
+        $dataTable = MapperHelper::mapperDashboardController('dataTable');
         $data = ['data'=>$dataResult,'dataTable'=>$dataTable];
         session()->put("SessTableData", $data);
         return redirect('/builder/table');
@@ -56,7 +60,7 @@ class SubjectsController extends Controller
         /**
          * 
          */
-        $req = MapperHelper::mapperSubjectsController();
+        $req = MapperHelper::mapperDashboardController();
         $data = GeneratePages::_initial($MAIN_PAGE)
                 ->table(manual,$TABLE_CONFIG);
 
@@ -71,7 +75,7 @@ class SubjectsController extends Controller
     public function create()
     {
         // CALL FORM
-        $dataForm = MapperHelper::mapperSubjectsController('dataFormAdd');
+        $dataForm = MapperHelper::mapperDashboardController('dataFormAdd');
 
         $data = ['dataForm'=>$dataForm];
         session()->put("SessFormData", $data);
@@ -133,7 +137,7 @@ class SubjectsController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $dataForm = MapperHelper::mapperSubjectsController('dataFormEdit',$id);
+        $dataForm = MapperHelper::mapperDashboardController('dataFormEdit',$id);
 
         session()->put("SessFormData", $dataForm);
         return redirect('/builder/table/edit');// Variable has to come from here

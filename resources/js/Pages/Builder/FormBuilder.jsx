@@ -7,8 +7,11 @@ import Dropdown from "@/Components/Dropdown";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router, usePage } from "@inertiajs/react";
 import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+
 
 export default function FormBuilder({ auth }) {
+
     const data = usePage().props.data.data;
     const dataForm = usePage().props.data?.dataForm;
     const [formData, setFormData] = useState(data ? data : "");
@@ -24,6 +27,9 @@ export default function FormBuilder({ auth }) {
         router.visit(`${data ? `${route}/${id}` : route}`, {
             method: data ? 'put' : 'post',
             data: formData,
+            onSuccess: () => {
+                data ? toast.success("Berhasil Diupdate!") : toast.success("Berhasil Diupdate!");
+            },
         });
     };
     return (
@@ -56,6 +62,45 @@ export default function FormBuilder({ auth }) {
                                 <div className="flex flex-col gap-5 w-1/2">
                                         {dataForm.formConfig.formInput?dataForm.formConfig.formInput.map((form_data,idx)=>{
                                             if(form_data.inputType == 'TextInput'){
+                                                return (
+                                                    <div className="flex flex-col gap-2">
+                                                        <InputLabel
+                                                            className="text-sm"
+                                                            htmlFor="menuName"
+                                                            value={
+                                                                <p>
+                                                                    {form_data.required == 'true'?
+                                                                    (<span className="text-rose-500 text-xs">
+                                                                        * {" "}
+                                                                    </span>)
+                                                                    :null
+                                                                    }
+                                                                   {form_data.alias}
+                                                                </p>
+                                                            }
+                                                        />
+                                                        <TextInput
+                                                            className="required"
+                                                            type={form_data.dataType}
+                                                            value={formData[form_data.state]}
+                                                            onChange={(e)=>handleChange(e,form_data.state)}
+                                                        />
+                                                        {form_data.note || form_data.note != '' ? 
+                                                            (
+                                                                <p className="text-xs text-gray-400">
+                                                                   {form_data.note}
+                                                                </p>
+                                                            )
+                                                            :
+                                                            null
+                                                         }
+                                                    </div>
+
+                                                )
+                                            }
+
+                                            // Time
+                                            if(form_data.inputType == 'time'){
                                                 return (
                                                     <div className="flex flex-col gap-2">
                                                         <InputLabel

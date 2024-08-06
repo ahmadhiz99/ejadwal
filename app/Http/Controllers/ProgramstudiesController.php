@@ -11,7 +11,6 @@ use App\Helpers\TableHelper;
 
 class ProgramstudiesController extends Controller
 {
-   
     function purgeConfig(){
         $configTemp = Self::configController();
         $config = [];
@@ -106,8 +105,11 @@ class ProgramstudiesController extends Controller
             ],400);
         }else{
             $config = Self::configController($req);
-            // dd($config);
-            return ControllerHelper::ch_insert($config);
+            if(ControllerHelper::ch_insert($config)){
+                return self::table();
+            }
+            return 'Failed';
+
         }
       
     }
@@ -117,7 +119,6 @@ class ProgramstudiesController extends Controller
      */
     public function show($id)
     {
-        //   $role = Role::find($id);
         $req = [
             'id'=>$id
         ];
@@ -168,7 +169,10 @@ class ProgramstudiesController extends Controller
             ],400);
         }else{
             $config = Self::configController($req);
-            return ControllerHelper::ch_insert($config);
+             if(ControllerHelper::ch_insert($config)){
+                return self::table();
+             }
+             return 'Failed';
         }
     }
 
@@ -182,6 +186,9 @@ class ProgramstudiesController extends Controller
         ];
 
         $config = Self::configController($req);
-        return ControllerHelper::ch_destroy($config);
+        if(ControllerHelper::ch_destroy($config)){
+            return self::table();
+        }
+        return 'Failed';
     }
 }

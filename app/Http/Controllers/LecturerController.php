@@ -2,85 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use App\Helpers\ControllerHelper;
-
+use App\Helpers\MapperHelper;
+use App\Helpers\TableHelper;
 
 class LecturerController extends Controller
 {
-    // new
-    public static $title = 'Dosen';
-    public static $mainRoute = 'lecturer';
-    public static $mainBuilder = 'builder';
-    public static $subRoute = [];
-    public static $model = 'User';
-    public static $master_table = 'users';
-    
-    public  function __construct() {
-        // routingan backend
-        self::$subRoute = [
-            'index' => self::$mainRoute . '.index',
-            'table' => self::$mainRoute . '.table',
-            'show' => self::$mainRoute . '.show',
-            'create' => self::$mainRoute . '.create',
-            'store' => '/' . self::$mainRoute . '-store', /* /route-store  */
-            'edit' => self::$mainRoute . '-edit',
-            'update' => '/'.self::$mainRoute . '-update',
-            'destroy' => self::$mainRoute . '-destroy'
-        ];
-    }
-
-    function table_view() {
-        $data = [
-            ['column' => 'name', 'alias' => 'Nama', 'data' => '', 'className'=>''],
-            ['column' => 'email', 'alias' => 'Email', 'data' => '', 'className'=>''],
-            ['column' => 'role_id', 'alias' => 'Role', 'data' => '', 'className'=>''],
-        ];
-        return $data;
-    }
-
-    function form_view() {
-        Self::purgeConfig();
-        $req = [
-            'id'=>null,
-            'where_condition' => [
-                'equals' => [
-                    ['parent','=','0']
-                ]
-            ]
-        ];
-        $config = Self::configController($req);
-        $dataParent = ControllerHelper::ch_datas($config);
-
-        $data = [
-            ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Nama User','state'=>'name','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>''],
-                    ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Email','state'=>'email','required'=>'true','note'=>'','data'=>''],
-                    ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Password','state'=>'password','required'=>'true','note'=>'','data'=>''],
-                    ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Status','state'=>'status','required'=>'true','note'=>'','data'=>''],
-                    ['inputType'=>'TextInput','dataType'=>'text','alias'=>'NIS','state'=>'nis','required'=>'true','note'=>'','data'=>''],
-                    ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Role Id','state'=>'role_id','required'=>'true','note'=>'','data'=>''],
-                    ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Program Studi Id','state'=>'program_study_id','required'=>'true','note'=>'','data'=>''],
-        ];
-        return $data;
-    }
-
-    function get_validator(){
-        return [
-            'name' => 'required',
-            'email' => 'required',
-            'password' => 'required',
-            'nis' => 'required',
-            'program_study_id' => 'required'
-        ];
+    function purgeConfig(){
+        $configTemp = Self::configController();
+        $config = [];
+        $config = $configTemp;
     }
 
      function configController($params = null){
         $config = [
-            'model'=> self::$model,
+            'model'=> MapperHelper::mapperLecturerController('model')
         ];
 
         if($params != null){
@@ -89,70 +28,54 @@ class LecturerController extends Controller
         
         return $config;
     }
-
-    function purgeConfig(){
-        $configTemp = Self::configController();
-        $config = [];
-        $config = $configTemp;
-    }
-
-    public function table(){
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
         $req = [
-            'id'=>null,
-            'where_condition'=>[
-                'equals' => [
-                    ['role_id','=','3'],
-                    ['status','=','1'],
-                ]
-            ]
+            'id'=>null
         ];
 
         $config = Self::configController($req);
 
-        $data = ControllerHelper::ch_datas($config);
-        $dataTable = [
-                        'tableConfig' => [
-                            'idType'=>['alias'=>'No','type'=>'number'],/* number/alphabet */
-                            'columnMode'=>'manual',/* manual/auto */
-                            'columnCase'=>'camel',/* upper/lowercase/camel/pascal */
-                            'orderColumn' =>'id,asc', /* name column then asc or desc */
-                            'title' => self::$title,
-                            'action' => [ 
-                                'alias' => 'Aksi',
-                                'feature' => [ /*feature = add,edit,delete */
-                                    // ['feature'=>'detail', 'alias'=> 'Detail', 'route'=>self::$subRoute['show'], 'icon'=>'bx-info-circle','disabled'=>'false','hide'=>'false'], 
-                                    ['feature'=>'edit', 'alias'=> 'Edit', 'route'=>self::$subRoute['edit'], 'icon'=>'bx-pencil','disabled'=>'false','hide'=>'false'], 
-                                    ['feature'=>'delete', 'alias'=> 'Hapus', 'route'=>self::$subRoute['destroy'], 'icon'=>'bx-trash','disabled'=>'false','hide'=>'false'], 
-                                    ['feature'=>'add', 'alias'=> 'Tambah', 'route'=>self::$subRoute['create'], 'icon'=>'','disabled'=>'false','hide'=>'false'], 
-                                ]
-                            ]
-                        ],
-                        'data'=> self::table_view()
-                    ];
-
-        $data = ['data'=>$data,'dataTable'=>$dataTable];
-        session()->put("SessTableData", $data);
-        return redirect('/builder/table');// Variable has to come from here
+        return ControllerHelper::ch_datas($config);
     }
+
+    public function table(){
+        // Get Mapping Tabl
+        $req = MapperHelper::mapperLecturerController('table_req_query');
+        $config = Self::configController($req);
+        $dataResult = ControllerHelper::ch_datas($config);
+
+        $dataTable = MapperHelper::mapperLecturerController('dataTable');
+        $data = ['data'=>$dataResult,'dataTable'=>$dataTable];
+        session()->put("SessTableData", $data);
+        return redirect('/builder/table');
+
+        /**
+         * 
+         */
+        $req = MapperHelper::mapperLecturerController();
+        $data = GeneratePages::_initial($MAIN_PAGE)
+                ->table(manual,$TABLE_CONFIG);
+
+        session()->put("SessTableData", $data);
+        return redirect('/builder/table');
+        
+     }
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-
-        $dataForm = [
-            'formConfig' => [
-                'title' => 'Tambah '.self::$title.' Baru', /*title page*/
-                'route'=> self::$subRoute['store'], /*route backend*/
-                'formInput' => self::form_view(),
-            ],
-        ];
+        // CALL FORM
+        $dataForm = MapperHelper::mapperLecturerController('dataFormAdd');
 
         $data = ['dataForm'=>$dataForm];
         session()->put("SessFormData", $data);
-        return redirect('/builder/table/add');// Variable has to come from here
- 
+        return redirect('/builder/table/add');
     }
 
     /**
@@ -160,12 +83,18 @@ class LecturerController extends Controller
      */
     public function store(Request $request)
     {
-        // $data = $request->all();
-        $validator = Validator::make($request->all(), Self::get_validator());
+    //    GET VALIDATOR FROM FORM HELPER
+        $validator = Validator::make($request->all(), [
+            // 'start_date' => 'required',
+            // 'end_date' => 'required',
+            // 'status' => 'required',
+            // 'class_id' => 'required',
+            // 'user_id' => 'required'
+        ]);
 
         $req = [
             'id'=>null,
-            'request'=> $request->all(),
+            'request'=> $request->all()
         ];
 
         if($validator->fails()){
@@ -176,9 +105,13 @@ class LecturerController extends Controller
             ],400);
         }else{
             $config = Self::configController($req);
-            ControllerHelper::ch_insert($config);
-            return to_route(self::$subRoute['table']);
+            if(ControllerHelper::ch_insert($config)){
+                return self::table();
+            }
+            return 'Failed';
+
         }
+      
     }
 
     /**
@@ -186,37 +119,23 @@ class LecturerController extends Controller
      */
     public function show($id)
     {
-        //   $role = Role::find($id);
         $req = [
             'id'=>$id
         ];
 
         $config = Self::configController($req);
         return ControllerHelper::ch_datas($config);
+
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request,$id)
+    public function edit(Request $request, $id)
     {
-        $req = [
-            'id'=>$id
-        ];
+        $dataForm = MapperHelper::mapperLecturerController('dataFormEdit',$id);
 
-        $config = Self::configController($req);
-        $data = ControllerHelper::ch_datas($config);
-        
-        $dataForm = [
-            'formConfig' => [
-                'title' => 'Edit Data '.self::$title, /*title page*/
-                'route'=> self::$subRoute['update'], /*route backend*/
-                'method'=> 'post', /* post for create, put/patch for update */
-                'formInput' => self::form_view(),
-            ],
-        ];
-        $data = ['data'=>$data, 'dataForm'=>$dataForm];
-        session()->put("SessFormData", $data);
+        session()->put("SessFormData", $dataForm);
         return redirect('/builder/table/edit');// Variable has to come from here
     }
 
@@ -225,30 +144,35 @@ class LecturerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), Self::get_validator());
+        $validator = Validator::make($request->all(), [
+            // 'start_date' => 'required',
+            // 'end_date' => 'required',
+            // 'status' => 'required',
+            // 'class_id' => 'required',
+            // 'room_id' => 'required',
+            // 'subject_id' => 'required',
+            // 'user_id' => 'required'
+        ]);
+        Self::purgeConfig();
 
         $req = [
             'id'=>$id,
             'request'=> $request->all()
         ];
+        
 
         if($validator->fails()){
             return response()->json([
-                'message' => 'Update '. self::$title .' Failed!',
+                'message' => 'Store Role Failed!',
                 'status' => 'false',
                 'data'=> [$validator->messages()]
             ],400);
         }else{
             $config = Self::configController($req);
-            if(ControllerHelper::ch_insert($config)){
-                return to_route(self::$subRoute['table']);
-            }else{
-                return response()->json([
-                    'message' => 'Update '. self::$title .' Failed!',
-                    'status' => 'false',
-                    'data'=> [$validator->messages()]
-                ],400);
-            }
+             if(ControllerHelper::ch_insert($config)){
+                return self::table();
+             }
+             return 'Failed';
         }
     }
 
@@ -262,7 +186,9 @@ class LecturerController extends Controller
         ];
 
         $config = Self::configController($req);
-        return ControllerHelper::ch_destroy($config);
-        
+        if(ControllerHelper::ch_destroy($config)){
+            return self::table();
+        }
+        return 'Failed';
     }
 }

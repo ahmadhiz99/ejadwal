@@ -41,7 +41,7 @@ export default function TableBuilder({ auth }) {
         >
             <Head title="Subject" />
 
-            <ToastContainer
+            {/* <ToastContainer
                 position="top-right"
                 autoClose={5000}
                 hideProgressBar={'false'}
@@ -53,7 +53,9 @@ export default function TableBuilder({ auth }) {
                 pauseOnHover
                 theme="light"
                 transition={'true'}
-            />
+            /> */}
+
+            <ToastContainer />
 
             <div className="py-8">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">

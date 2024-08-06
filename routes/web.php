@@ -13,6 +13,7 @@ use App\Http\Controllers\MenusController;
 use App\Http\Controllers\TxMenuController;
 use App\Http\Controllers\Sys_ContentController;
 use App\Http\Controllers\LecturerController;
+use App\Http\Controllers\DashboardController;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -39,10 +40,13 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/dashboard', [DashboardController::class, 'table'])->name('dashboard');
+
 // !!!! ROUTE FOR INERTIA REACT !!!!
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+    // return Inertia::render('Dashboard');
+
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 // BUILDER
 Route::get('/builder/table', function () {
@@ -138,6 +142,8 @@ Route::get('/subject/show', function () {
 Route::get('/content-page', [Sys_ContentController::class, 'index'])->name('content.index');
 
 Route::group(['middleware' => 'checkRole:super,admin,client'], function() {
+
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

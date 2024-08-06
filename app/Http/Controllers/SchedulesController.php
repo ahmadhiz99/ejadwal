@@ -95,8 +95,8 @@ class SchedulesController extends Controller
             // 'end_date' => 'required',
             // 'status' => 'required',
             // 'class_id' => 'required',
-            'room_id' => 'required',
-            'subject_id' => 'required',
+            // 'room_id' => 'required',
+            // 'subject_id' => 'required',
             // 'user_id' => 'required'
         ]);
 
@@ -113,8 +113,10 @@ class SchedulesController extends Controller
             ],400);
         }else{
             $config = Self::configController($req);
-            return ControllerHelper::ch_insert($config);
-        }
+            if(ControllerHelper::ch_insert($config)){
+                return self::table();
+            }
+            return 'Failed';        }
       
     }
 
@@ -150,13 +152,13 @@ class SchedulesController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'start_date' => 'required',
-            'end_date' => 'required',
-            'status' => 'required',
-            'class_id' => 'required',
-            'room_id' => 'required',
-            'subject_id' => 'required',
-            'user_id' => 'required'
+            // 'start_date' => 'required',
+            // 'end_date' => 'required',
+            // 'status' => 'required',
+            // 'class_id' => 'required',
+            // 'room_id' => 'required',
+            // 'subject_id' => 'required',
+            // 'user_id' => 'required'
         ]);
         Self::purgeConfig();
 
@@ -174,8 +176,10 @@ class SchedulesController extends Controller
             ],400);
         }else{
             $config = Self::configController($req);
-            return ControllerHelper::ch_insert($config);
-        }
+            if(ControllerHelper::ch_insert($config)){
+                return self::table();
+            }
+            return 'Failed';        }
     }
 
     /**
@@ -188,6 +192,9 @@ class SchedulesController extends Controller
         ];
 
         $config = Self::configController($req);
-        return ControllerHelper::ch_destroy($config);
+        if(ControllerHelper::ch_destroy($config)){
+            return self::table();
+        }
+        return 'Failed';
     }
 }
