@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `contents` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table jadwal.contents: ~0 rows (approximately)
+-- Dumping data for table jadwal.contents: ~1 rows (approximately)
 INSERT INTO `contents` (`id`, `name`, `code`, `description`, `url`, `other`, `created_at`, `updated_at`) VALUES
 	(1, 'title', 'item1', 'UPN Veteran', NULL, NULL, '2024-01-31 06:05:19', '2024-01-31 06:05:19');
 
@@ -66,6 +66,23 @@ CREATE TABLE IF NOT EXISTS `failed_jobs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table jadwal.failed_jobs: ~0 rows (approximately)
+
+-- Dumping structure for table jadwal.hari
+CREATE TABLE IF NOT EXISTS `hari` (
+  `id` int(11) DEFAULT NULL,
+  `day_name` varchar(50) DEFAULT NULL,
+  `day_english` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table jadwal.hari: ~7 rows (approximately)
+INSERT INTO `hari` (`id`, `day_name`, `day_english`) VALUES
+	(1, 'Senin', 'Sunday'),
+	(2, 'Selasa', 'Monday'),
+	(3, 'Rabu', 'Tuesday'),
+	(4, 'Kamis', 'Wednesday'),
+	(5, 'Jumat', 'Thursday'),
+	(6, 'Sabtu', 'Friday'),
+	(7, 'Minggu', 'Saturday');
 
 -- Dumping structure for table jadwal.migrations
 CREATE TABLE IF NOT EXISTS `migrations` (
@@ -141,14 +158,13 @@ CREATE TABLE IF NOT EXISTS `program_studies` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table jadwal.program_studies: ~3 rows (approximately)
 INSERT INTO `program_studies` (`id`, `prodi_name`, `description`, `created_at`, `updated_at`) VALUES
 	(1, 'Informatikasss', 'Lorem ipsum dolor sit amet', '2024-05-18 10:56:55', '2024-05-14 12:03:09'),
 	(2, 'Sistem Informasi', 'Lorem ipsum dolor sit amet', NULL, NULL),
-	(10, 'Ilmu Komputers', 'Pendidikan Ilmu Komputer', '2024-02-15 09:14:06', '2024-03-16 02:52:24'),
-	(15, 'Test', 'AAABB', '2024-08-02 04:11:19', '2024-08-02 04:12:26');
+	(10, 'Ilmu Komputers', 'Pendidikan Ilmu Komputers', '2024-02-15 09:14:06', '2024-08-04 05:37:48');
 
 -- Dumping structure for table jadwal.roles
 CREATE TABLE IF NOT EXISTS `roles` (
@@ -200,8 +216,9 @@ INSERT INTO `rooms` (`id`, `room_name`, `description`, `created_at`, `updated_at
 -- Dumping structure for table jadwal.schedules
 CREATE TABLE IF NOT EXISTS `schedules` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `start_date` date NOT NULL,
-  `end_date` date NOT NULL,
+  `start_time` time DEFAULT NULL,
+  `end_time` time DEFAULT NULL,
+  `day` varchar(50) DEFAULT NULL,
   `status` varchar(255) NOT NULL,
   `class_id` bigint(20) unsigned NOT NULL,
   `room_id` bigint(20) unsigned NOT NULL,
@@ -218,13 +235,13 @@ CREATE TABLE IF NOT EXISTS `schedules` (
   CONSTRAINT `schedules_class_id_foreign` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`) ON DELETE CASCADE,
   CONSTRAINT `schedules_room_id_foreign` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`) ON DELETE CASCADE,
   CONSTRAINT `schedules_subject_id_foreign` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table jadwal.schedules: ~2 rows (approximately)
-INSERT INTO `schedules` (`id`, `start_date`, `end_date`, `status`, `class_id`, `room_id`, `subject_id`, `user_id`, `created_at`, `updated_at`) VALUES
-	(2, '2024-07-24', '2024-07-24', '5', 4, 1, 2, 15, '2024-07-24 01:47:43', '2024-07-31 18:05:29'),
-	(3, '2024-07-24', '2024-07-24', '1', 2, 10, 1, 3, '2024-07-24 01:47:43', '2024-07-24 01:47:44'),
-	(6, '2024-08-01', '2024-08-03', '', 2, 2, 4, 3, '2024-07-31 18:34:35', '2024-07-31 18:34:35');
+INSERT INTO `schedules` (`id`, `start_time`, `end_time`, `day`, `status`, `class_id`, `room_id`, `subject_id`, `user_id`, `created_at`, `updated_at`) VALUES
+	(2, '08:30:00', '10:00:00', '1', '5', 4, 1, 2, 15, '2024-07-24 01:47:43', '2024-07-31 18:05:29'),
+	(3, '08:30:00', '10:00:00', '2', '1', 2, 10, 1, 3, '2024-07-24 01:47:43', '2024-07-24 01:47:44'),
+	(6, '08:30:00', '08:30:00', '3', '', 2, 2, 4, 3, '2024-07-31 18:34:35', '2024-07-31 18:34:35');
 
 -- Dumping structure for table jadwal.subjects
 CREATE TABLE IF NOT EXISTS `subjects` (
@@ -246,7 +263,7 @@ INSERT INTO `subjects` (`id`, `code`, `subject_name`, `sks`, `semester`, `progra
 	(1, 'S1', 'Pengenalan Informatika', 2, 1, 1, '2024-01-30 09:09:03', '2024-01-30 09:09:03'),
 	(2, 'S1', 'Algoritma Pemrograman', 2, 1, 1, '2024-01-30 09:09:03', '2024-01-30 09:09:03'),
 	(3, 'S1', 'Pemrograman Dasar', 3, 1, 1, '2024-01-30 09:09:03', '2024-01-30 09:09:03'),
-	(4, 'S1', 'Pemrograman Web', 2, 2, 1, '2024-01-30 09:09:03', '2024-01-30 09:09:03');
+	(4, 'S1', 'Pemrograman Web', 2, 3, 1, '2024-01-30 09:09:03', '2024-08-05 20:43:11');
 
 -- Dumping structure for table jadwal.sys_action
 CREATE TABLE IF NOT EXISTS `sys_action` (
@@ -331,7 +348,7 @@ CREATE TABLE IF NOT EXISTS `sys_menu` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=108 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table jadwal.sys_menu: ~17 rows (approximately)
 INSERT INTO `sys_menu` (`id`, `name`, `code`, `parent`, `icon`, `route`, `activeRoute`, `is_active`, `created_at`, `updated_at`) VALUES
@@ -428,14 +445,15 @@ CREATE TABLE IF NOT EXISTS `users` (
   KEY `users_program_study_id_foreign` (`program_study_id`),
   CONSTRAINT `users_program_study_id_foreign` FOREIGN KEY (`program_study_id`) REFERENCES `program_studies` (`id`) ON DELETE CASCADE,
   CONSTRAINT `users_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table jadwal.users: ~4 rows (approximately)
+-- Dumping data for table jadwal.users: ~5 rows (approximately)
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `nis`, `status`, `role_id`, `program_study_id`, `remember_token`, `created_at`, `updated_at`) VALUES
 	(1, 'Super Admin', 'super@gmail.com', NULL, '$2y$12$evFqLSYJNmbhqLJVkkgZUuXoUfrcI6nVruoJxeFhwfg55gPs/3b.u', NULL, NULL, 1, NULL, NULL, NULL, NULL),
 	(2, 'Mas Admin2', 'admin@gmail.com', NULL, '$2y$12$evFqLSYJNmbhqLJVkkgZUuXoUfrcI6nVruoJxeFhwfg55gPs/3b.u', NULL, NULL, 2, NULL, NULL, NULL, NULL),
 	(3, 'Puji Astuti, S.Kom., M.Koms', 'dosen@gmail.com', NULL, '$2y$12$NF14q/g37KZoTMVssfk20Ow6xaaZ1vkb/HHTK/pdrpWVJUn9s7aGC', '321890', '1', 3, 1, NULL, NULL, '2024-05-17 19:36:06'),
-	(15, 'test4', 'test4@gmail.com', NULL, '$2y$12$HOmpqMGtWGW19WNaZfTbL.La5vXOeFf471PrCy/nDrUA/526dLLa.', '123', '1', 1, 1, NULL, '2024-05-17 12:50:24', '2024-05-17 12:50:24');
+	(15, 'test4', 'test4@gmail.com', NULL, '$2y$12$HOmpqMGtWGW19WNaZfTbL.La5vXOeFf471PrCy/nDrUA/526dLLa.', '123', '1', 1, 1, NULL, '2024-05-17 12:50:24', '2024-05-17 12:50:24'),
+	(19, 'Dudung', 'dudung@gmail.com', NULL, '$2y$12$057Qu7AfntFAkAhvrQxrIuUpcm1H6xA5aXPyHvXGiiNe/VSC1IvC.', '123123123', '0', 3, 10, NULL, '2024-08-04 22:43:30', '2024-08-04 22:43:45');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
