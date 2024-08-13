@@ -1,10 +1,12 @@
 <?php
-
 namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use App\Models\ProgramStudy; 
+
 
 class ProgramStudySeeder extends Seeder
 {
@@ -15,14 +17,10 @@ class ProgramStudySeeder extends Seeder
     {
         DB::table('program_studies')->insert(
             [
-                [
-                    'prodi_name' => 'Informatika',
-                    'description' => 'Lorem ipsum dolor sit amet'
-                ],
-                [
-                    'prodi_name' => 'Sistem Informasi',
-                    'description' => 'Lorem ipsum dolor sit amet'
-                ]
+                ['prodi_name' => 'Informatikasss', 'description' => 'Lorem ipsum dolor sit amet'],
+                ['prodi_name' => 'Sistem Informasi', 'description' => 'Lorem ipsum dolor sit amet'],
+                ['prodi_name' => 'Ilmu Komputers', 'description' => 'Pendidikan Ilmu Komputers'],
+          
             ]
         );
     }

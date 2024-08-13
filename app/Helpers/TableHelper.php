@@ -50,11 +50,10 @@ class TableHelper {
      * GENERATE TABLE
      */
     public static function generate_table_view($tableReq, $dataTable){
-        if($tableReq['type'] == 'generate'){
+        if($tableReq['type'] == 'generate' && count($dataTable) > 0){
             $data=[];
             $dataColumn=[];
             $dataForm = $dataTable[0];
-            // dd($dataForm);
             foreach($dataForm as $key1 => $data1){
                 foreach($tableReq['column_block'] as $key2 => $data2){
                     if($key1 == $data2){

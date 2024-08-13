@@ -14,6 +14,7 @@ use App\Http\Controllers\TxMenuController;
 use App\Http\Controllers\Sys_ContentController;
 use App\Http\Controllers\LecturerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MainController;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -31,14 +32,13 @@ use Inertia\Inertia;
 */
 
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+    Route::get('/', [MainController::class, 'index']);
+    // return Inertia::render('Welcome', [
+    //     'canLogin' => Route::has('login'),
+    //     'canRegister' => Route::has('register'),
+    //     'laravelVersion' => Application::VERSION,
+    //     'phpVersion' => PHP_VERSION,
+    // ]);
 
 Route::get('/dashboard', [DashboardController::class, 'table'])->name('dashboard');
 

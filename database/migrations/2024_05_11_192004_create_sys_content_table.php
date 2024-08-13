@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('value');
-            $table->string('description');
-            $table->integer('url');
-            $table->integer('is_active');
+            $table->text('description')->nullable();
+            $table->string('url')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
