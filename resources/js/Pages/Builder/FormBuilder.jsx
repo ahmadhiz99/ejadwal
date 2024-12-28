@@ -6,7 +6,7 @@ import TextInput from "@/Components/TextInput";
 import Dropdown from "@/Components/Dropdown";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router, usePage } from "@inertiajs/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 
 
@@ -15,6 +15,14 @@ export default function FormBuilder({ auth }) {
     const data = usePage().props.data.data;
     const dataForm = usePage().props.data?.dataForm;
     const [formData, setFormData] = useState(data ? data : "");
+    const { errors } = usePage().props;
+
+    useEffect(() => {
+        if (errors?.message) {
+            toast.error(errors.message); // Display error using toast
+        }
+    }, [errors]);
+
 
     const handleChange = (e,key) =>{
         setFormData(prevState =>({
@@ -23,6 +31,7 @@ export default function FormBuilder({ auth }) {
         }))
     }
     const handleSubmit = (e, id, route, method) => {
+        console.log('submit');
         e.preventDefault();
         router.visit(`${data ? `${route}/${id}` : route}`, {
             method: data ? 'put' : 'post',
@@ -43,6 +52,8 @@ export default function FormBuilder({ auth }) {
         >
             <Head title="Tambah Baru" />
 
+            <ToastContainer />
+           
             <div className="py-8">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4">

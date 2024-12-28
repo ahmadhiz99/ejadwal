@@ -89,6 +89,7 @@ class SchedulesController extends Controller
      */
     public function store(Request $request)
     {
+
     //    GET VALIDATOR FROM FORM HELPER
         $validator = Validator::make($request->all(), [
             // 'start_date' => 'required',
@@ -99,11 +100,25 @@ class SchedulesController extends Controller
             // 'subject_id' => 'required',
             // 'user_id' => 'required'
         ]);
+        
+        $class = $request->class_id;
+        $day = $request->day;
+        $room = $request->room_id;
+        $start_time = $request->start_time;
+        $end_time = $request->end_time;
+        $request->status = 1;
 
         $req = [
             'id'=>null,
             'request'=> $request->all()
         ];
+
+        $dataScehdule = Schedule::where('class_id','=',$class)
+                                ->where('day','=', $day)
+                                ->where('room_id','=',$room)
+                                ->where('end_time','>',$start_time)
+                                ->where('start_time','<',$end_time)
+                                ->count();
 
         if($validator->fails()){
             return response()->json([
@@ -111,12 +126,18 @@ class SchedulesController extends Controller
                 'status' => 'false',
                 'data'=> [$validator->messages()]
             ],400);
-        }else{
+        }else if($dataScehdule > 0){
+            return back()->withErrors([
+                'message' => 'Terdapat jadwal lain di jam ini. Silakan coba lagi!',
+            ]);
+        }
+        else{
             $config = Self::configController($req);
             if(ControllerHelper::ch_insert($config)){
                 return self::table();
             }
-            return 'Failed';        }
+            return 'Failed';        
+        }
       
     }
 
