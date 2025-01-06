@@ -1366,7 +1366,7 @@ class MapperHelper {
         /**
          * DATAS CONFIG START
          */
-        $title = 'Dashboard';
+        $title = 'Jadwal Perkuliahan';
         $mainRoute = 'schedule';
         $mainBuilder = 'builder';
         $subRoute = [];
@@ -1399,6 +1399,8 @@ class MapperHelper {
                 'alias' => 'a',
                 'select'=>[
                     'a.*',
+                    'a.start_time as jam_mulai',
+                    'a.end_time as jam_berakhir',
                     ['IF(a.status = 0,"Non Active","Active") as status','raw()']
                 ]
             ],
@@ -1432,7 +1434,7 @@ class MapperHelper {
                     'alias'=> 'e',
                     'on'=>'a.user_id = e.id',
                     'select'=> [
-                        ['e.name as user_name']
+                        ['e.name as dosen']
                     ],
                 ],
                 'hari'=>[
@@ -1458,14 +1460,14 @@ class MapperHelper {
             'type' => 'generate', /* generate/manual */
             'column_show' => '',
             'column_block' => [
-                'created_at','updated_at','class_id','room_id','subject_id','id','user_id','day','status'
+                'start_time','end_time','created_at','updated_at','class_id','room_id','subject_id','id','user_id','day','status','id'
             ],
         ];
 
         // Table value
         $dataTable = [
             'tableConfig' => [
-                'idType'=>['alias'=>'No','type'=>'number'],/* number/alphabet */
+                // 'idType'=>['alias'=>'No','type'=>'number'],/* number/alphabet */
                 'columnMode'=>'manual',/* manual/auto */
                 'columnCase'=>'camel',/* upper/lowercase/camel/pascal */
                 'orderColumn' =>'id,asc', /* name column then asc or desc */

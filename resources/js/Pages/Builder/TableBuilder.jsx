@@ -125,9 +125,16 @@ export default function TableBuilder({ auth }) {
                                                           key={data_table.id}
                                                           className="border text-gray-700"
                                                       >
-                                                          <td className="px-8 py-8 text-center">
-                                                              {idx + 1}
-                                                          </td>
+                                                        {dataTable.tableConfig.idType?
+                                                                (
+                                                                <td className="px-8 py-8 text-center">
+                                                                    {idx + 1}
+                                                                </td>
+                                                                )
+                                                                :
+                                                                null
+                                                            }
+                                                          
 
                                                         {dataTable.data?dataTable.data.map((data_column_table,idx)=>{
                                                         return (
