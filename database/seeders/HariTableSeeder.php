@@ -17,13 +17,13 @@ class HariTableSeeder extends Seeder
     public function run()
     {
         $hari = [
-            ['id' => 1, 'day_name' => 'Senin', 'day_english' => 'Sunday'],
-            ['id' => 2, 'day_name' => 'Selasa', 'day_english' => 'Monday'],
-            ['id' => 3, 'day_name' => 'Rabu', 'day_english' => 'Tuesday'],
-            ['id' => 4, 'day_name' => 'Kamis', 'day_english' => 'Wednesday'],
-            ['id' => 5, 'day_name' => 'Jumat', 'day_english' => 'Thursday'],
-            ['id' => 6, 'day_name' => 'Sabtu', 'day_english' => 'Friday'],
-            ['id' => 7, 'day_name' => 'Minggu', 'day_english' => 'Saturday'],
+            ['id' => 1, 'day_name' => 'Senin', 'day_english' => 'Monday'],
+            ['id' => 2, 'day_name' => 'Selasa', 'day_english' => 'Tuesday'],
+            ['id' => 3, 'day_name' => 'Rabu', 'day_english' => 'Wednesday'],
+            ['id' => 4, 'day_name' => 'Kamis', 'day_english' => 'Thursday'],
+            ['id' => 5, 'day_name' => 'Jumat', 'day_english' => 'Friday'],
+            ['id' => 6, 'day_name' => 'Sabtu', 'day_english' => 'Saturday'],
+            ['id' => 7, 'day_name' => 'Minggu', 'day_english' => 'Sunday'],
         ];
 
         foreach ($hari as $data) {
