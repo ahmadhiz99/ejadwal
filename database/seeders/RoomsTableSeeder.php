@@ -24,15 +24,6 @@ class RoomsTableSeeder extends Seeder
             ['room_name' => 'LAB', 'description' => 'LABORAT', 'is_active' => 1],
             ['room_name' => 'AULA', 'description' => 'AULA UTAMA', 'is_active' => 0],
             ['room_name' => 'RUANGAN BASEMENT', 'description' => 'Ruangan Tambahan', 'is_active' => 0],
-            ['room_name' => 'tes', 'description' => 'tes', 'is_active' => 0],
-            ['room_name' => 'aa', 'description' => 'aa', 'is_active' => 1],
-            ['room_name' => 'aa', 'description' => 'aa', 'is_active' => 1],
-            ['room_name' => 'bb', 'description' => 'aa', 'is_active' => 1],
-            ['room_name' => 'tes', 'description' => 'tes', 'is_active' => 0],
-            ['room_name' => 'bb', 'description' => 'aa', 'is_active' => 0],
-            ['room_name' => 'bb', 'description' => 'aa', 'is_active' => 0],
-            ['room_name' => 'bb', 'description' => 'aa', 'is_active' => 0],
-            ['room_name' => 'bb', 'description' => 'aa', 'is_active' => 1],
         ];
 
         foreach ($rooms as $data) {

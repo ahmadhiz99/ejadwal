@@ -17,9 +17,9 @@ class ProgramStudySeeder extends Seeder
     {
         DB::table('program_studies')->insert(
             [
-                ['prodi_name' => 'Informatikasss', 'description' => 'Lorem ipsum dolor sit amet'],
+                ['prodi_name' => 'Informatika', 'description' => 'Lorem ipsum dolor sit amet'],
                 ['prodi_name' => 'Sistem Informasi', 'description' => 'Lorem ipsum dolor sit amet'],
-                ['prodi_name' => 'Ilmu Komputers', 'description' => 'Pendidikan Ilmu Komputers'],
+                ['prodi_name' => 'Ilmu Komputer', 'description' => 'Pendidikan Ilmu Komputers'],
           
             ]
         );

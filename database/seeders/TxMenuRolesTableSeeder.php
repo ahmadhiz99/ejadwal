@@ -26,16 +26,23 @@ class TxMenuRolesTableSeeder extends Seeder
             ['menu_id' => 95, 'role_id' => 2, 'description' => null, 'is_active' => '1', 'created_at' => '2024-07-23 16:09:43', 'updated_at' => '2024-07-23 16:09:43'],
             ['menu_id' => 98, 'role_id' => 2, 'description' => null, 'is_active' => '1', 'created_at' => '2024-07-23 16:09:57', 'updated_at' => '2024-07-23 16:09:57'],
             ['menu_id' => 99, 'role_id' => 2, 'description' => null, 'is_active' => '1', 'created_at' => '2024-07-23 16:10:19', 'updated_at' => '2024-07-23 16:10:19'],
-            ['menu_id' => 2, 'role_id' => 3, 'description' => 'tess dosen', 'is_active' => '1', 'created_at' => '2024-07-23 20:06:56', 'updated_at' => '2024-07-23 20:06:56'],
-            ['menu_id' => 4, 'role_id' => 3, 'description' => 'tess dosen', 'is_active' => '1', 'created_at' => '2024-07-23 20:06:56', 'updated_at' => '2024-07-23 20:06:56'],
-            ['menu_id' => 6, 'role_id' => 3, 'description' => 'tess dosen', 'is_active' => '1', 'created_at' => '2024-07-23 20:06:56', 'updated_at' => '2024-07-23 20:06:56'],
-            ['menu_id' => 107, 'role_id' => 3, 'description' => 'tess dosen', 'is_active' => '1', 'created_at' => '2024-07-23 20:06:56', 'updated_at' => '2024-07-23 20:06:56'],
+            // ['menu_id' => 2, 'role_id' => 3, 'description' => 'tess dosen', 'is_active' => '1', 'created_at' => '2024-07-23 20:06:56', 'updated_at' => '2024-07-23 20:06:56'],
+            // ['menu_id' => 4, 'role_id' => 3, 'description' => 'tess dosen', 'is_active' => '1', 'created_at' => '2024-07-23 20:06:56', 'updated_at' => '2024-07-23 20:06:56'],
+            // ['menu_id' => 6, 'role_id' => 3, 'description' => 'tess dosen', 'is_active' => '1', 'created_at' => '2024-07-23 20:06:56', 'updated_at' => '2024-07-23 20:06:56'],
+            // ['menu_id' => 107, 'role_id' => 3, 'description' => 'tess dosen', 'is_active' => '1', 'created_at' => '2024-07-23 20:06:56', 'updated_at' => '2024-07-23 20:06:56'],
             ['menu_id' => 5, 'role_id' => 1, 'description' => 'super', 'is_active' => '1', 'created_at' => '2024-07-23 21:34:01', 'updated_at' => '2024-07-23 21:34:01'],
             ['menu_id' => 7, 'role_id' => 1, 'description' => 'super', 'is_active' => '1', 'created_at' => '2024-07-23 21:34:01', 'updated_at' => '2024-07-23 21:34:01'],
             ['menu_id' => 8, 'role_id' => 1, 'description' => 'super', 'is_active' => '1', 'created_at' => '2024-07-23 21:34:01', 'updated_at' => '2024-07-23 21:34:01'],
             ['menu_id' => 9, 'role_id' => 1, 'description' => 'super', 'is_active' => '1', 'created_at' => '2024-07-23 21:34:01', 'updated_at' => '2024-07-23 21:34:01'],
             ['menu_id' => 105, 'role_id' => 1, 'description' => 'superr', 'is_active' => '1', 'created_at' => '2024-07-23 21:35:04', 'updated_at' => '2024-07-23 21:35:04'],
             ['menu_id' => 106, 'role_id' => 1, 'description' => 'superr', 'is_active' => '1', 'created_at' => '2024-07-23 21:35:04', 'updated_at' => '2024-07-23 21:35:04'],
+            ['menu_id' => 5, 'role_id' => 2, 'description' => 'admin', 'is_active' => '1', 'created_at' => '2024-07-23 21:35:04', 'updated_at' => '2024-07-23 21:35:04'],
+            ['menu_id' => 9, 'role_id' => 2, 'description' => 'admin', 'is_active' => '1', 'created_at' => '2024-07-23 21:35:04', 'updated_at' => '2024-07-23 21:35:04'],
+            ['menu_id' => 5, 'role_id' => 3, 'description' => 'dosen', 'is_active' => '1', 'created_at' => '2024-07-23 21:35:04', 'updated_at' => '2024-07-23 21:35:04'],
+            ['menu_id' => 5, 'role_id' => 4, 'description' => 'kaprodi', 'is_active' => '1', 'created_at' => '2024-07-23 21:35:04', 'updated_at' => '2024-07-23 21:35:04'],
+            ['menu_id' => 1, 'role_id' => 4, 'description' => null, 'is_active' => '1', 'created_at' => null, 'updated_at' => null],
+            ['menu_id' => 1, 'role_id' => 5, 'description' => null, 'is_active' => '1', 'created_at' => null, 'updated_at' => null],
+
         ]);
     }
 }

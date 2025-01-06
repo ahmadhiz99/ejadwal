@@ -14,11 +14,11 @@ class SysMenusTableSeeder extends Seeder
     public function run(): void
     {
         $data = [
-            ['id' => 1, 'name' => 'Dashboard', 'code' => 'D1', 'parent' => '0', 'icon' => 'bx-home', 'route' => 'dashboard', 'activeRoute' => NULL, 'is_active' => 1, 'created_at' => '2024-05-15 04:19:01', 'updated_at' => '2024-05-15 04:19:01'],
+            ['id' => 1, 'name' => 'Jadwal Perkuliahan', 'code' => 'D1', 'parent' => '0', 'icon' => 'bx-calendar', 'route' => 'dashboard', 'activeRoute' => NULL, 'is_active' => 1, 'created_at' => '2024-05-15 04:19:01', 'updated_at' => '2024-05-15 04:19:01'],
             ['id' => 2, 'name' => 'Prodi', 'code' => 'A1', 'parent' => '0', 'icon' => 'bx-buildings', 'route' => '', 'activeRoute' => '', 'is_active' => 1, 'created_at' => '2024-01-31 06:13:00', 'updated_at' => '2024-01-31 06:13:00'],
             ['id' => 3, 'name' => 'Sys Menu', 'code' => 'A1', 'parent' => '0', 'icon' => 'bx-grid', 'route' => 'menu.table', 'activeRoute' => 'menu.menus', 'is_active' => 1, 'created_at' => '2024-01-31 06:13:00', 'updated_at' => '2024-01-31 06:13:00'],
             ['id' => 4, 'name' => 'Program Studi', 'code' => 'A1', 'parent' => '2', 'icon' => NULL, 'route' => 'programstudies.table', 'activeRoute' => '', 'is_active' => 1, 'created_at' => '2024-01-31 06:13:00', 'updated_at' => '2024-01-31 06:13:00'],
-            ['id' => 5, 'name' => 'Akademik', 'code' => 'A1', 'parent' => '0', 'icon' => 'bx-calendar', 'route' => '', 'activeRoute' => '', 'is_active' => 1, 'created_at' => '2024-01-31 06:13:00', 'updated_at' => '2024-01-31 06:13:00'],
+            ['id' => 5, 'name' => 'Akademik', 'code' => 'A1', 'parent' => '0', 'icon' => 'bx-book-open', 'route' => '', 'activeRoute' => '', 'is_active' => 1, 'created_at' => '2024-01-31 06:13:00', 'updated_at' => '2024-01-31 06:13:00'],
             ['id' => 6, 'name' => 'Dosen', 'code' => 'A1', 'parent' => '2', 'icon' => NULL, 'route' => 'lecturer.table', 'activeRoute' => 'lecturer.lecturers', 'is_active' => 1, 'created_at' => '2024-01-31 06:13:00', 'updated_at' => '2024-05-15 07:52:59'],
             ['id' => 7, 'name' => 'Mata Kuliah', 'code' => 'A1', 'parent' => '2', 'icon' => NULL, 'route' => 'subject.table', 'activeRoute' => '', 'is_active' => 1, 'created_at' => '2024-01-31 06:13:00', 'updated_at' => '2024-08-02 02:59:36'],
             ['id' => 8, 'name' => 'Ruangan', 'code' => 'A1', 'parent' => '2', 'icon' => NULL, 'route' => 'room.table', 'activeRoute' => 'room.rooms', 'is_active' => 1, 'created_at' => '2024-01-31 06:13:00', 'updated_at' => '2024-08-01 16:08:48'],

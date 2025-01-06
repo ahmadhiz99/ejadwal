@@ -20,8 +20,8 @@ class ClassesTableSeeder extends Seeder
         $classes = [
             ['class_name' => 'Kelas A', 'code' => 'A1', 'description' => 'Class A number 1', 'program_study_id' => 1],
             ['class_name' => 'Kelas B', 'code' => 'B1', 'description' => 'Class B number 1', 'program_study_id' => 1],
-            ['class_name' => 'test clas', 'code' => '1', 'description' => 'asdasd', 'program_study_id' => 1],
-            ['class_name' => 'CLASS D', 'code' => '12', 'description' => 'aaaa', 'program_study_id' => 2],
+            ['class_name' => 'Kelas C', 'code' => 'C1', 'description' => 'Class C', 'program_study_id' => 1],
+            ['class_name' => 'CLASS D', 'code' => '12', 'description' => 'Class D', 'program_study_id' => 2],
         ];
 
         foreach ($classes as $class) {

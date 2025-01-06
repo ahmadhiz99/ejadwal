@@ -1,4 +1,5 @@
 import InputLabel from "@/Components/InputLabel";
+import InputError from "@/Components/InputError";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import SecondaryButtonLink from "@/Components/SecondaryButtonLink";
@@ -10,17 +11,17 @@ import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 
 
-export default function FormBuilder({ auth }) {
+export default function FormBuilder({ auth, errors, old }) {
 
     const data = usePage().props.data.data;
     const dataForm = usePage().props.data?.dataForm;
     const [formData, setFormData] = useState(data ? data : "");
-    const { errors } = usePage().props;
 
     useEffect(() => {
         if (errors?.message) {
-            toast.error(errors.message); // Display error using toast
+            toast.error(errors.message[0]); // Display error using toast
         }
+        setFormData(old);
     }, [errors]);
 
 
@@ -96,6 +97,7 @@ export default function FormBuilder({ auth }) {
                                                             value={formData[form_data.state]}
                                                             onChange={(e)=>handleChange(e,form_data.state)}
                                                         />
+                                                         <InputError message={errors[form_data.state]} className='mt-2' />
                                                         {form_data.note || form_data.note != '' ? 
                                                             (
                                                                 <p className="text-xs text-gray-400">
@@ -135,6 +137,7 @@ export default function FormBuilder({ auth }) {
                                                             value={formData[form_data.state]}
                                                             onChange={(e)=>handleChange(e,form_data.state)}
                                                         />
+                                                        <InputError message={errors[form_data.state]} className='mt-2' />
                                                         {form_data.note || form_data.note != '' ? 
                                                             (
                                                                 <p className="text-xs text-gray-400">
@@ -174,6 +177,7 @@ export default function FormBuilder({ auth }) {
                                                             value={formData[form_data.state]}
                                                             onChange={(e)=>handleChange(e,form_data.state)}
                                                         />
+                                                         <InputError message={errors[form_data.state]} className='mt-2' />
                                                         {form_data.note || form_data.note != '' ? 
                                                             (
                                                                 <p className="text-xs text-gray-400">
@@ -206,6 +210,7 @@ export default function FormBuilder({ auth }) {
                                                             value={formData[form_data.state]}
                                                             onChange={(e)=>handleChange(e,form_data.state)}
                                                         ></textarea>
+                                                         <InputError message={errors[form_data.state]} className='mt-2' />
 
                                                         {form_data.note || form_data.note != '' ? 
                                                             (
@@ -246,6 +251,7 @@ export default function FormBuilder({ auth }) {
                                                             null
                                                             }
                                                         </select>
+                                                        <InputError message={errors[form_data.state]} className='mt-2' />
 
                                                         {form_data.note || form_data.note != '' ? 
                                                             (

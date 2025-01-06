@@ -64,13 +64,25 @@ class MapperHelper {
          */
         
         //  Query ke database
+        $role = Auth()->user()->role_id;
+
+        $where_condition = [ ];
+
+        if($role == 3){
+            $where_condition = [
+                    "equals" => [
+                        ['a.user_id','=',Auth()->user()->id],
+                    ],
+                ];
+        }
+
         $table_req_query = [
             'table_master' => [
                 'table_name' => $table_name,
                 'alias' => 'a',
                 'select'=>[
                     'a.*',
-                    ['IF(a.status = 0,"Non Active","Active") as status','raw()']
+                    ['IF(a.status = 0,"Diajukan","Disetujui") as status','raw()']
                 ]
             ],
             'join' => [
@@ -115,6 +127,7 @@ class MapperHelper {
                     ],
                 ],
             ],
+            'where_condition' => $where_condition
         ];
 
         
@@ -127,6 +140,34 @@ class MapperHelper {
             ],
         ];
 
+        $feture = [];
+        if($role == 1){
+            $feture = [ 
+                        // ['feature'=>'detail', 'alias'=> 'Detail', 'route'=>self::$subRoute['show'], 'icon'=>'bx-info-circle','disabled'=>'false','hide'=>'false'], 
+                        ['feature'=>'edit', 'alias'=> 'Edit', 'route'=>$subRoute['edit'], 'icon'=>'bx-pencil','disabled'=>'false','hide'=>'false'], 
+                        ['feature'=>'delete', 'alias'=> 'Hapus', 'route'=>$subRoute['destroy'], 'icon'=>'bx-trash','disabled'=>'false','hide'=>'false'], 
+                        ['feature'=>'add', 'alias'=> 'Tambah', 'route'=>$subRoute['create'], 'icon'=>'','disabled'=>'false','hide'=>'false'], 
+            ];
+        }
+        if($role == 2){
+            $feture = [ 
+                        ['feature'=>'edit', 'alias'=> 'Edit', 'route'=>$subRoute['edit'], 'icon'=>'bx-pencil','disabled'=>'false','hide'=>'false'], 
+                        ['feature'=>'delete', 'alias'=> 'Hapus', 'route'=>$subRoute['destroy'], 'icon'=>'bx-trash','disabled'=>'false','hide'=>'false'], 
+                        ['feature'=>'add', 'alias'=> 'Tambah', 'route'=>$subRoute['create'], 'icon'=>'','disabled'=>'false','hide'=>'false'], 
+            ];
+        }
+        if($role == 3){
+            $feture = [ 
+                ['feature'=>'add', 'alias'=> 'Tambah', 'route'=>$subRoute['create'], 'icon'=>'','disabled'=>'false','hide'=>'false'], 
+            ];
+        }
+        if($role == 4){
+            $feture = [ 
+                        ['feature'=>'edit', 'alias'=> 'Edit', 'route'=>$subRoute['edit'], 'icon'=>'bx-pencil','disabled'=>'false','hide'=>'false'], 
+                        ['feature'=>'delete', 'alias'=> 'Hapus', 'route'=>$subRoute['destroy'], 'icon'=>'bx-trash','disabled'=>'false','hide'=>'false'], 
+            ];
+        }
+       
         // Table value
         $dataTable = [
             'tableConfig' => [
@@ -137,15 +178,9 @@ class MapperHelper {
                 'title' => $title, 
                 'action' => [ 
                     'alias' => 'Aksi',
-                    'feature' => [ /*feature = add,edit,delete */
-                        // ['feature'=>'detail', 'alias'=> 'Detail', 'route'=>self::$subRoute['show'], 'icon'=>'bx-info-circle','disabled'=>'false','hide'=>'false'], 
-                        ['feature'=>'edit', 'alias'=> 'Edit', 'route'=>$subRoute['edit'], 'icon'=>'bx-pencil','disabled'=>'false','hide'=>'false'], 
-                        ['feature'=>'delete', 'alias'=> 'Hapus', 'route'=>$subRoute['destroy'], 'icon'=>'bx-trash','disabled'=>'false','hide'=>'false'], 
-                        ['feature'=>'add', 'alias'=> 'Tambah', 'route'=>$subRoute['create'], 'icon'=>'','disabled'=>'false','hide'=>'false'], 
-                    ]
+                    'feature' => $feture,
                 ]
             ],
-            // 'data'=> self::table_view()
             'data'=> TableHelper::table_view($table_req_query, $tableReq)
         ];
 
@@ -158,60 +193,37 @@ class MapperHelper {
          * DATA FORM START
         */
 
-        // $MAIN_PAGE = [
-        //     // ROUTES
-        //     ['ROUTES']       => $mainRoute,
-        //     ['SUB_ROUTES']   => $subRoute,
-        //     ['MODEL']        => $model,
-        //     ['FORM']         => [
-        //                             'GENERATE'  => ['auto',null], 
-        //                             'DROPDOWN'  => ['auto',null],
-        //                             'CHECKBOX'  => ['auto',null],
-        //                         ],
-        //     ['TABLE'] => [
-        //         'GENERATE'  => ['auto',null],
-        //         'HEADER'    => ['auto',null], /* auto || hybrid || manual */
-        //         'VALUE'     => ['auto',null],
-        //     ],
-        //     ['FEATURE'] => [
-        //         'ADD' => ['auto',null],
-        //         'EDIT' => ['auto',null],
-        //         'DETAIL' => ['auto',null],
-        //         'DELETE' => ['auto',null],
-        //     ]
-        // ];
+        $statusInput = '';
+        if(in_array($role, [1,2,4]) ){
+            $statusInput = [
+                'inputType'=>'dropdown',
+                'dataType'=>'text',
+                'alias'=>'Status',
+                'required'=>'true',
+                'note'=>'Status',
+                'state'=>'status',
+                // 'data'=>FormHelper::dropdownInstantBool('status')            
+                'data'=>FormHelper::dropdownInstantBool(null, null, null, 
+                    [
+                        ['id'=>1,'name'=>'Setujui'],
+                        ['id'=>0,'name'=>'Request'],
+                    ]
+                )            
+            ];
+        }
 
-        // $TABLE_CONFIG = [
-        //     'GENERATE_DROPDOWN' => [
-                
-        //     ],
-        //     'GENERATE_',
-
-        // ];
-
-        // $FORM_CONFIG = [
-
-        // ];
-
-        // GeneratePages::_initial($MAIN_PAGE)
-        //         ->table(manual,$TABLE_CONFIG)
-                
-        // GeneratePages::_initial($MAIN_PAGE)
-        //         ->form(manual,$FORM_CONFIG)
-
-        // DBHelper::get_generate('schedules')
-        
-        // DBHelper::getDropdown('schedules')
-        //     ->key('id')
-        //     ->select(['id','name'])
-        //     ->where()
-        //     ->get();
-
-        // DBHelper::get_table('schedules')
-        //     ->key('id')
-        //     ->select(['id','name'])
-        //     ->where()
-        //     ->get();
+        $lecturerInput = '';
+        if(in_array($role, [1,2,4]) ){
+            $lecturerInput = [
+                'inputType'=>'dropdown',
+                'dataType'=>'text',
+                'alias'=>'Nama Dosen',
+                'required'=>'true',
+                'note'=>'Gunakan nama yang singkat namun informatif',
+                'state'=>'user_id',
+                'data'=>FormHelper::dropdownInstant('name','users')
+            ];
+        }
 
         $formConfig = [
             [
@@ -268,15 +280,8 @@ class MapperHelper {
                 'state'=>'class_id',
                 'data'=>FormHelper::dropdownInstant('class_name','classes')
             ],
-            [
-                'inputType'=>'dropdown',
-                'dataType'=>'text',
-                'alias'=>'Nama User',
-                'required'=>'true',
-                'note'=>'Gunakan nama yang singkat namun informatif',
-                'state'=>'user_id',
-                'data'=>FormHelper::dropdownInstant('name','users')
-            ],
+            $lecturerInput,
+            $statusInput,
         ];
 
         // FORM ADD

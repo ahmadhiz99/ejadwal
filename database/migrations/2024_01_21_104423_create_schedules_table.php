@@ -16,7 +16,7 @@ return new class extends Migration
             $table->time('start_time');
             $table->time('end_time');
             $table->string('day');
-            $table->string('status')->nullable();
+            $table->string('status')->default(0);
             $table->unsignedBigInteger('class_id');
             $table->unsignedBigInteger('room_id');
             $table->unsignedBigInteger('subject_id');

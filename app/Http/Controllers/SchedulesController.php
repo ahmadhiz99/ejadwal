@@ -92,13 +92,14 @@ class SchedulesController extends Controller
 
     //    GET VALIDATOR FROM FORM HELPER
         $validator = Validator::make($request->all(), [
-            // 'start_date' => 'required',
-            // 'end_date' => 'required',
-            // 'status' => 'required',
-            // 'class_id' => 'required',
-            // 'room_id' => 'required',
-            // 'subject_id' => 'required',
+            'start_time' => 'required',
+            'end_time' => 'required',
+            'class_id' => 'required',
+            'room_id' => 'required',
+            'subject_id' => 'required',
+            'day' => 'required',
             // 'user_id' => 'required'
+            // 'status' => 'required',
         ]);
         
         $class = $request->class_id;
@@ -106,30 +107,33 @@ class SchedulesController extends Controller
         $room = $request->room_id;
         $start_time = $request->start_time;
         $end_time = $request->end_time;
-        $request->status = 1;
+        // $request->status = 1;
 
+        if(!$request->has('user_id') || $request->user_id == null){
+            $request->merge(['user_id' => Auth()->user()->id]);
+        }
+        
         $req = [
             'id'=>null,
             'request'=> $request->all()
         ];
-
-        $dataScehdule = Schedule::where('class_id','=',$class)
-                                ->where('day','=', $day)
-                                ->where('room_id','=',$room)
-                                ->where('end_time','>',$start_time)
-                                ->where('start_time','<',$end_time)
-                                ->count();
+        
+        if($start_time && $end_time){
+            $dataScehdule = Schedule::where('class_id','=',$class)
+                                    ->where('day','=', $day)
+                                    ->where('room_id','=',$room)
+                                    ->where('end_time','>',$start_time)
+                                    ->where('start_time','<',$end_time)
+                                    ->count();
+        }
 
         if($validator->fails()){
-            return response()->json([
-                'message' => 'Store Role Failed!',
-                'status' => 'false',
-                'data'=> [$validator->messages()]
-            ],400);
+            return back()->withErrors($validator)
+            ->withInput();
         }else if($dataScehdule > 0){
             return back()->withErrors([
                 'message' => 'Terdapat jadwal lain di jam ini. Silakan coba lagi!',
-            ]);
+            ])->withInput();
         }
         else{
             $config = Self::configController($req);
@@ -173,28 +177,77 @@ class SchedulesController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            // 'start_date' => 'required',
-            // 'end_date' => 'required',
-            // 'status' => 'required',
+            // 'start_time' => 'required',
+            // 'end_time' => 'required',
             // 'class_id' => 'required',
             // 'room_id' => 'required',
             // 'subject_id' => 'required',
-            // 'user_id' => 'required'
+            // 'day' => 'required',
         ]);
+
         Self::purgeConfig();
+
+        // $class = $request->class_id;
+        // $day = $request->day;
+        // $room = $request->room_id;
+        // $start_time = $request->start_time;
+        // $end_time = $request->end_time;
+        // dd($request);
+
+        $dataFromDb = Schedule::find($id);
+        $db_class = $dataFromDb->class_id;
+        $db_day = $dataFromDb->day;
+        $db_room = $dataFromDb->room_id;
+        $db_start_time = $dataFromDb->start_time;
+        $db_end_time = $dataFromDb->end_time;
+
+        if($request->has('class_id')){
+            $class = $request->class_id;
+        }else{
+            $class = $db_class;
+        }
+        if($request->has('day')){
+            $day = $request->day;
+        }else{
+            $day = $db_day;
+        }
+        if($request->has('room_id')){
+            $room = $request->room_id;
+        }else{
+            $room = $db_room;
+        }
+        if($request->has('start_time')){
+            $start_time = $request->start_time;
+        }else{
+            $start_time = $db_start_time;
+        }
+        if($request->has('end_time')){
+            $end_time = $request->end_time;
+        }else{
+            $end_time = $db_end_time;
+        }
 
         $req = [
             'id'=>$id,
             'request'=> $request->all()
         ];
-        
+         
+        if($start_time && $end_time){
+            $dataScehdule = Schedule::where('class_id','=',$class)
+                                    ->where('day','=', $day)
+                                    ->where('room_id','=',$room)
+                                    ->where('end_time','>',$start_time)
+                                    ->where('start_time','<',$end_time)
+                                    ->count();
+        }
 
         if($validator->fails()){
-            return response()->json([
-                'message' => 'Store Role Failed!',
-                'status' => 'false',
-                'data'=> [$validator->messages()]
-            ],400);
+            return back()->withErrors($validator)
+            ->withInput();
+        }else if($dataScehdule > 0){
+            return back()->withErrors([
+                'message' => 'Terdapat jadwal lain di jam ini. Silakan coba lagi!',
+            ])->withInput();
         }else{
             $config = Self::configController($req);
             if(ControllerHelper::ch_insert($config)){

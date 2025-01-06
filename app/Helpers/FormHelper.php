@@ -73,11 +73,15 @@ class FormHelper {
     /**
      * DROPDOWN INSTANT Bool
      */
-    public static function dropdownInstantBool($column=null, $table=null , $active=null){
-        $dataArr =[
-            ['id'=>1,'name'=>'Active'],
-            ['id'=>0,'name'=>'Inactive'],
-        ];
+    public static function dropdownInstantBool($column=null, $table=null , $active=null, $arrData=null){
+        if($arrData != null){
+          $dataArr = $arrData;
+        }else{
+            $dataArr = [
+                ['id'=>1,'name'=>'Active'],
+                ['id'=>0,'name'=>'Inactive'],
+            ];
+        }
         $dropdown_result = ['default'=>'','id'=>'id','name'=>'name','data'=>$dataArr];
         return $dropdown_result;
     }

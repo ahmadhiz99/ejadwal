@@ -27,13 +27,32 @@ class HandleInertiaRequests extends Middleware
      *
      * @return array<string, mixed>
      */
+    // public function share(Request $request): array
+    // {
+    //     return [
+    //         ...parent::share($request),
+    //         'auth' => [
+    //             'user' => $request->user(),
+    //         ],
+    //     ];
+    // }
     public function share(Request $request): array
     {
         return [
             ...parent::share($request),
+
+            // Share authenticated user
             'auth' => [
                 'user' => $request->user(),
             ],
+
+            // Share validation errors
+            'errors' => fn () => $request->session()->get('errors')
+                ? $request->session()->get('errors')->getBag('default')->getMessages()
+                : (object) [],
+
+            // Share old input (for repopulating form fields)
+            'old' => fn () => $request->session()->getOldInput(),
         ];
     }
 }
