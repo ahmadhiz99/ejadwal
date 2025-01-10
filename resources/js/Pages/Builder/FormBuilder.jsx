@@ -22,7 +22,7 @@ export default function FormBuilder({ auth, errors, old }) {
             toast.error(errors.message[0]); // Display error using toast
         }
         setFormData(old);
-    }, [errors]);
+    }, []);
 
 
     const handleChange = (e,key) =>{

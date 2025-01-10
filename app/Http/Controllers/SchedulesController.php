@@ -232,7 +232,8 @@ class SchedulesController extends Controller
             'request'=> $request->all()
         ];
          
-        if($start_time && $end_time){
+        $dataScehdule = 0;
+        if($request->has('start_time') && $request->has('end_time')){
             $dataScehdule = Schedule::where('class_id','=',$class)
                                     ->where('day','=', $day)
                                     ->where('room_id','=',$room)
