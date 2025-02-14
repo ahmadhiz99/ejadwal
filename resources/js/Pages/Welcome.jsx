@@ -35,35 +35,42 @@ export default function Welcome({ auth, laravelVersion, phpVersion, data }) {
                 <div className="max-w-7xl mx-auto p-6 lg:p-8 w-full">
                                    
                             <div className="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
-                                <h2 className="text-center mt-6 text-xl font-semibold text-gray-900 dark:text-white">
+                                <h2 className="text-center mt-6 text-xl font-bold text-gray-900 dark:text-white">
                                     Jadwal Hari Ini
                                 </h2>
 
-                                <table className="w-full mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                                    <thead>
-                                        <tr>
-                                            <th>Kelas</th>
-                                            <th>Ruangan</th>
-                                            <th>Jam Masuk</th>
-                                            <th>Jam Akhir</th>
-                                            <th>Mata Kuliah</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {console.log(data)}
-                                        {data?.map((item,idx) => {
-                                            return(
-                                                <tr className='text-center'>
-                                                    <td>{item.class_name}</td>
-                                                    <td>{item.room_name}</td>
-                                                    <td>{item.start_time}</td>
-                                                    <td>{item.end_time}</td>
-                                                    <td>{item.subject_name}</td>
-                                                </tr>
-                                            )
-                                        })}
-                                    </tbody>
-                                </table>
+                                {Object.entries(data).map(([key, value], idx) => {
+                                    return(
+                                        <div key={key} className='mt-6 '>
+                                            <hr />
+                                            <h2 className="text-center mt-2 text-l font-semibold text-gray-600 dark:text-white">
+                                                {key}
+                                            </h2>
+                                            <table className="w-full mt-2 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Kelas</th>
+                                                        <th>Ruangan</th>
+                                                        <th>Jam Masuk</th>
+                                                        <th>Jam Akhir</th>
+                                                        <th>Mata Kuliah</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {Array.isArray(value) && value.map((item, idx) => (
+                                                            <tr className='text-center' key={idx}>
+                                                                <td>{item.class_name}</td>
+                                                                <td>{item.room_name}</td>
+                                                                <td>{item.start_time}</td>
+                                                                <td>{item.end_time}</td>
+                                                                <td>{item.subject_name}</td>
+                                                            </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        )
+                                })}
                     </div>
 
                     <div className="flex justify-center mt-16 px-6 sm:items-center sm:justify-between">
