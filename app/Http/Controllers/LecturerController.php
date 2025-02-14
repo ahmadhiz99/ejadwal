@@ -85,11 +85,13 @@ class LecturerController extends Controller
     {
     //    GET VALIDATOR FROM FORM HELPER
         $validator = Validator::make($request->all(), [
-            // 'start_date' => 'required',
-            // 'end_date' => 'required',
-            // 'status' => 'required',
-            // 'class_id' => 'required',
-            // 'user_id' => 'required'
+            'name' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+            'nis' => 'required',
+            'role_id' => 'required',
+            'program_study_id' => 'required',
+            'status' => 'required',
         ]);
 
         $req = [
@@ -98,18 +100,28 @@ class LecturerController extends Controller
         ];
 
         if($validator->fails()){
-            return response()->json([
-                'message' => 'Store Role Failed!',
-                'status' => 'false',
-                'data'=> [$validator->messages()]
-            ],400);
+            return back()->withErrors($validator)
+            ->withInput();
         }else{
             $config = Self::configController($req);
             if(ControllerHelper::ch_insert($config)){
+                session()->flash("dataResponse", 
+                 [
+                    'code' => 200,
+                    'message' => 'Store Success!',
+                    'status' => 'true',
+                    'data'=> [$validator->messages()]
+                ]
+            );
                 return self::table();
             }
-            return 'Failed';
-
+            return session()->flash("dataResponse", 
+            [
+                'code' => 400,
+                'message' => 'Store Failed!',
+                'status' => 'false',
+                'data'=> [$validator->messages()]
+            ]);
         }
       
     }
@@ -160,19 +172,29 @@ class LecturerController extends Controller
             'request'=> $request->all()
         ];
         
-
         if($validator->fails()){
-            return response()->json([
-                'message' => 'Store Role Failed!',
-                'status' => 'false',
-                'data'=> [$validator->messages()]
-            ],400);
+            return back()->withErrors($validator)
+            ->withInput();
         }else{
             $config = Self::configController($req);
-             if(ControllerHelper::ch_insert($config)){
+            if(ControllerHelper::ch_insert($config)){
+                session()->flash("dataResponse", 
+                    [
+                        'code' => 200,
+                        'message' => 'Update Success!',
+                        'status' => 'true',
+                        'data'=> [$validator->messages()]
+                    ]
+                );
                 return self::table();
-             }
-             return 'Failed';
+            }
+            return session()->flash("dataResponse", 
+            [
+                'code' => 400,
+                'message' => 'Update Failed!',
+                'status' => 'false',
+                'data'=> [$validator->messages()]
+            ]);
         }
     }
 
@@ -187,8 +209,23 @@ class LecturerController extends Controller
 
         $config = Self::configController($req);
         if(ControllerHelper::ch_destroy($config)){
+            session()->flash("dataResponse", 
+                    [
+                        'code' => 200,
+                        'message' => 'Delete Success!',
+                        'status' => 'true',
+                        'data'=> []
+                    ]
+                );
             return self::table();
         }
-        return 'Failed';
+        return session()->flash("dataResponse", 
+                [
+                    'code' => 400,
+                    'message' => 'Delete Failed!',
+                    'status' => 'true',
+                    'data'=> []
+                ]
+            );
     }
 }

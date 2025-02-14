@@ -21,6 +21,7 @@ export default function FormBuilder({ auth, errors, old }) {
         if (errors?.message) {
             toast.error(errors.message[0]); // Display error using toast
         }
+        console.log(errors);
         setFormData(old);
     }, []);
 

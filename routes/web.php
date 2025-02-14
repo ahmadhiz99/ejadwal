@@ -51,7 +51,8 @@ Route::get('/dashboard', [DashboardController::class, 'table'])->name('dashboard
 // BUILDER
 Route::get('/builder/table', function () {
     $data = session()->get('SessTableData');
-    return Inertia::render('Builder/TableBuilder',['data'=>$data]);
+    $dataResponse = session()->get('dataResponse');
+    return Inertia::render('Builder/TableBuilder',['data'=>$data,'dataResponse'=>$dataResponse]);
 })->middleware(['auth', 'verified'])->name('builder.table-builder');
 
 Route::get('/builder/table/destory', function () {
@@ -61,11 +62,13 @@ Route::get('/builder/table/destory', function () {
 
 Route::get('/builder/table/add', function () {
     $data = session()->get('SessFormData');
+    // dd($data);
     return Inertia::render('Builder/FormBuilder',['data'=>$data]);
 })->middleware(['auth', 'verified'])->name('builder.form-builder');
 
 Route::get('/builder/table/edit', function () {
     $data = session()->get('SessFormData');
+    // dd($data);
     return Inertia::render('Builder/FormBuilder',['data'=>$data]);
 })->middleware(['auth', 'verified'])->name('builder.form-builder');
 
@@ -171,8 +174,8 @@ Route::group(['middleware' => 'checkRole:super,admin,client'], function() {
      Route::get('/class-create', [ClassesController::class, 'create'])->name('class.create');
      Route::post('/class-store', [ClassesController::class, 'store']);
      Route::get('/class-show/{id}', [ClassesController::class, 'show'])->name('class.show');
-     Route::put('/class-edit/{id}', [ClassesController::class, 'edit'])->name('class.edit');
-     Route::get('/class-update/{id}', [ClassesController::class, 'update'])->name('class.update');
+     Route::get('/class-edit/{id}', [ClassesController::class, 'edit'])->name('class.edit');
+     Route::put('/class-update/{id}', [ClassesController::class, 'update'])->name('class.update');
      Route::delete('/class-destroy/{id}', [ClassesController::class, 'destroy'])->name('class.delete');
 
       // Program Studi

@@ -38,7 +38,7 @@ class RolesController extends Controller
             'type' => 'generate', /* generate/manual */
             'column_show' => '',
             'column_block' => [
-                'created_at','updated_at'
+                'created_at','updated_at','id'
             ],
         ];
 
@@ -262,8 +262,10 @@ class RolesController extends Controller
      */
     public function store(Request $request)
     {
-        // $data = $request->all();
-        $validator = Validator::make($request->all(), Self::get_validator());
+        $validator = Validator::make($request->all(), [
+            'role_name' => 'required',
+            'level' => 'required',
+        ]);
 
         $req = [
             'id'=>null,
@@ -271,15 +273,28 @@ class RolesController extends Controller
         ];
 
         if($validator->fails()){
-            return response()->json([
-                'message' => 'Store Role Failed!',
-                'status' => 'false',
-                'data'=> [$validator->messages()]
-            ],400);
+            return back()->withErrors($validator)
+            ->withInput();
         }else{
             $config = Self::configController($req);
-            ControllerHelper::ch_insert($config);
-            return to_route(self::$subRoute['table']);
+            if(ControllerHelper::ch_insert($config)){
+                session()->flash("dataResponse", 
+                 [
+                    'code' => 200,
+                    'message' => 'Store Success!',
+                    'status' => 'true',
+                    'data'=> [$validator->messages()]
+                ]
+            );
+                return self::table();
+            }
+            return session()->flash("dataResponse", 
+            [
+                'code' => 400,
+                'message' => 'Store Failed!',
+                'status' => 'false',
+                'data'=> [$validator->messages()]
+            ]);
         }
     }
 
@@ -328,7 +343,10 @@ class RolesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), Self::get_validator());
+        $validator = Validator::make($request->all(), [
+            // 'role_name' => 'required',
+            // 'level' => 'required',
+        ]);
 
         $req = [
             'id'=>$id,
@@ -336,22 +354,28 @@ class RolesController extends Controller
         ];
 
         if($validator->fails()){
-            return response()->json([
-                'message' => 'Update '. self::$title .' Failed!',
-                'status' => 'false',
-                'data'=> [$validator->messages()]
-            ],400);
+            return back()->withErrors($validator)
+            ->withInput();
         }else{
             $config = Self::configController($req);
             if(ControllerHelper::ch_insert($config)){
-                return to_route(self::$subRoute['table']);
-            }else{
-                return response()->json([
-                    'message' => 'Update '. self::$title .' Failed!',
-                    'status' => 'false',
-                    'data'=> [$validator->messages()]
-                ],400);
+                session()->flash("dataResponse", 
+                    [
+                        'code' => 200,
+                        'message' => 'Update Success!',
+                        'status' => 'true',
+                        'data'=> [$validator->messages()]
+                    ]
+                );
+                return self::table();
             }
+            return session()->flash("dataResponse", 
+            [
+                'code' => 400,
+                'message' => 'Update Failed!',
+                'status' => 'false',
+                'data'=> [$validator->messages()]
+            ]);
         }
     }
 
@@ -365,7 +389,25 @@ class RolesController extends Controller
         ];
 
         $config = Self::configController($req);
-        return ControllerHelper::ch_destroy($config);
+        if(ControllerHelper::ch_destroy($config)){
+            session()->flash("dataResponse", 
+                    [
+                        'code' => 200,
+                        'message' => 'Delete Success!',
+                        'status' => 'true',
+                        'data'=> []
+                    ]
+                );
+            return self::table();
+        }
+        return session()->flash("dataResponse", 
+                [
+                    'code' => 400,
+                    'message' => 'Delete Failed!',
+                    'status' => 'true',
+                    'data'=> []
+                ]
+            );
         
     }
 }

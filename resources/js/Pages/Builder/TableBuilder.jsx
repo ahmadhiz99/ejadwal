@@ -3,11 +3,22 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router, usePage } from "@inertiajs/react";
 import { ToastContainer, toast } from "react-toastify";
+import { useState, useEffect } from "react";
 
 export default function TableBuilder({ auth }) {
     const data = usePage().props.data;
     const dataTable = usePage().props.data.dataTable;
+    const dataResponse = usePage().props.dataResponse;
 
+    useEffect(() => {
+        if (dataResponse?.code == 200) {
+            toast.success(dataResponse.message);
+        }
+        if (dataResponse?.code == 400) {
+            toast.error(dataResponse.message);
+        }
+    }, []);
+    
     const detail = (e, route, id) => {
         e.preventDefault();
         router.visit(`/${route}/${id}`, {

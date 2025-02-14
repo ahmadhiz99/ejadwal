@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use App\Helpers\ControllerHelper;
+use App\Helpers\FormHelper;
 
 
 class UsersController extends Controller
@@ -107,7 +108,7 @@ class UsersController extends Controller
         }
     }
 
-    function form_view() {
+    function form_view($params = null) {
         Self::purgeConfig();
         $req = [
             'id'=>null,
@@ -118,7 +119,7 @@ class UsersController extends Controller
             ],
         ];
         $config = Self::configController($req);
-        $dataDropdownRes = ControllerHelper::ch_datas($config);
+        $dataDropdownRes = FormHelper::dropdownInstant('role_name','roles');
         // $dataDropdownRes =[
         //     ['id'=>'1','name'=>'active'],
         //     ['id'=>'0','name'=>'no active'],
@@ -126,13 +127,50 @@ class UsersController extends Controller
         $dataDropdown = ['default'=>'0','id'=>'id','name'=>'role_name','data'=>$dataDropdownRes];
     
         $data = [
+            // ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Nama User','state'=>'name','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>''],
+            // ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Email','state'=>'email','required'=>'true','note'=>'','data'=>''],
+            // ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Password','state'=>'password','required'=>'true','note'=>'','data'=>''],
+            // ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Status','state'=>'status','required'=>'true','note'=>'','data'=>''],
+            // ['inputType'=>'TextInput','dataType'=>'text','alias'=>'NIS','state'=>'nis','required'=>'true','note'=>'','data'=>''],
+            // ['inputType'=>'dropdown',
+            // 'dataType'=>'text',
+            // 'alias'=>'Role Id',
+            // 'state'=>'role_id',
+            // 'required'=>'true',
+            // 'note'=>'',
+            // 'data'=> FormHelper::dropdownInstant('role_name','roles')
+            // ],
             ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Nama User','state'=>'name','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>''],
             ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Email','state'=>'email','required'=>'true','note'=>'','data'=>''],
             ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Password','state'=>'password','required'=>'true','note'=>'','data'=>''],
-            ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Status','state'=>'status','required'=>'true','note'=>'','data'=>''],
-            ['inputType'=>'TextInput','dataType'=>'text','alias'=>'NIS','state'=>'nis','required'=>'true','note'=>'','data'=>''],
-            ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Role Id','state'=>'role_id','required'=>'true','note'=>'','data'=>''],
-            ['inputType'=>'dropdown','dataType'=>'text','alias'=>'Program Studi Id','state'=>'role_name','required'=>'true','note'=>'','data'=>$dataDropdown],
+            [
+                'inputType'=>'dropdown',
+                'dataType'=>'text',
+                'alias'=>'Status',
+                'state'=>'status',
+                'required'=>'true',
+                'note'=>'',
+                'data'=>FormHelper::dropdownInstantBool('status')
+            ],
+            ['inputType'=>'TextInput','dataType'=>'text','alias'=>'NIS','state'=>'nis','required'=>'true','note'=>'','data'=>FormHelper::dropdownInstantBool('is_active')],
+            ['inputType'=>'dropdown',
+                'dataType'=>'text',
+                'alias'=>'Role Id',
+                'state'=>'role_id',
+                'required'=>'true',
+                'note'=>'',
+                'data'=> FormHelper::dropdownInstant('role_name','roles')
+            ],
+            [
+                'inputType'=>'dropdown',
+                'dataType'=>'number',
+                'alias'=>'Program Studi',
+                'state'=>'program_study_id',
+                'required'=>'true',
+                'note'=>'Gunakan nama yang singkat namun informatif',
+                'data'=> FormHelper::dropdownInstant('prodi_name','program_studies')
+            ],
+
         ];
         return $data;
     }
@@ -277,7 +315,17 @@ class UsersController extends Controller
     public function store(Request $request)
     {
         // $data = $request->all();
-        $validator = Validator::make($request->all(), Self::get_validator());
+        // $validator = Validator::make($request->all(), Self::get_validator());
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+            'nis' => 'required',
+            'role_id' => 'required',
+            'program_study_id' => 'required',
+            'status' => 'required',
+        ]);
+
 
         $req = [
             'id'=>null,
@@ -285,15 +333,28 @@ class UsersController extends Controller
         ];
 
         if($validator->fails()){
-            return response()->json([
-                'message' => 'Store Role Failed!',
-                'status' => 'false',
-                'data'=> [$validator->messages()]
-            ],400);
+            return back()->withErrors($validator)
+            ->withInput();
         }else{
             $config = Self::configController($req);
-            ControllerHelper::ch_insert($config);
-            return to_route(self::$subRoute['table']);
+            if(ControllerHelper::ch_insert($config)){
+                session()->flash("dataResponse", 
+                 [
+                    'code' => 200,
+                    'message' => 'Store Success!',
+                    'status' => 'true',
+                    'data'=> [$validator->messages()]
+                ]
+            );
+                return self::table();
+            }
+            return session()->flash("dataResponse", 
+            [
+                'code' => 400,
+                'message' => 'Store Failed!',
+                'status' => 'false',
+                'data'=> [$validator->messages()]
+            ]);
         }
     }
 
@@ -342,7 +403,17 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), Self::get_validator());
+        $validator = Validator::make($request->all(), [
+            // 'start_date' => 'required',
+            // 'end_date' => 'required',
+            // 'status' => 'required',
+            // 'class_id' => 'required',
+            // 'room_id' => 'required',
+            // 'subject_id' => 'required',
+            // 'user_id' => 'required'
+        ]);
+
+        Self::purgeConfig();
 
         $req = [
             'id'=>$id,
@@ -350,22 +421,28 @@ class UsersController extends Controller
         ];
 
         if($validator->fails()){
-            return response()->json([
-                'message' => 'Update '. self::$title .' Failed!',
-                'status' => 'false',
-                'data'=> [$validator->messages()]
-            ],400);
+            return back()->withErrors($validator)
+            ->withInput();
         }else{
             $config = Self::configController($req);
             if(ControllerHelper::ch_insert($config)){
-                return to_route(self::$subRoute['table']);
-            }else{
-                return response()->json([
-                    'message' => 'Update '. self::$title .' Failed!',
-                    'status' => 'false',
-                    'data'=> [$validator->messages()]
-                ],400);
+                session()->flash("dataResponse", 
+                    [
+                        'code' => 200,
+                        'message' => 'Update Success!',
+                        'status' => 'true',
+                        'data'=> [$validator->messages()]
+                    ]
+                );
+                return self::table();
             }
+            return session()->flash("dataResponse", 
+            [
+                'code' => 400,
+                'message' => 'Update Failed!',
+                'status' => 'false',
+                'data'=> [$validator->messages()]
+            ]);
         }
     }
 
@@ -379,7 +456,25 @@ class UsersController extends Controller
         ];
 
         $config = Self::configController($req);
-        return ControllerHelper::ch_destroy($config);
+        if(ControllerHelper::ch_destroy($config)){
+            session()->flash("dataResponse", 
+                    [
+                        'code' => 200,
+                        'message' => 'Delete Success!',
+                        'status' => 'true',
+                        'data'=> []
+                    ]
+                );
+            return self::table();
+        }
+        return session()->flash("dataResponse", 
+                [
+                    'code' => 400,
+                    'message' => 'Delete Failed!',
+                    'status' => 'true',
+                    'data'=> []
+                ]
+            );
         
     }
     
