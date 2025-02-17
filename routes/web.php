@@ -102,7 +102,7 @@ Route::get('/lecturer', function () {
     return Inertia::render('Lecturer/Lecturers',['data'=>$data]);
 })->middleware(['auth', 'verified'])->name('lecturer.lecturers');
 Route::get('/lecturer/add', function () {
-    $data = session()->get('SessSelectionData');
+    $data_selection = session()->get('SessSelectionData');
     return Inertia::render('Lecturer/FormLecturer',['data_selection'=>$data_selection]);
 })->middleware(['auth', 'verified'])->name('lecturer.formlecturer');
 Route::get('/lecturer/show', function () {

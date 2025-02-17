@@ -6,11 +6,12 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
 
-export default function Register() {
+export default function Register(datas) {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
         password: '',
+        role_id: '',
         password_confirmation: '',
     });
 
@@ -63,6 +64,32 @@ export default function Register() {
                     />
 
                     <InputError message={errors.email} className="mt-2" />
+                </div>
+
+                <div>
+                    <InputLabel htmlFor="role_id" value="Role" />
+
+                    <select
+                        id="role_id"
+                        name="role_id"
+                        value={data.role_id}
+                        className="mt-1 block w-full"
+                        autoComplete="role_id"
+                        onChange={(e) => setData('role_id', e.target.value)}
+                        required
+                    >
+                       <option value={''} disabled>Pilih role</option>
+                       {console.log(datas.roles)
+                       }
+                        {datas.roles.map((role, idx) => {
+                            return (
+                                <option key={idx} value={role.id}>{role.role_name}</option>
+                            )
+                        })}
+                    </select>
+                    
+
+                    <InputError message={errors.role_id} className="mt-2" />
                 </div>
 
                 <div className="mt-4">
