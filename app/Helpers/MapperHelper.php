@@ -12,6 +12,7 @@ namespace App\Helpers;
 use App\Helpers\TableHelper;
 use App\Helpers\FormHelper;
 use App\Helpers\ControllerHelper;
+use Illuminate\Support\Facades\Auth;
 
 class MapperHelper {
 
@@ -1446,15 +1447,23 @@ class MapperHelper {
                     ],
                 ],
             ],
-            'where_condition' => [
-                "equals" => [
-                    ['f.day_english','=', date('l')],
-                ],
-            ],
-            
+            // 'where_condition' => [
+            //     "equals" => [
+            //         // ['f.day_english','=', date('l')],
+            //         ['d.program_study_id','=', Auth()->user()->program_study_id],
+            //     ],
+            // ],
         ];
 
-        
+        if(Auth()->user()->role_id == 5){
+
+            $table_req_query['where_condition'] = [
+                "equals" => [
+                    ['d.program_study_id','=', Auth()->user()->program_study_id],
+                ],
+            ];
+        }
+
         // Table header
         $tableReq = [
             'type' => 'generate', /* generate/manual */

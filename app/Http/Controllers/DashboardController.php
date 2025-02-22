@@ -8,6 +8,9 @@ use Inertia\Inertia;
 use App\Helpers\ControllerHelper;
 use App\Helpers\MapperHelper;
 use App\Helpers\TableHelper;
+use Carbon\Carbon;
+
+use function Laravel\Prompts\search;
 
 class DashboardController extends Controller
 {
@@ -45,12 +48,16 @@ class DashboardController extends Controller
 
     public function table(){
 
-        // dd($dayName);
-
         // Get Mapping Tabl
         $req = MapperHelper::mapperDashboardController('table_req_query');
         $config = Self::configController($req);
         $dataResult = ControllerHelper::ch_datas($config);
+
+        $currentDay = Carbon::now()->dayOfWeek;
+        $dataResult = collect($dataResult)->sortBy(function ($item) use ($currentDay) {
+            return ($item->day - $currentDay + 7) % 7; // Mengatur urutan dari hari ini, besok, lusa, dst.
+        })->values()->all();
+        // dd($dataResult);
 
         $dataTable = MapperHelper::mapperDashboardController('dataTable');
         $data = ['data'=>$dataResult,'dataTable'=>$dataTable];
