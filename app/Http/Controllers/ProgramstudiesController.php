@@ -202,6 +202,8 @@ class ProgramstudiesController extends Controller
      */
     public function destroy($id)
     {
+        Self::purgeConfig();
+
         $req = [
             'id'=>$id
         ];
