@@ -196,6 +196,7 @@ Route::group(['middleware' => 'checkRole:super,admin,client'], function() {
       Route::get('/schedule-edit/{id}', [SchedulesController::class, 'edit'])->name('schedule.edit');
       Route::put('/schedule-update/{id}', [SchedulesController::class, 'update'])->name('schedule.update');
       Route::delete('/schedule-destroy/{id}', [SchedulesController::class, 'destroy'])->name('schedule.delete');
+      Route::get('/schedule-print', [SchedulesController::class, 'print'])->name('schedule.print');
  
       // Subject
       Route::get('/subject-page', [SubjectsController::class, 'table'])->name('subject.table');

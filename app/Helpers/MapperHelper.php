@@ -1279,7 +1279,7 @@ class MapperHelper {
             ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Nama Mata Kuliah','state'=>'subject_name','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>''],
             ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Kode','state'=>'code','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>''],
             ['inputType'=>'TextInput','dataType'=>'number','alias'=>'SKS','state'=>'sks','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>''],
-            ['inputType'=>'TextInput','dataType'=>'number','alias'=>'Semester','state'=>'semester','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>''],
+            ['inputType'=>'TextInput','dataType'=>'text','alias'=>'Semester','state'=>'semester','required'=>'true','note'=>'Gunakan nama yang singkat namun informatif','data'=>''],
             [
                 'inputType'=>'dropdown',
                 'dataType'=>'number',
@@ -1382,7 +1382,8 @@ class MapperHelper {
             'store' => '/' . $mainRoute . '-store', /* /route-store  */
             'edit' => $mainRoute . '-edit',
             'update' => '/'.$mainRoute . '-update',
-            'destroy' => $mainRoute . '-destroy'
+            'destroy' => $mainRoute . '-destroy',
+            'print' => $mainRoute . '.print'
         ];
         /**
          * DATAS CONFIG END
@@ -1447,12 +1448,13 @@ class MapperHelper {
                     ],
                 ],
             ],
-            // 'where_condition' => [
-            //     "equals" => [
-            //         // ['f.day_english','=', date('l')],
-            //         ['d.program_study_id','=', Auth()->user()->program_study_id],
-            //     ],
-            // ],
+            'where_condition' => [
+                "equals" => [
+                    // ['f.day_english','=', date('l')],
+                    // ['d.program_study_id','=', Auth()->user()->program_study_id],
+                    ['a.status','=', 1],
+                ],
+            ],
         ];
 
         if(Auth()->user()->role_id == 5){
@@ -1488,6 +1490,7 @@ class MapperHelper {
                         // ['feature'=>'edit', 'alias'=> 'Edit', 'route'=>$subRoute['edit'], 'icon'=>'bx-pencil','disabled'=>'false','hide'=>'false'], 
                         // ['feature'=>'delete', 'alias'=> 'Hapus', 'route'=>$subRoute['destroy'], 'icon'=>'bx-trash','disabled'=>'false','hide'=>'false'], 
                         // ['feature'=>'add', 'alias'=> 'Tambah', 'route'=>$subRoute['create'], 'icon'=>'','disabled'=>'false','hide'=>'false'], 
+                        ['feature'=>'print', 'alias'=> 'Print', 'route'=>$subRoute['print'], 'icon'=>'','disabled'=>'false','hide'=>'false'], 
                     ]
                 ]
             ],

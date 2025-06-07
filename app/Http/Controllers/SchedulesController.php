@@ -71,6 +71,29 @@ class SchedulesController extends Controller
         
      }
 
+    public function print(){
+        // Get Mapping Tablw
+        $req = MapperHelper::schedules('table_req_query');
+        $config = Self::configController($req);
+        $dataResult = ControllerHelper::ch_datas($config);
+
+        $dataTable = MapperHelper::schedules('dataTable');
+        $data = ['data'=>$dataResult,'dataTable'=>$dataTable];
+        session()->put("SessTableData", $data);
+        return redirect('/builder/table');
+
+        /**
+         * 
+         */
+        $req = MapperHelper::schedules();
+        $data = GeneratePages::_initial($MAIN_PAGE)
+                ->table(manual,$TABLE_CONFIG);
+
+        session()->put("SessTableData", $data);
+        return redirect('/builder/table');
+        
+     }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -119,11 +142,10 @@ class SchedulesController extends Controller
         ];
         
         if($start_time && $end_time){
-            $dataScehdule = Schedule::where('class_id','=',$class)
-                                    ->where('day','=', $day)
+            $dataScehdule = Schedule::where('day','=', $day)
                                     ->where('room_id','=',$room)
-                                    ->where('end_time','>',$start_time)
-                                    ->where('start_time','<',$end_time)
+                                    ->where('end_time','>=',$start_time)
+                                    ->where('start_time','<=',$end_time)
                                     ->count();
         }
 

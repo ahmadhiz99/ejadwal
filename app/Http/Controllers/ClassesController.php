@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use App\Helpers\ControllerHelper;
-
+use Hamcrest\Arrays\IsArray;
 
 class ClassesController extends Controller
 {
@@ -383,7 +383,11 @@ class ClassesController extends Controller
         if($tableReq['type'] == 'generate'){
             $data=[];
             $dataColumn=[];
-            $dataForm = $dataTable[0];
+            if (isset($dataTable[0])){
+                $dataForm = $dataTable[0];
+            }else{
+                $dataForm = [];
+            }
             foreach($dataForm as $key1 => $data1){
                 foreach($tableReq['column_block'] as $key2 => $data2){
                     if($key1 == $data2){

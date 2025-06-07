@@ -3,12 +3,13 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router, usePage } from "@inertiajs/react";
 import { ToastContainer, toast } from "react-toastify";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function TableBuilder({ auth }) {
     const data = usePage().props.data;
     const dataTable = usePage().props.data.dataTable;
     const dataResponse = usePage().props.dataResponse;
+    const printRef = useRef();
 
     useEffect(() => {
         if (dataResponse?.code == 200) {
@@ -41,6 +42,33 @@ export default function TableBuilder({ auth }) {
             },
         });
     };
+
+    const handlePrint = () => {
+        // window.print();
+        const content = printRef.current.innerHTML;
+        const printWindow = window.open('', '', 'height=600,width=800');
+        printWindow.document.write(`
+          <html>
+            <head>
+              <title>Print</title>
+              <style>
+                body { font-family: sans-serif; padding: 20px; }
+                @media print {
+                  .no-print { display: none !important; }
+                }
+              </style>
+            </head>
+            <body>
+              ${content}
+            </body>
+          </html>
+        `);
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+      };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -68,7 +96,7 @@ export default function TableBuilder({ auth }) {
 
             <ToastContainer />
 
-            <div className="py-8">
+            <div className="py-8" ref={printRef}>
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4">
                         <div className="p-6 text-gray-900">
@@ -82,6 +110,16 @@ export default function TableBuilder({ auth }) {
                                             <ButtonLink href={data_feature.route}>
                                                 {data_feature.alias}
                                             </ButtonLink>
+                                        )
+                                    }
+                                    if (data_feature.feature == 'print'){
+                                        return(
+                                            // <ButtonLink href={data_feature.route}>
+                                            //     {data_feature.alias}
+                                            // </ButtonLink>
+                                            <button onClick={handlePrint}  className="no-print">
+                                                {data_feature.alias}
+                                            </button>
                                         )
                                     }
                                 })
