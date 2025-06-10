@@ -90,7 +90,7 @@ class DashboardController extends Controller
         
         $dataResult = collect($dataResult)->filter(function ($item) use ($keywords) {
             return collect($keywords)->contains(function ($keyword) use ($item) {
-                return str_contains($item->dosen, $keyword) || str_contains($item->subject_name, $keyword);
+                return str_contains(strtolower($item->dosen), strtolower($keyword)) || str_contains(strtolower($item->subject_name), strtolower($keyword));
             });
         })->values()->all();
 
