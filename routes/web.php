@@ -19,6 +19,7 @@ use App\Http\Controllers\MainController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -197,6 +198,7 @@ Route::group(['middleware' => 'checkRole:super,admin,client'], function() {
       Route::put('/schedule-update/{id}', [SchedulesController::class, 'update'])->name('schedule.update');
       Route::delete('/schedule-destroy/{id}', [SchedulesController::class, 'destroy'])->name('schedule.delete');
       Route::get('/schedule-print', [SchedulesController::class, 'print'])->name('schedule.print');
+      Route::get('/schedule-search', [DashboardController::class, 'search'])->name('schedule.search');
  
       // Subject
       Route::get('/subject-page', [SubjectsController::class, 'table'])->name('subject.table');

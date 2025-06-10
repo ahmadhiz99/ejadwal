@@ -1,15 +1,18 @@
 import ButtonLink from "@/Components/ButtonLink";
+import TextInput from "@/Components/TextInput";
 import PrimaryButton from "@/Components/PrimaryButton";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router, usePage } from "@inertiajs/react";
 import { ToastContainer, toast } from "react-toastify";
 import { useState, useEffect, useRef } from "react";
+import { Input } from "postcss";
 
 export default function TableBuilder({ auth }) {
     const data = usePage().props.data;
     const dataTable = usePage().props.data.dataTable;
     const dataResponse = usePage().props.dataResponse;
     const printRef = useRef();
+    const [keyword, setKeyword] = useState(""); 
 
     useEffect(() => {
         if (dataResponse?.code == 200) {
@@ -69,6 +72,26 @@ export default function TableBuilder({ auth }) {
         printWindow.close();
       };
 
+    const handleSearch = (e,route) => {
+        e.preventDefault();
+        // route = 'schedule.search';
+        // console.log(keyword, route);
+        route = 'schedule-search';
+        if (keyword.trim() !== "") {
+            router.visit(`/${route}`, {
+                method: "get",
+                data: { search: keyword },
+                preserveState: true,
+            });
+        } else {
+            toast.error("Please enter a search keyword.");
+        }
+      };
+
+      const handleChange = (e) =>{
+       setKeyword(e.target.value);
+    }
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -114,12 +137,52 @@ export default function TableBuilder({ auth }) {
                                     }
                                     if (data_feature.feature == 'print'){
                                         return(
-                                            // <ButtonLink href={data_feature.route}>
-                                            //     {data_feature.alias}
-                                            // </ButtonLink>
-                                            <button onClick={handlePrint}  className="no-print">
-                                                {data_feature.alias}
-                                            </button>
+                                            <div className="no-print flex flex-row items-center gap-2">
+                                                <div className="gap-2 flex flex-row items-center">
+                                                    <TextInput
+                                                        className="required"
+                                                        type="text"
+                                                        placeholder="Masukan Keyword"
+                                                        onChange={(e)=>handleChange(e)}
+                                                        // type={form_data.dataType}
+                                                        // value={formData[form_data.state]}
+                                                        // onChange={(e)=>handleChange(e,form_data.state)}
+                                                    />
+                                                    <button onClick={(e)=>handleSearch(e,data_feature.route)} className="no-print bg-blue-500 text-white px-4 py-2 rounded">
+                                                        {/* {data_feature.alias} */}
+                                                        Search
+                                                    </button>
+                                                </div>
+
+                                                <button onClick={handlePrint} className=" bg-purple-500 text-white px-4 py-2 rounded">
+                                                    {data_feature.alias}
+                                                </button>
+                                            </div>
+                                        )
+                                    }
+                                    if (data_feature.feature == 'print'){
+                                        return(
+                                            <div className="no-print flex flex-row items-center gap-2">
+                                                <div className="gap-2 flex flex-row items-center">
+                                                    <TextInput
+                                                        className="required"
+                                                        type="text"
+                                                        placeholder="Masukan Keyword"
+                                                        onChange={(e)=>handleChange(e)}
+                                                        // type={form_data.dataType}
+                                                        // value={formData[form_data.state]}
+                                                        // onChange={(e)=>handleChange(e,form_data.state)}
+                                                    />
+                                                    <button onClick={(e)=>handleSearch(e,data_feature.route)} className="no-print bg-blue-500 text-white px-4 py-2 rounded">
+                                                        {/* {data_feature.alias} */}
+                                                        Search
+                                                    </button>
+                                                </div>
+
+                                                <button onClick={handlePrint} className=" bg-purple-500 text-white px-4 py-2 rounded">
+                                                    {data_feature.alias}
+                                                </button>
+                                            </div>
                                         )
                                     }
                                 })

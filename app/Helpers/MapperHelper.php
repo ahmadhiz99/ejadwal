@@ -34,7 +34,7 @@ class MapperHelper {
         $config = $configTemp;
     }
 
-    public static function schedules($params = nul, $id_data = null){
+    public static function schedules($params = null, $id_data = null){
         /**
          * DATAS CONFIG START
          */
@@ -58,7 +58,6 @@ class MapperHelper {
         /**
          * DATAS CONFIG END
          */
-
 
         /**
          * TABLE CONFIG START

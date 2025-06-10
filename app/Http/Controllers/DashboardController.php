@@ -76,6 +76,41 @@ class DashboardController extends Controller
         
      }
 
+     public function search(Request $request){
+        $keywords = $request->search;
+        // Get Mapping Tabl
+        $req = MapperHelper::mapperDashboardController('table_req_query');
+        $config = Self::configController($req);
+        $dataResult = ControllerHelper::ch_datas($config);
+
+        $currentDay = Carbon::now()->dayOfWeek;
+        $dataResult = collect($dataResult)->sortBy(function ($item) use ($currentDay) {
+            return ($item->day - $currentDay + 7) % 7; // Mengatur urutan dari hari ini, besok, lusa, dst.
+        })->values()->all();
+        
+        $dataResult = collect($dataResult)->filter(function ($item) use ($keywords) {
+            return collect($keywords)->contains(function ($keyword) use ($item) {
+                return str_contains($item->dosen, $keyword) || str_contains($item->subject_name, $keyword);
+            });
+        })->values()->all();
+
+        $dataTable = MapperHelper::mapperDashboardController('dataTable');
+        $data = ['data'=>$dataResult,'dataTable'=>$dataTable];
+        session()->put("SessTableData", $data);
+        return redirect('/builder/table');
+
+        /**
+         * 
+         */
+        $req = MapperHelper::mapperDashboardController();
+        $data = GeneratePages::_initial($MAIN_PAGE)
+                ->table(manual,$TABLE_CONFIG);
+
+        session()->put("SessTableData", $data);
+        return redirect('/builder/table');
+        
+     }
+
     /**
      * Show the form for creating a new resource.
      */

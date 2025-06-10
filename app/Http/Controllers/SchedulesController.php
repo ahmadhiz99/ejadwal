@@ -50,7 +50,6 @@ class SchedulesController extends Controller
     public function table(){
         // Get Mapping Tablw
         $req = MapperHelper::schedules('table_req_query');
-        $req = MapperHelper::schedules('table_req_query');
         $config = Self::configController($req);
         $dataResult = ControllerHelper::ch_datas($config);
 
@@ -92,6 +91,20 @@ class SchedulesController extends Controller
         session()->put("SessTableData", $data);
         return redirect('/builder/table');
         
+     }
+
+     public function search(Request $request){
+        $keywords = $request->search;
+        // Get Mapping Table
+        $req = MapperHelper::schedules('table_req_query');
+        $config = Self::configController($req);
+        $dataResult = ControllerHelper::ch_datas($config);
+
+        $dataTable = MapperHelper::schedules('dataTable');
+        $data = ['data'=>$dataResult,'dataTable'=>$dataTable];
+        session()->put("SessTableData", $data);
+        return redirect('/builder/table');
+        dd($keywords);
      }
 
     /**
@@ -142,8 +155,14 @@ class SchedulesController extends Controller
         ];
         
         if($start_time && $end_time){
-            $dataScehdule = Schedule::where('day','=', $day)
+            $dataScehdulebyroom = Schedule::where('day','=', $day)
                                     ->where('room_id','=',$room)
+                                    ->where('end_time','>=',$start_time)
+                                    ->where('start_time','<=',$end_time)
+                                    ->count();
+
+            $dataScehdulebyclass = Schedule::where('day','=', $day)
+                                    ->where('class_id','=',$class)
                                     ->where('end_time','>=',$start_time)
                                     ->where('start_time','<=',$end_time)
                                     ->count();
@@ -152,7 +171,7 @@ class SchedulesController extends Controller
         if($validator->fails()){
             return back()->withErrors($validator)
             ->withInput();
-        }else if($dataScehdule > 0){
+        }else if($dataScehdulebyroom > 0 || $dataScehdulebyclass > 0){
             return back()->withErrors([
                 'message' => 'Terdapat jadwal lain di jam ini. Silakan coba lagi!',
             ])->withInput();
