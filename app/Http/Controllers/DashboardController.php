@@ -48,7 +48,7 @@ class DashboardController extends Controller
 
     public function table(){
 
-        // Get Mapping Tabl
+        // Get Mapping Table
         $req = MapperHelper::mapperDashboardController('table_req_query');
         $config = Self::configController($req);
         $dataResult = ControllerHelper::ch_datas($config);

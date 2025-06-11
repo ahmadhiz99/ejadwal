@@ -1,9 +1,18 @@
 import { Link, Head } from '@inertiajs/react';
+import { useState } from 'react';
 
 export default function Welcome({ auth, laravelVersion, phpVersion, data }) {
+    const [prodi, setProdi] = useState('');
+
+    const handleChangeProdi = (prodi) =>{
+        console.log(prodi);
+        setProdi(prodi);
+    }
+    
     return (
         <>
             <Head title="Welcome" />
+            
             <div className="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
                 <div className="sm:fixed sm:top-0 sm:right-0 p-6 text-end">
                     {auth.user ? (
@@ -33,13 +42,55 @@ export default function Welcome({ auth, laravelVersion, phpVersion, data }) {
                 </div>
 
                 <div className="max-w-7xl mx-auto p-6 lg:p-8 w-full">
-                                   
+                {!prodi && (
+                    <>
+                    <div className='flex row justify-center mb-6 gap-4'>
+                        <a href="#" onClick={() => handleChangeProdi('informatika')} className="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
+                            Informatika
+                        </a>
+                        <a href="#" onClick={() => handleChangeProdi('Sistem Informasi')} className="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
+                            Sistem Informasi
+                        </a>
+                        <a href="#" onClick={() => handleChangeProdi('Teknik Industri')} className="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
+                           Teknik Industri
+                        </a>
+                    </div>
+                    <div className='flex row justify-center mb-6 gap-4'>
+                        <a href="#" onClick={() => handleChangeProdi('Arsitektur')} className="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
+                            Arsitektur
+                        </a>
+                        <a href="#" onClick={() => handleChangeProdi('Teknik Biomedik')} className="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
+                            Teknik Biomedik
+                        </a>
+                        <a href="#" onClick={() => handleChangeProdi('Ilmu Keolahragaan')} className="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
+                           Ilmu Keolahragaan
+                        </a>
+                    </div>
+                    <div className='flex row justify-center mb-6 gap-4'>
+                        <a href="#" onClick={() => handleChangeProdi('Gizi')} className="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
+                            Gizi
+                        </a>
+                        <a href="#" onClick={() => handleChangeProdi('Teknik Rekayasa elektromedis')} className="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
+                            Teknik Rekayasa elektromedis
+                        </a>
+                        <a href="#" onClick={() => handleChangeProdi('Farmasi')} className="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
+                           Farmasi
+                        </a>
+                    </div>
+                    </>
+                )}
+                    
+                    {prodi && (
                             <div className="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
                                 <h2 className="text-center mt-6 text-xl font-bold text-gray-900 dark:text-white">
                                     Jadwal Hari Ini
                                 </h2>
+                                {/* <h2 className="text-center mt-6 text-xl font-bold text-gray-900 dark:text-white">
+                                    {prodi ? prodi.toUpperCase() : '-'}
+                                </h2> */}
 
                                 {Object.entries(data).map(([key, value], idx) => {
+                                    if(key.toLowerCase().replace(/\s+/g, '') !== prodi.toLowerCase().replace(/\s+/g, '')) return null; // Filter by selected prodi
                                     return(
                                         <div key={key} className='mt-6 '>
                                             <hr />
@@ -71,7 +122,8 @@ export default function Welcome({ auth, laravelVersion, phpVersion, data }) {
                                         </div>
                                         )
                                 })}
-                    </div>
+                            </div>
+                    )}
 
                     <div className="flex justify-center mt-16 px-6 sm:items-center sm:justify-between">
                         <div className="ms-4 text-center text-sm text-gray-500 dark:text-gray-400 sm:text-end sm:ms-0">
